@@ -98,7 +98,10 @@ namespace ImageViewer
             RenameForm form = new RenameForm(currentImagePath);
             string newFilename = null;
 
-            form.ShowDialog();
+            if (form.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
             newFilename = form.result;
             form.Dispose();
 

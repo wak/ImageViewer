@@ -30,8 +30,7 @@ namespace ImageViewer
             if (e.KeyChar == (char) Keys.Enter)
             {
                 e.Handled = true;
-                this.result = this.textBox_filename.Text;
-                this.Close();
+                desideFilename();
             }
             if (e.KeyChar == (char) Keys.Escape)
             {
@@ -42,7 +41,13 @@ namespace ImageViewer
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            desideFilename();
+        }
+
+        private void desideFilename()
+        {
             this.result = this.textBox_filename.Text;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
