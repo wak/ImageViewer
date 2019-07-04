@@ -6,6 +6,8 @@ namespace ImageViewer
 {
     public partial class MainForm : Form
     {
+        const int PICTURE_BORDER_SIZE = 10;
+
         private ImageLoader imageLoader = new ImageLoader();
 
         private ImageList imageList;
@@ -21,6 +23,8 @@ namespace ImageViewer
 
         private bool isFixedZoomRatio;
         private bool isFixedDrawLocation;
+
+        private bool pictureOnlyMode = false;
 
         private bool overwrapWait;
 
@@ -158,10 +162,18 @@ namespace ImageViewer
             if (!isFixedDrawLocation)
                 calcDefaultDrawLocation();
 
-            currentRectangle = new Rectangle(0, 0, currentImage.Width, currentImage.Height);
+            if (pictureOnlyMode)
+            {
+                autoResizeWindow();
+                centerWindow();
+                calcDefaultZoomRatio();
+                calcDefaultDrawLocation();
+            }
 
-            currentRectangle.Width = (int)Math.Round(currentImage.Width * currentZoomRatio);
-            currentRectangle.Height = (int)Math.Round(currentImage.Height * currentZoomRatio);
+            currentRectangle = new Rectangle(0, 0,
+                (int)Math.Round(currentImage.Width * currentZoomRatio),
+                (int)Math.Round(currentImage.Height * currentZoomRatio));
+
             currentRectangle.X = currentDrawLocation.X;
             currentRectangle.Y = currentDrawLocation.Y;
 
@@ -191,7 +203,13 @@ namespace ImageViewer
                     newTitle += " !!LOAD ERROR!!";
 
                 if (overwrapWait)
+                {
+                    pictureBox.BackColor = Color.FromArgb(115, 199, 255);
                     newTitle += " (!!OVERWRAPPED!!)";
+                } else
+                {
+                    pictureBox.BackColor = SystemColors.Control;
+                }
 
                 if (isFixedZoomRatio)
                     newTitle += "[FZ]";
@@ -223,7 +241,9 @@ namespace ImageViewer
         {
             isFixedZoomRatio = false;
             if (shouldSmallZoom())
-                currentZoomRatio = Math.Min((double)pictureBox.Width / currentImage.Width, (double)pictureBox.Height / currentImage.Height);
+                currentZoomRatio = Math.Min(
+                    (double)(pictureBox.Width - PICTURE_BORDER_SIZE * 2) / currentImage.Width,
+                    (double)(pictureBox.Height - PICTURE_BORDER_SIZE * 2) / currentImage.Height);
             else
                 currentZoomRatio = 1.0;
         }
@@ -254,6 +274,7 @@ namespace ImageViewer
             }
             else
             {
+                overwrapWait = false;
                 currentImageListIndex += 1;
             }
 
@@ -278,9 +299,17 @@ namespace ImageViewer
             }
             else
             {
+                overwrapWait = false;
                 currentImageListIndex -= 1;
             }
 
+            changeImage();
+        }
+
+        private void showFirstImage()
+        {
+            prepareToChangeImage();
+            currentImageListIndex = 0;
             changeImage();
         }
 
@@ -336,6 +365,20 @@ namespace ImageViewer
                 this.FormBorderStyle = FormBorderStyle.None;
             else
                 this.FormBorderStyle = FormBorderStyle.Sizable;
+        }
+
+        private void togglePictureOnlyMode()
+        {
+            pictureOnlyMode = !pictureOnlyMode;
+
+            if (pictureOnlyMode)
+            {
+                this.FormBorderStyle = FormBorderStyle.None;
+            } else
+            {
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+            }
+            refreshWindow();
         }
 
         private void autoResizeWindow()
@@ -420,7 +463,7 @@ namespace ImageViewer
                     zoomReset();
                     break;
 
-                case 'w':
+                case 'q':
                     Application.Exit();
                     break;
 
@@ -442,8 +485,11 @@ namespace ImageViewer
                     break;
 
                 case 'a':
-                    autoResizeWindow();
-                    centerWindow();
+                    togglePictureOnlyMode();
+                    break;
+
+                case 'z':
+                    showFirstImage();
                     break;
             }
         }
