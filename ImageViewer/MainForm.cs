@@ -24,7 +24,7 @@ namespace ImageViewer
         private bool isFixedZoomRatio;
         private bool isFixedDrawLocation;
 
-        private bool pictureOnlyMode = false;
+        private bool autoResizeWindowMode = false;
 
         private bool overwrapWait;
 
@@ -140,6 +140,11 @@ namespace ImageViewer
             currentImagePath = imageList[currentImageListIndex];
             currentImage = imageLoader.loadImage(currentImagePath);
 
+            if (autoResizeWindowMode)
+            {
+                autoResizeWindow();
+            }
+
             refreshWindow();
         }
 
@@ -162,9 +167,8 @@ namespace ImageViewer
             if (!isFixedDrawLocation)
                 calcDefaultDrawLocation();
 
-            if (pictureOnlyMode)
+            if (autoResizeWindowMode)
             {
-                autoResizeWindow();
                 centerWindow();
                 calcDefaultZoomRatio();
                 calcDefaultDrawLocation();
@@ -229,23 +233,21 @@ namespace ImageViewer
 
         #region 画像描画ビュー変更
 
-        private bool shouldSmallZoom()
+        private double calcZoomRatio(int outerHeight, int outerWidth, int imageHeight, int imageWidth)
         {
-            if (pictureBox.Width < currentImage.Width || pictureBox.Height < currentImage.Height)
-                return true;
-            else
-                return false;
+            double ratio;
+
+            ratio = Math.Min((double)(outerWidth - PICTURE_BORDER_SIZE * 2) / imageWidth,
+                             (double)(outerHeight - PICTURE_BORDER_SIZE * 2) / imageHeight);
+
+            return Math.Min(ratio, 1.0);
         }
 
         private void calcDefaultZoomRatio()
         {
             isFixedZoomRatio = false;
-            if (shouldSmallZoom())
-                currentZoomRatio = Math.Min(
-                    (double)(pictureBox.Width - PICTURE_BORDER_SIZE * 2) / currentImage.Width,
-                    (double)(pictureBox.Height - PICTURE_BORDER_SIZE * 2) / currentImage.Height);
-            else
-                currentZoomRatio = 1.0;
+
+            currentZoomRatio = calcZoomRatio(pictureBox.Height, pictureBox.Width, currentImage.Height, currentImage.Width);
         }
 
         private void calcDefaultDrawLocation()
@@ -367,16 +369,13 @@ namespace ImageViewer
                 this.FormBorderStyle = FormBorderStyle.Sizable;
         }
 
-        private void togglePictureOnlyMode()
+        private void toggleAutoResizeWindowMode()
         {
-            pictureOnlyMode = !pictureOnlyMode;
+            autoResizeWindowMode = !autoResizeWindowMode;
 
-            if (pictureOnlyMode)
+            if (autoResizeWindowMode)
             {
-                this.FormBorderStyle = FormBorderStyle.None;
-            } else
-            {
-                this.FormBorderStyle = FormBorderStyle.Sizable;
+                autoResizeWindow();
             }
             refreshWindow();
         }
@@ -390,8 +389,25 @@ namespace ImageViewer
             int maxHeight = (int) (s.Bounds.Height * 0.9);
             int maxWidth = (int) (s.Bounds.Width * 0.9);
 
-            this.Width = Math.Min(currentImage.Width + (this.Width - this.pictureBox.Width), maxWidth) + 10;
-            this.Height = Math.Min(currentImage.Height + (this.Height - this.pictureBox.Height), maxHeight) + 10;
+            int heightDiff = this.Height - this.pictureBox.Height;
+            int widthDiff = this.Width - this.pictureBox.Width;
+            int height, width;
+
+            height = Math.Min(currentImage.Height + heightDiff + PICTURE_BORDER_SIZE * 2, maxHeight) + 10;
+            width = Math.Min(currentImage.Width + widthDiff + PICTURE_BORDER_SIZE * 2, maxWidth) + 10;
+
+            double ratio = calcZoomRatio(height, width, currentImage.Height, currentImage.Width);
+
+            int neededHeight = (int)((this.currentImage.Height * ratio) + PICTURE_BORDER_SIZE * 2 + heightDiff);
+            if (height > neededHeight + 1)
+                height = neededHeight;
+
+            int neededWidth = (int)((this.currentImage.Width * ratio) + PICTURE_BORDER_SIZE * 2 + widthDiff);
+            if (width > neededWidth + 1)
+                width = neededWidth;
+
+            this.Height = height;
+            this.Width = width;
             
             this.Location = new Point(
                 Math.Min(this.Location.X, s.WorkingArea.X + s.WorkingArea.Width - this.Width),
@@ -485,7 +501,7 @@ namespace ImageViewer
                     break;
 
                 case 'a':
-                    togglePictureOnlyMode();
+                    toggleAutoResizeWindowMode();
                     break;
 
                 case 'z':
