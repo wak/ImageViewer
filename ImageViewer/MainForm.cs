@@ -358,7 +358,10 @@ namespace ImageViewer
             if (this.WindowState == FormWindowState.Normal)
                 this.WindowState = FormWindowState.Maximized;
             else
+            {
                 this.WindowState = FormWindowState.Normal;
+                refreshWindow(); // AutoResizeMode時にうまく中央表示できないため。
+            }
         }
 
         private void toggleFormBorderStyleNone()
@@ -375,9 +378,16 @@ namespace ImageViewer
 
             if (autoResizeWindowMode)
             {
+                normalizeWindow();
                 autoResizeWindow();
             }
             refreshWindow();
+        }
+
+        private void normalizeWindow()
+        {
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void autoResizeWindow()
@@ -454,22 +464,26 @@ namespace ImageViewer
         {
             switch (e.KeyChar)
             {
+                case 'c':
+                    centerWindow();
+                    break;
+
+                case '2':
                 case 'j':
                 case 'l':
                     showNextImage();
                     break;
 
+                case '1':
                 case 'k':
                 case 'h':
                     showPreviousImage();
                     break;
 
-                case '1':
                 case '-':
                     zoomOut();
                     break;
 
-                case '2':
                 case '+':
                     zoomIn();
                     break;
@@ -480,15 +494,16 @@ namespace ImageViewer
                     break;
 
                 case 'q':
+                case 'w':
                     Application.Exit();
                     break;
 
                 case 'f':
-                    toggleFormBorderStyleNone();
+                    toggleWindowMaximized();
                     break;
 
                 case 'm':
-                    toggleWindowMaximized();
+                    toggleFormBorderStyleNone();
                     //cwmEnterChangingWindowMode();
                     break;
 
@@ -496,11 +511,22 @@ namespace ImageViewer
                     toggleFullscreen();
                     break;
 
+                case 'R':
+                    updateImageList(currentImagePath);
+                    break;
+
                 case 'r':
                     renameImageFilename();
                     break;
 
                 case 'a':
+                    autoResizeWindowMode = false;
+                    normalizeWindow();
+                    autoResizeWindow();
+                    centerWindow();
+                    break;
+
+                case 'A':
                     toggleAutoResizeWindowMode();
                     break;
 
@@ -691,7 +717,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_ReloadDirectory_Click(object sender, EventArgs e)
         {
-            updateImageList(currentDirectoryPath);
+            updateImageList(currentImagePath);
         }
 
         private void ToolStripMenuItem_RunSnippingTool_Click(object sender, EventArgs e)

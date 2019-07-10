@@ -53,8 +53,9 @@
             this.pictureBox.ContextMenuStrip = this.contextMenuStrip1;
             this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(800, 450);
+            this.pictureBox.Size = new System.Drawing.Size(600, 360);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
@@ -80,104 +81,106 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(269, 244);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 226);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_OpenInExplorer
             // 
             this.toolStripMenuItem_OpenInExplorer.Name = "toolStripMenuItem_OpenInExplorer";
-            this.toolStripMenuItem_OpenInExplorer.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_OpenInExplorer.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_OpenInExplorer.Text = "エクスプローラーで開く";
             this.toolStripMenuItem_OpenInExplorer.Click += new System.EventHandler(this.ToolStripMenuItem_OpenInExplorer_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(223, 6);
             // 
             // toolStripMenuItem_CopyToClipboard
             // 
             this.toolStripMenuItem_CopyToClipboard.Name = "toolStripMenuItem_CopyToClipboard";
-            this.toolStripMenuItem_CopyToClipboard.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_CopyToClipboard.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_CopyToClipboard.Text = "クリップボードにコピー";
             this.toolStripMenuItem_CopyToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyToClipboard_Click);
             // 
             // toolStripMenuItem_AutoResizeWindow
             // 
             this.toolStripMenuItem_AutoResizeWindow.Name = "toolStripMenuItem_AutoResizeWindow";
-            this.toolStripMenuItem_AutoResizeWindow.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_AutoResizeWindow.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_AutoResizeWindow.Text = "ウィンドウ幅を調整して中央表示";
             this.toolStripMenuItem_AutoResizeWindow.Click += new System.EventHandler(this.ToolStripMenuItem_AutoResizeWindow_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(223, 6);
             // 
             // toolStripMenuItem_CopyFilePathToClipboard
             // 
             this.toolStripMenuItem_CopyFilePathToClipboard.Name = "toolStripMenuItem_CopyFilePathToClipboard";
-            this.toolStripMenuItem_CopyFilePathToClipboard.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_CopyFilePathToClipboard.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_CopyFilePathToClipboard.Text = "ファイルパスをコピー";
             this.toolStripMenuItem_CopyFilePathToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyFilePathToClipboard_Click);
             // 
             // toolStripMenuItem_CopyDirectoryPathToClipboard
             // 
             this.toolStripMenuItem_CopyDirectoryPathToClipboard.Name = "toolStripMenuItem_CopyDirectoryPathToClipboard";
-            this.toolStripMenuItem_CopyDirectoryPathToClipboard.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_CopyDirectoryPathToClipboard.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_CopyDirectoryPathToClipboard.Text = "フォルダパスをコピー";
             this.toolStripMenuItem_CopyDirectoryPathToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyDirectoryPathToClipboard_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(223, 6);
             // 
             // toolStripMenuItem_ReloadDirectory
             // 
             this.toolStripMenuItem_ReloadDirectory.Name = "toolStripMenuItem_ReloadDirectory";
-            this.toolStripMenuItem_ReloadDirectory.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_ReloadDirectory.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_ReloadDirectory.Text = "フォルダの内容を再読込み";
             this.toolStripMenuItem_ReloadDirectory.Click += new System.EventHandler(this.ToolStripMenuItem_ReloadDirectory_Click);
             // 
             // toolStripMenuItem_ResetCustomView
             // 
             this.toolStripMenuItem_ResetCustomView.Name = "toolStripMenuItem_ResetCustomView";
-            this.toolStripMenuItem_ResetCustomView.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_ResetCustomView.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_ResetCustomView.Text = "カスタムビューを解除";
             this.toolStripMenuItem_ResetCustomView.Click += new System.EventHandler(this.ToolStripMenuItem_ResetCustomView_Click);
             // 
             // toolStripMenuItem_RunSnippingTool
             // 
             this.toolStripMenuItem_RunSnippingTool.Name = "toolStripMenuItem_RunSnippingTool";
-            this.toolStripMenuItem_RunSnippingTool.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_RunSnippingTool.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_RunSnippingTool.Text = "Snipping Toolを起動";
             this.toolStripMenuItem_RunSnippingTool.Click += new System.EventHandler(this.ToolStripMenuItem_RunSnippingTool_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(223, 6);
             // 
             // toolStripMenuItem_ExitApplication
             // 
             this.toolStripMenuItem_ExitApplication.Name = "toolStripMenuItem_ExitApplication";
-            this.toolStripMenuItem_ExitApplication.Size = new System.Drawing.Size(268, 24);
+            this.toolStripMenuItem_ExitApplication.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
             // MainForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 360);
             this.Controls.Add(this.pictureBox);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(100, 100);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(79, 88);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ImageViewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
