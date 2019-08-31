@@ -95,6 +95,8 @@ namespace ImageViewer
             currentDirectoryPath = directory;
             currentImagePath = path;
             currentImageListIndex = Math.Max(imageList.findIndex(path), 0);
+
+            updateDirectoryWatcher();
         }
 
         private void renameImageFilename()
@@ -135,7 +137,11 @@ namespace ImageViewer
         private void changeImage()
         {
             if (imageList.Count == 0)
+            {
+                currentImage = null;
+                refreshWindow();
                 return;
+            }
 
             currentImagePath = imageList[currentImageListIndex];
             currentImage = imageLoader.loadImage(currentImagePath);
@@ -308,6 +314,14 @@ namespace ImageViewer
             changeImage();
         }
 
+        private void showLastImage()
+        {
+            prepareToChangeImage();
+
+            currentImageListIndex = imageList.Count - 1;
+            changeImage();
+        }
+
         private void showFirstImage()
         {
             prepareToChangeImage();
@@ -464,10 +478,6 @@ namespace ImageViewer
         {
             switch (e.KeyChar)
             {
-                case 'c':
-                    centerWindow();
-                    break;
-
                 case '2':
                 case 'j':
                 case 'l':
@@ -528,6 +538,10 @@ namespace ImageViewer
 
                 case 'A':
                     toggleAutoResizeWindowMode();
+                    break;
+
+                case 'c':
+                    centerWindow();
                     break;
 
                 case 'z':
@@ -807,13 +821,82 @@ namespace ImageViewer
             }
             catch (Exception)
             {
-                MessageBox.Show("ImageViewer.exe.configを作成してください。", "設定保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // MessageBox.Show("ImageViewer.exe.configを作成してください。", "設定保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             saveWindowSize();
+        }
+
+        #endregion
+
+        #region ディレクトリ監視
+
+        System.IO.FileSystemWatcher imageDirectoryWatcher;
+        bool watchDirectoryMode = false;
+
+        private void updateDirectoryWatcher()
+        {
+            if (watchDirectoryMode)
+            {
+                if (imageDirectoryWatcher != null)
+                {
+                    if (imageDirectoryWatcher.Path == this.currentImagePath)
+                        return;
+                    imageDirectoryWatcher.EnableRaisingEvents = false;
+                    imageDirectoryWatcher.Dispose();
+                    imageDirectoryWatcher = null;
+                }
+                watchImageDirectory();
+            }
+            else
+            {
+                if (imageDirectoryWatcher != null)
+                {
+                    imageDirectoryWatcher.EnableRaisingEvents = false;
+                    imageDirectoryWatcher.Dispose();
+                    imageDirectoryWatcher = null;
+                }
+            }
+        }
+
+        private void watchImageDirectory()
+        {
+            if (currentImage == null)
+            {
+                return;
+            }
+
+            imageDirectoryWatcher = new System.IO.FileSystemWatcher();
+            imageDirectoryWatcher.Path = this.currentDirectoryPath;
+            imageDirectoryWatcher.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+            imageDirectoryWatcher.IncludeSubdirectories = false;
+            imageDirectoryWatcher.SynchronizingObject = this;
+            imageDirectoryWatcher.Changed += new System.IO.FileSystemEventHandler(watcher_Changed);
+            imageDirectoryWatcher.EnableRaisingEvents = true;
+        }
+
+        private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
+        {
+            updateImageList(currentDirectoryPath);
+            showLastImage();
+        }
+
+        private void ToolStripMenuItem_watchDirectory_Click(object sender, EventArgs e)
+        {
+            if (watchDirectoryMode)
+            {
+                toolStripMenuItem_watchDirectory.Checked = false;
+                watchDirectoryMode = false;
+            }
+            else
+            {
+                toolStripMenuItem_watchDirectory.Checked = true;
+                watchDirectoryMode = true;
+            }
+            updateDirectoryWatcher();
         }
 
         #endregion

@@ -54,6 +54,14 @@ public class ImageList
         return -1;
     }
 
+    public bool contains(string filepath)
+    {
+        if (findIndex(filepath) >= 0)
+            return true;
+        else
+            return false;
+    }
+
     public int Count
     {
         get { return imageList.Count; }

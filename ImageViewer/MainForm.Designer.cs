@@ -44,6 +44,8 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_watchDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +55,7 @@
             this.pictureBox.ContextMenuStrip = this.contextMenuStrip1;
             this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(600, 360);
             this.pictureBox.TabIndex = 0;
@@ -67,6 +69,8 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_watchDirectory,
+            this.toolStripSeparator5,
             this.toolStripMenuItem_OpenInExplorer,
             this.toolStripSeparator1,
             this.toolStripMenuItem_CopyToClipboard,
@@ -81,7 +85,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 226);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 276);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_OpenInExplorer
@@ -167,6 +171,18 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
+            // toolStripMenuItem_watchDirectory
+            // 
+            this.toolStripMenuItem_watchDirectory.Name = "toolStripMenuItem_watchDirectory";
+            this.toolStripMenuItem_watchDirectory.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_watchDirectory.Text = "フォルダを監視";
+            this.toolStripMenuItem_watchDirectory.Click += new System.EventHandler(this.ToolStripMenuItem_watchDirectory_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(223, 6);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -177,7 +193,7 @@
             this.Controls.Add(this.pictureBox);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(79, 88);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -213,6 +229,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_AutoResizeWindow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_CopyToClipboard;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_watchDirectory;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 
