@@ -78,7 +78,10 @@ namespace ImageViewer
             }
             else if (System.IO.Directory.Exists(path))
             {
-                filepath = null;
+                if (currentImagePath != null && currentImagePath.Contains(path))
+                    filepath = currentImagePath;
+                else
+                    filepath = null;
                 directory = path;
             }
             else
@@ -93,10 +96,16 @@ namespace ImageViewer
 
             imageList = new ImageList(directory);
             currentDirectoryPath = directory;
-            currentImagePath = path;
-            currentImageListIndex = Math.Max(imageList.findIndex(path), 0);
+            currentImagePath = filepath;
+            currentImageListIndex = Math.Max(imageList.findIndex(filepath), 0);
 
+            changeImage();
             updateDirectoryWatcher();
+        }
+
+        private void reloadImageList()
+        {
+            string viewingPath = currentImagePath;
         }
 
         private void renameImageFilename()
@@ -522,7 +531,8 @@ namespace ImageViewer
                     break;
 
                 case 'R':
-                    updateImageList(currentImagePath);
+                    updateImageList(currentDirectoryPath);
+                    refreshWindow();
                     break;
 
                 case 'r':
@@ -704,7 +714,7 @@ namespace ImageViewer
         {
             bool enabled = !(currentImage == null);
 
-            toolStripMenuItem_ReloadDirectory.Enabled = enabled;
+            toolStripMenuItem_ReloadDirectory.Enabled = true;
             toolStripMenuItem_CopyToClipboard.Enabled = enabled;
             toolStripMenuItem_AutoResizeWindow.Enabled = enabled;
             toolStripMenuItem_CopyDirectoryPathToClipboard.Enabled = enabled;
@@ -731,7 +741,8 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_ReloadDirectory_Click(object sender, EventArgs e)
         {
-            updateImageList(currentImagePath);
+            updateImageList(currentDirectoryPath);
+            refreshWindow();
         }
 
         private void ToolStripMenuItem_RunSnippingTool_Click(object sender, EventArgs e)
