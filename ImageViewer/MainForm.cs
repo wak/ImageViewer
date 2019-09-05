@@ -875,7 +875,7 @@ namespace ImageViewer
 
         private void watchImageDirectory()
         {
-            if (currentImage == null)
+            if (currentDirectoryPath == null)
             {
                 return;
             }
