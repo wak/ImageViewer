@@ -125,7 +125,8 @@ namespace ImageViewer
             try
             {
                 System.IO.File.Move(currentImagePath, newFilepath);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 MessageBox.Show("名前変更に失敗しました。\n\n" + e.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -225,7 +226,8 @@ namespace ImageViewer
                 {
                     pictureBox.BackColor = Color.FromArgb(115, 199, 255);
                     newTitle += " (!!OVERWRAPPED!!)";
-                } else
+                }
+                else
                 {
                     pictureBox.BackColor = SystemColors.Control;
                 }
@@ -369,7 +371,8 @@ namespace ImageViewer
             {
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Maximized;
-            } else
+            }
+            else
             {
                 this.FormBorderStyle = FormBorderStyle.Sizable;
                 this.WindowState = FormWindowState.Normal;
@@ -755,7 +758,8 @@ namespace ImageViewer
             {
                 System.Diagnostics.Process.Start(@"C:\Windows\sysnative\SnippingTool.exe");
                 return;
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 // nothing to do
             }
@@ -806,7 +810,8 @@ namespace ImageViewer
 
                 this.Height = int.Parse(height);
                 this.Width = int.Parse(width);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 // do nothing
             }
