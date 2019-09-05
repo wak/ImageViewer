@@ -15,9 +15,9 @@ namespace ImageViewer
 
             this.result = null;
             this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
-            // this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
-            this.textBox_filename.SelectionStart = 0;
-            this.textBox_filename.SelectionLength = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
+            this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
+            // this.textBox_filename.SelectionStart = 0;
+            // this.textBox_filename.SelectionLength = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
         }
 
         private void RenameForm_Shown(object sender, EventArgs e)
