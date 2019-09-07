@@ -361,6 +361,18 @@ namespace ImageViewer
             refreshWindow();
         }
 
+        private void rotateRight90()
+        {
+            currentImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            refreshWindow();
+        }
+
+        private void rotateLeft90()
+        {
+            currentImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            refreshWindow();
+        }
+
         #endregion
 
         #region Window調整
@@ -492,14 +504,20 @@ namespace ImageViewer
             {
                 case '2':
                 case 'j':
-                case 'l':
                     showNextImage();
                     break;
 
                 case '1':
                 case 'k':
-                case 'h':
                     showPreviousImage();
+                    break;
+
+                case 'l':
+                    rotateRight90();
+                    break;
+
+                case 'h':
+                    rotateLeft90();
                     break;
 
                 case '-':
@@ -795,6 +813,16 @@ namespace ImageViewer
         private void ToolStripMenuItem_CopyToClipboard_Click(object sender, EventArgs e)
         {
             copyToClipboard();
+        }
+
+        private void ToolStripMenuItem_rotateRight_Click(object sender, EventArgs e)
+        {
+            rotateRight90();
+        }
+
+        private void ToolStripMenuItem_rotateLeft_Click(object sender, EventArgs e)
+        {
+            rotateLeft90();
         }
 
         #endregion
