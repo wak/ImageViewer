@@ -35,6 +35,8 @@ namespace ImageViewer
             initializeInstanceVariables();
 
             InitializeComponent();
+            this.Icon = FormIcon.icon();
+
             this.MouseWheel += MainForm_MouseWheel;
 
             restoreWindowSize();
