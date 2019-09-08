@@ -281,7 +281,7 @@ namespace ImageViewer
         {
             prepareToChangeImage();
 
-            if (currentImageListIndex + 1  >= imageList.Count)
+            if (currentImageListIndex + 1 >= imageList.Count)
             {
                 if (!overwrapWait)
                 {
@@ -436,8 +436,8 @@ namespace ImageViewer
                 return;
 
             System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-            int maxHeight = (int) (s.Bounds.Height * 0.9);
-            int maxWidth = (int) (s.Bounds.Width * 0.9);
+            int maxHeight = (int)(s.Bounds.Height * 0.9);
+            int maxWidth = (int)(s.Bounds.Width * 0.9);
 
             int heightDiff = this.Height - this.pictureBox.Height;
             int widthDiff = this.Width - this.pictureBox.Width;
@@ -458,7 +458,7 @@ namespace ImageViewer
 
             this.Height = height;
             this.Width = width;
-            
+
             this.Location = new Point(
                 Math.Min(this.Location.X, s.WorkingArea.X + s.WorkingArea.Width - this.Width),
                 Math.Min(this.Location.Y, s.WorkingArea.Y + s.WorkingArea.Height - this.Height));
@@ -727,7 +727,7 @@ namespace ImageViewer
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
-            string[] fileName = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
+            string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             updateImageList(fileName[0]);
             changeImage();
         }
