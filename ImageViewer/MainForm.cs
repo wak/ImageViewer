@@ -706,6 +706,9 @@ namespace ImageViewer
 
         private void resetCustomView()
         {
+            if (currentImage == null)
+                return;
+
             calcDefaultZoomRatio();
             calcDefaultDrawLocation();
         }
