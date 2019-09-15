@@ -33,6 +33,9 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_watchDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_rotateRight = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_rotateLeft = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_OpenInExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,9 +49,7 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_rotateRight = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_rotateLeft = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -81,6 +82,7 @@
             this.toolStripSeparator1,
             this.toolStripMenuItem_CopyToClipboard,
             this.toolStripMenuItem_AutoResizeWindow,
+            this.toolStripMenuItem_SetRatio100,
             this.toolStripSeparator4,
             this.toolStripMenuItem_CopyFilePathToClipboard,
             this.toolStripMenuItem_CopyDirectoryPathToClipboard,
@@ -91,7 +93,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 326);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 348);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_watchDirectory
@@ -105,6 +107,25 @@
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(223, 6);
+            // 
+            // toolStripMenuItem_rotateRight
+            // 
+            this.toolStripMenuItem_rotateRight.Name = "toolStripMenuItem_rotateRight";
+            this.toolStripMenuItem_rotateRight.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_rotateRight.Text = "右に回転";
+            this.toolStripMenuItem_rotateRight.Click += new System.EventHandler(this.ToolStripMenuItem_rotateRight_Click);
+            // 
+            // toolStripMenuItem_rotateLeft
+            // 
+            this.toolStripMenuItem_rotateLeft.Name = "toolStripMenuItem_rotateLeft";
+            this.toolStripMenuItem_rotateLeft.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_rotateLeft.Text = "左に回転";
+            this.toolStripMenuItem_rotateLeft.Click += new System.EventHandler(this.ToolStripMenuItem_rotateLeft_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(223, 6);
             // 
             // toolStripMenuItem_OpenInExplorer
             // 
@@ -189,24 +210,12 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_rotateRight
+            // toolStripMenuItem_SetRatio100
             // 
-            this.toolStripMenuItem_rotateRight.Name = "toolStripMenuItem_rotateRight";
-            this.toolStripMenuItem_rotateRight.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_rotateRight.Text = "右に回転";
-            this.toolStripMenuItem_rotateRight.Click += new System.EventHandler(this.ToolStripMenuItem_rotateRight_Click);
-            // 
-            // toolStripMenuItem_rotateLeft
-            // 
-            this.toolStripMenuItem_rotateLeft.Name = "toolStripMenuItem_rotateLeft";
-            this.toolStripMenuItem_rotateLeft.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_rotateLeft.Text = "左に回転";
-            this.toolStripMenuItem_rotateLeft.Click += new System.EventHandler(this.ToolStripMenuItem_rotateLeft_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(223, 6);
+            this.toolStripMenuItem_SetRatio100.Name = "toolStripMenuItem_SetRatio100";
+            this.toolStripMenuItem_SetRatio100.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_SetRatio100.Text = "拡大率を100%に設定";
+            this.toolStripMenuItem_SetRatio100.Click += new System.EventHandler(this.ToolStripMenuItem_SetRatio100_Click);
             // 
             // MainForm
             // 
@@ -259,6 +268,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_rotateRight;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_rotateLeft;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_SetRatio100;
     }
 }
 

@@ -363,6 +363,13 @@ namespace ImageViewer
             refreshWindow();
         }
 
+        private void zoomNative()
+        {
+            currentZoomRatio = 1.0;
+            isFixedZoomRatio = true;
+            refreshWindow();
+        }
+
         private void rotateRight90()
         {
             currentImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
@@ -828,6 +835,11 @@ namespace ImageViewer
         private void ToolStripMenuItem_rotateLeft_Click(object sender, EventArgs e)
         {
             rotateLeft90();
+        }
+
+        private void ToolStripMenuItem_SetRatio100_Click(object sender, EventArgs e)
+        {
+            zoomNative();
         }
 
         #endregion
