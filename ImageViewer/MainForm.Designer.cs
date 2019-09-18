@@ -32,6 +32,11 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_watchDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Color = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Color_Default = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Color_Black = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Color_Yellow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Color_Rainbow = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_rotateRight = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_rotateLeft = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,6 +45,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_AutoResizeWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyFilePathToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CopyDirectoryPathToClipboard = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +55,6 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +79,7 @@
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_watchDirectory,
+            this.toolStripMenuItem_Color,
             this.toolStripSeparator5,
             this.toolStripMenuItem_rotateRight,
             this.toolStripMenuItem_rotateLeft,
@@ -93,7 +99,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 348);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 370);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_watchDirectory
@@ -102,6 +108,49 @@
             this.toolStripMenuItem_watchDirectory.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_watchDirectory.Text = "フォルダを監視";
             this.toolStripMenuItem_watchDirectory.Click += new System.EventHandler(this.ToolStripMenuItem_watchDirectory_Click);
+            // 
+            // toolStripMenuItem_Color
+            // 
+            this.toolStripMenuItem_Color.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_Color_Default,
+            this.toolStripMenuItem_Color_Black,
+            this.toolStripMenuItem_Color_Yellow,
+            this.toolStripMenuItem_Color_Rainbow});
+            this.toolStripMenuItem_Color.Name = "toolStripMenuItem_Color";
+            this.toolStripMenuItem_Color.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_Color.Text = "色";
+            // 
+            // toolStripMenuItem_Color_Default
+            // 
+            this.toolStripMenuItem_Color_Default.Name = "toolStripMenuItem_Color_Default";
+            this.toolStripMenuItem_Color_Default.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Default.Tag = "DEFAULT";
+            this.toolStripMenuItem_Color_Default.Text = "標準";
+            this.toolStripMenuItem_Color_Default.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
+            // 
+            // toolStripMenuItem_Color_Black
+            // 
+            this.toolStripMenuItem_Color_Black.Name = "toolStripMenuItem_Color_Black";
+            this.toolStripMenuItem_Color_Black.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Black.Tag = "BLACK";
+            this.toolStripMenuItem_Color_Black.Text = "黒";
+            this.toolStripMenuItem_Color_Black.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
+            // 
+            // toolStripMenuItem_Color_Yellow
+            // 
+            this.toolStripMenuItem_Color_Yellow.Name = "toolStripMenuItem_Color_Yellow";
+            this.toolStripMenuItem_Color_Yellow.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Yellow.Tag = "YELLOW";
+            this.toolStripMenuItem_Color_Yellow.Text = "黄";
+            this.toolStripMenuItem_Color_Yellow.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
+            // 
+            // toolStripMenuItem_Color_Rainbow
+            // 
+            this.toolStripMenuItem_Color_Rainbow.Name = "toolStripMenuItem_Color_Rainbow";
+            this.toolStripMenuItem_Color_Rainbow.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Rainbow.Tag = "RAINBOW";
+            this.toolStripMenuItem_Color_Rainbow.Text = "虹";
+            this.toolStripMenuItem_Color_Rainbow.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // toolStripSeparator5
             // 
@@ -152,6 +201,13 @@
             this.toolStripMenuItem_AutoResizeWindow.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_AutoResizeWindow.Text = "ウィンドウ幅を調整して中央表示";
             this.toolStripMenuItem_AutoResizeWindow.Click += new System.EventHandler(this.ToolStripMenuItem_AutoResizeWindow_Click);
+            // 
+            // toolStripMenuItem_SetRatio100
+            // 
+            this.toolStripMenuItem_SetRatio100.Name = "toolStripMenuItem_SetRatio100";
+            this.toolStripMenuItem_SetRatio100.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_SetRatio100.Text = "拡大率を100%に設定";
+            this.toolStripMenuItem_SetRatio100.Click += new System.EventHandler(this.ToolStripMenuItem_SetRatio100_Click);
             // 
             // toolStripSeparator4
             // 
@@ -210,13 +266,6 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_SetRatio100
-            // 
-            this.toolStripMenuItem_SetRatio100.Name = "toolStripMenuItem_SetRatio100";
-            this.toolStripMenuItem_SetRatio100.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_SetRatio100.Text = "拡大率を100%に設定";
-            this.toolStripMenuItem_SetRatio100.Click += new System.EventHandler(this.ToolStripMenuItem_SetRatio100_Click);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -269,6 +318,11 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_rotateLeft;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_SetRatio100;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Default;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Black;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Yellow;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Rainbow;
     }
 }
 

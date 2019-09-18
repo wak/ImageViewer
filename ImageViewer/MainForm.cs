@@ -35,7 +35,7 @@ namespace ImageViewer
             initializeInstanceVariables();
 
             InitializeComponent();
-            this.Icon = FormIcon.icon();
+            this.Icon = FormIcon.defaultIcon();
 
             this.MouseWheel += MainForm_MouseWheel;
 
@@ -842,6 +842,32 @@ namespace ImageViewer
             zoomNative();
         }
 
+        private void ToolStripMenuItem_Color_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+
+            switch ((string)menu.Tag) {
+                case "DEFAULT":
+                    this.Icon = FormIcon.defaultIcon();
+                    break;
+
+                case "BLACK":
+                    this.Icon = FormIcon.blackIcon();
+                    break;
+
+                case "YELLOW":
+                    this.Icon = FormIcon.yellowIcon();
+                    break;
+
+                case "RAINBOW":
+                    this.Icon = FormIcon.rainbowIcon();
+                    break;
+
+                default:
+                    throw new Exception("unknown color.");
+            }
+        }
+
         #endregion
 
         #region ウインドウ幅保存・復元
@@ -951,11 +977,13 @@ namespace ImageViewer
             {
                 toolStripMenuItem_watchDirectory.Checked = false;
                 watchDirectoryMode = false;
+                this.Icon = FormIcon.defaultIcon();
             }
             else
             {
                 toolStripMenuItem_watchDirectory.Checked = true;
                 watchDirectoryMode = true;
+                this.Icon = FormIcon.greenIcon();
             }
             updateDirectoryWatcher();
         }

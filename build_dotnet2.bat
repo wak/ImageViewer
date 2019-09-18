@@ -6,5 +6,5 @@ if EXIST C:\Windows\Microsoft.NET\Framework64\v2.0.50727\csc.exe (
     set OPT=
 )
 
-%CSC% %OPT% /target:winexe /win32icon:ImageViewer\app.ico /out:ImageViewer.exe ImageViewer\*.cs
+%CSC% %OPT% /target:winexe /win32icon:ImageViewer\icon\app.ico /out:ImageViewer.exe ImageViewer\*.cs
 pause
