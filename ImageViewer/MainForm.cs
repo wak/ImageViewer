@@ -549,6 +549,7 @@ namespace ImageViewer
 
                 case 'q':
                 case 'w':
+                case (char)Keys.Escape:
                     Application.Exit();
                     break;
 
@@ -591,6 +592,10 @@ namespace ImageViewer
 
                 case 'z':
                     showFirstImage();
+                    break;
+
+                case 'x':
+                    showLastImage();
                     break;
             }
         }
