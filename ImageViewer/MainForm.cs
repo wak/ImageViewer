@@ -217,7 +217,7 @@ namespace ImageViewer
 
         private void updateWindowTitle()
         {
-            string newTitle = "ImageViewer";
+            string newTitle = "";
 
             if (imageList.Count > 0)
             {
@@ -240,10 +240,15 @@ namespace ImageViewer
                 if (isFixedDrawLocation)
                     newTitle += "[FL]";
 
-                newTitle += string.Format(" ({0}/{1}, {2:0.00}x, {3})",
+                newTitle += string.Format(
+                    " [{0," + imageList.Count.ToString("#").Length + "}/{1}]",
                     currentImageListIndex + 1,
-                    imageList.Count,
-                    currentZoomRatio, currentImagePath);
+                    imageList.Count
+                );
+
+                newTitle += string.Format(" {0:0.00}x, {1})",
+                    currentZoomRatio,
+                    System.IO.Path.GetFileName(currentImagePath));
             }
             this.Text = newTitle;
         }
