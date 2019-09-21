@@ -30,6 +30,9 @@ namespace ImageViewer
 
         private bool initialized = false;
 
+        private bool isRangeOperating = false;
+        private int isRangeOperate_StartPosition = 0;
+
         public MainForm(string path)
         {
             initializeInstanceVariables();
@@ -103,11 +106,6 @@ namespace ImageViewer
 
             changeImage();
             updateDirectoryWatcher();
-        }
-
-        private void reloadImageList()
-        {
-            string viewingPath = currentImagePath;
         }
 
         private void renameImageFilename()
@@ -218,6 +216,9 @@ namespace ImageViewer
         private void updateWindowTitle()
         {
             string newTitle = "";
+
+            if (isRangeOperating)
+                newTitle += "【選択】";
 
             if (imageList.Count > 0)
             {
@@ -597,6 +598,14 @@ namespace ImageViewer
                 case 'x':
                     showLastImage();
                     break;
+
+                case (char)Keys.Space:
+                    if (isRangeOperating)
+                        toolStripMenuItem_RangeOpe_MoveTo.PerformClick();
+                    else
+                        toolStripMenuItem_RangeOpe_FromHere.PerformClick();
+                    refreshWindow();
+                    break;
             }
         }
 
@@ -763,6 +772,17 @@ namespace ImageViewer
             toolStripMenuItem_CopyDirectoryPathToClipboard.Enabled = enabled;
             toolStripMenuItem_CopyFilePathToClipboard.Enabled = enabled;
             toolStripMenuItem_OpenInExplorer.Enabled = enabled;
+
+            if (isRangeOperating)
+            {
+                toolStripMenuItem_RangeOpe_FromHere.Enabled = false;
+                toolStripMenuItem_RangeOpe_MoveTo.Enabled = true;
+            }
+            else
+            {
+                toolStripMenuItem_RangeOpe_FromHere.Enabled = true;
+                toolStripMenuItem_RangeOpe_MoveTo.Enabled = false;
+            }
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -876,6 +896,29 @@ namespace ImageViewer
                 default:
                     throw new Exception("unknown color.");
             }
+        }
+
+        private void ToolStripMenuItem_RangeOpe_FromHere_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+                return;
+            isRangeOperating = true;
+            isRangeOperate_StartPosition = currentImageListIndex;
+        }
+
+        private void ToolStripMenuItem_RangeOpe_MoveTo_Click(object sender, EventArgs e)
+        {
+            isRangeOperating = false;
+
+            int index = Math.Min(isRangeOperate_StartPosition, currentImageListIndex);
+            ImageList range = imageList.GetRange(index, Math.Abs(currentImageListIndex - isRangeOperate_StartPosition) + 1);
+
+            MoveForm mf = new MoveForm(range);
+
+            mf.ShowDialog();
+            mf.Dispose();
+
+            updateImageList(currentDirectoryPath);
         }
 
         #endregion

@@ -16,6 +16,11 @@ public class ImageList
         this.findImages(folderPath);
     }
 
+    //private ImageList(List<string> list)
+    //{
+    //    this.imageList = list;
+    //}
+
     private void findImages(string folderPath)
     {
         string[] allPathes = System.IO.Directory.GetFiles(folderPath);
@@ -52,6 +57,14 @@ public class ImageList
         }
 
         return -1;
+    }
+
+    public ImageList GetRange(int index, int count)
+    {
+        ImageList newList = new ImageList();
+        newList.imageList = imageList.GetRange(index, count);
+
+        return newList;
     }
 
     public bool contains(string filepath)
