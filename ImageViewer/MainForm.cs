@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace ImageViewer
 {
@@ -136,10 +137,43 @@ namespace ImageViewer
             refreshWindow();
         }
 
+        private void reloadDirectory()
+        {
+            updateImageList(currentDirectoryPath);
+        }
+
         private void copyToClipboard()
         {
             if (currentImage != null)
                 Clipboard.SetImage(currentImage);
+        }
+
+        private void deleteImage()
+        {
+            if (currentImage == null)
+                return;
+
+            DialogResult result = MessageBox.Show("Delete " + currentImagePath + " ?", "Delete File", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+                return;
+
+            try
+            {
+                //
+                // ゴミ箱に移動できない場合に「完全に削除するか」を問うためには、
+                // AllDialogs を指定する必要がある。
+                //
+                // ゴミ箱の設定にて「削除の確認メッセージを表示する」にチェックが入っている場合に
+                // 「ゴミ箱に移動するか」も問われるため、上の削除確認MessageBoxと重複してしまう。
+                //
+                FileSystem.DeleteFile(currentImagePath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                reloadDirectory();
+                refreshWindow();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #region Window描画
@@ -568,7 +602,7 @@ namespace ImageViewer
                     break;
 
                 case 'R':
-                    updateImageList(currentDirectoryPath);
+                    reloadDirectory();
                     refreshWindow();
                     break;
 
@@ -597,6 +631,10 @@ namespace ImageViewer
 
                 case 'x':
                     showLastImage();
+                    break;
+
+                case 'd':
+                    deleteImage();
                     break;
 
                 case (char)Keys.Space:
@@ -804,7 +842,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_ReloadDirectory_Click(object sender, EventArgs e)
         {
-            updateImageList(currentDirectoryPath);
+            reloadDirectory();
             refreshWindow();
         }
 
@@ -917,8 +955,7 @@ namespace ImageViewer
 
             mf.ShowDialog();
             mf.Dispose();
-
-            updateImageList(currentDirectoryPath);
+            reloadDirectory();
         }
 
         #endregion
@@ -1020,7 +1057,7 @@ namespace ImageViewer
 
         private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
         {
-            updateImageList(currentDirectoryPath);
+            reloadDirectory();
             showLastImage();
         }
 
