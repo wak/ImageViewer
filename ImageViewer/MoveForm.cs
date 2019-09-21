@@ -171,6 +171,10 @@ namespace ImageViewer
 
             switch (e.KeyChar)
             {
+                case (char)Keys.Escape:
+                    this.Close();
+                    break;
+
                 case (char)Keys.Space:
                 case (char)Keys.Enter:
                     if (isMoveCompleted)

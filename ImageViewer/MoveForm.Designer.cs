@@ -59,17 +59,20 @@
             // 
             // listView
             // 
+            this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader_Result,
             this.columnHeader_Path});
-            this.listView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listView.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(578, 231);
+            this.listView.Size = new System.Drawing.Size(580, 228);
             this.listView.TabIndex = 3;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -91,6 +94,7 @@
             this.Controls.Add(this.listView);
             this.Controls.Add(this.button_Move);
             this.Controls.Add(this.button_Close);
+            this.MinimumSize = new System.Drawing.Size(100, 100);
             this.Name = "MoveForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "画像の移動";
