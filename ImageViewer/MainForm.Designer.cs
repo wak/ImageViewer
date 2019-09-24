@@ -59,6 +59,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_MoveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_MoveAllFromHere = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -100,6 +102,8 @@
             this.toolStripSeparator7,
             this.toolStripMenuItem_RangeOpe_FromHere,
             this.toolStripMenuItem_RangeOpe_MoveTo,
+            this.toolStripMenuItem_MoveAllFromHere,
+            this.toolStripMenuItem_MoveAll,
             this.toolStripSeparator2,
             this.toolStripMenuItem_ReloadDirectory,
             this.toolStripMenuItem_ResetCustomView,
@@ -107,7 +111,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 442);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 486);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_watchDirectory
@@ -252,7 +256,7 @@
             // 
             this.toolStripMenuItem_RangeOpe_MoveTo.Name = "toolStripMenuItem_RangeOpe_MoveTo";
             this.toolStripMenuItem_RangeOpe_MoveTo.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_RangeOpe_MoveTo.Text = "ここまでを移動する";
+            this.toolStripMenuItem_RangeOpe_MoveTo.Text = "　　ここまでを移動する";
             this.toolStripMenuItem_RangeOpe_MoveTo.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_MoveTo_Click);
             // 
             // toolStripSeparator2
@@ -299,6 +303,20 @@
             this.toolStripMenuItem_ToggleAutoResizeMode.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_ToggleAutoResizeMode.Text = "自動ウインドウリサイズ切替";
             this.toolStripMenuItem_ToggleAutoResizeMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoResizeMode_Click);
+            // 
+            // toolStripMenuItem_MoveAll
+            // 
+            this.toolStripMenuItem_MoveAll.Name = "toolStripMenuItem_MoveAll";
+            this.toolStripMenuItem_MoveAll.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_MoveAll.Text = "すべてを移動する";
+            this.toolStripMenuItem_MoveAll.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAll_Click);
+            // 
+            // toolStripMenuItem_MoveAllFromHere
+            // 
+            this.toolStripMenuItem_MoveAllFromHere.Name = "toolStripMenuItem_MoveAllFromHere";
+            this.toolStripMenuItem_MoveAllFromHere.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_MoveAllFromHere.Text = "ここから最後までを移動する";
+            this.toolStripMenuItem_MoveAllFromHere.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAllFromHere_Click);
             // 
             // MainForm
             // 
@@ -361,6 +379,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_RangeOpe_FromHere;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_RangeOpe_MoveTo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleAutoResizeMode;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MoveAllFromHere;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MoveAll;
     }
 }
 

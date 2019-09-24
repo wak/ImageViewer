@@ -33,6 +33,7 @@
             this.listView = new System.Windows.Forms.ListView();
             this.columnHeader_Result = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader_Path = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button_Close
@@ -86,11 +87,21 @@
             this.columnHeader_Path.Text = "Path";
             this.columnHeader_Path.Width = 200;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 249);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "label1";
+            // 
             // MoveForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(578, 276);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.button_Move);
             this.Controls.Add(this.button_Close);
@@ -101,6 +112,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MoveForm_FormClosing);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MoveForm_KeyPress);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -110,5 +122,6 @@
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.ColumnHeader columnHeader_Result;
         private System.Windows.Forms.ColumnHeader columnHeader_Path;
+        private System.Windows.Forms.Label label1;
     }
 }

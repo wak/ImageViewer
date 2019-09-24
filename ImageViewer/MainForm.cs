@@ -813,17 +813,23 @@ namespace ImageViewer
             toolStripMenuItem_OpenInExplorer.Enabled = enabled;
             toolStripMenuItem_ToggleAutoResizeMode.Enabled = enabled;
             toolStripMenuItem_ToggleAutoResizeMode.Checked = autoResizeWindowMode;
+            toolStripMenuItem_rotateRight.Enabled = enabled;
+            toolStripMenuItem_rotateLeft.Enabled = enabled;
+            toolStripMenuItem_SetRatio100.Enabled = enabled;
 
             if (isRangeOperating)
             {
                 toolStripMenuItem_RangeOpe_FromHere.Enabled = false;
-                toolStripMenuItem_RangeOpe_MoveTo.Enabled = true;
+                toolStripMenuItem_RangeOpe_MoveTo.Enabled = enabled;
             }
             else
             {
-                toolStripMenuItem_RangeOpe_FromHere.Enabled = true;
+                toolStripMenuItem_RangeOpe_FromHere.Enabled = enabled;
                 toolStripMenuItem_RangeOpe_MoveTo.Enabled = false;
             }
+
+            toolStripMenuItem_MoveAllFromHere.Enabled = enabled;
+            toolStripMenuItem_MoveAll.Enabled = enabled;
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -950,10 +956,25 @@ namespace ImageViewer
         private void ToolStripMenuItem_RangeOpe_MoveTo_Click(object sender, EventArgs e)
         {
             isRangeOperating = false;
+            moveItems(isRangeOperate_StartPosition, currentImageListIndex);
+        }
 
-            int index = Math.Min(isRangeOperate_StartPosition, currentImageListIndex);
-            ImageList range = imageList.GetRange(index, Math.Abs(currentImageListIndex - isRangeOperate_StartPosition) + 1);
+        private void ToolStripMenuItem_MoveAll_Click(object sender, EventArgs e)
+        {
+            moveItems(0, imageList.Count - 1);
+        }
 
+        private void ToolStripMenuItem_MoveAllFromHere_Click(object sender, EventArgs e)
+        {
+            moveItems(currentImageListIndex, imageList.Count - 1);
+        }
+
+        private void moveItems(int index1, int index2)
+        {
+            int fromIndex = Math.Min(index1, currentImageListIndex);
+            int count = Math.Abs(index2 - index1) + 1;
+
+            ImageList range = imageList.GetRange(fromIndex, count);
             MoveForm mf = new MoveForm(range);
 
             mf.ShowDialog();

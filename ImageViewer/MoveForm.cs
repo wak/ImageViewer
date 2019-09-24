@@ -34,6 +34,8 @@ namespace ImageViewer
                 this.listView.Items.Add(new ListViewItem(new string[] { "", imageList[i] }));
             }
             columnHeader_Path.Width = -1;
+
+            label1.Text = imageList.Count.ToString("#") + " items.";
         }
 
         private void Button_Close_Click(object sender, EventArgs e)
