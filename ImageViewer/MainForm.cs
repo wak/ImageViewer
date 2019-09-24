@@ -167,8 +167,13 @@ namespace ImageViewer
                 // 「ゴミ箱に移動するか」も問われるため、上の削除確認MessageBoxと重複してしまう。
                 //
                 FileSystem.DeleteFile(currentImagePath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+
+                int save = currentImageListIndex;
                 reloadDirectory();
-                refreshWindow();
+                if (save >= imageList.Count)
+                    save -= 1;
+                currentImageListIndex = Math.Max(save, 0);
+                changeImage();
             }
             catch (Exception e)
             {
