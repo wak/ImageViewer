@@ -49,15 +49,16 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyFilePathToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CopyDirectoryPathToClipboard = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_RangeOpe_FromHere = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_RangeOpe_MoveTo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ReloadDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ResetCustomView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem_RangeOpe_FromHere = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_RangeOpe_MoveTo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -91,6 +92,7 @@
             this.toolStripSeparator1,
             this.toolStripMenuItem_CopyToClipboard,
             this.toolStripMenuItem_AutoResizeWindow,
+            this.toolStripMenuItem_ToggleAutoResizeMode,
             this.toolStripMenuItem_SetRatio100,
             this.toolStripSeparator4,
             this.toolStripMenuItem_CopyFilePathToClipboard,
@@ -105,7 +107,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 420);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 442);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_watchDirectory
@@ -234,6 +236,25 @@
             this.toolStripMenuItem_CopyDirectoryPathToClipboard.Text = "フォルダパスをコピー";
             this.toolStripMenuItem_CopyDirectoryPathToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyDirectoryPathToClipboard_Click);
             // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(223, 6);
+            // 
+            // toolStripMenuItem_RangeOpe_FromHere
+            // 
+            this.toolStripMenuItem_RangeOpe_FromHere.Name = "toolStripMenuItem_RangeOpe_FromHere";
+            this.toolStripMenuItem_RangeOpe_FromHere.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_RangeOpe_FromHere.Text = "ここから…";
+            this.toolStripMenuItem_RangeOpe_FromHere.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_FromHere_Click);
+            // 
+            // toolStripMenuItem_RangeOpe_MoveTo
+            // 
+            this.toolStripMenuItem_RangeOpe_MoveTo.Name = "toolStripMenuItem_RangeOpe_MoveTo";
+            this.toolStripMenuItem_RangeOpe_MoveTo.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_RangeOpe_MoveTo.Text = "ここまでを移動する";
+            this.toolStripMenuItem_RangeOpe_MoveTo.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_MoveTo_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -272,24 +293,12 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripSeparator7
+            // toolStripMenuItem_ToggleAutoResizeMode
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(223, 6);
-            // 
-            // toolStripMenuItem_RangeOpe_FromHere
-            // 
-            this.toolStripMenuItem_RangeOpe_FromHere.Name = "toolStripMenuItem_RangeOpe_FromHere";
-            this.toolStripMenuItem_RangeOpe_FromHere.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_RangeOpe_FromHere.Text = "ここから…";
-            this.toolStripMenuItem_RangeOpe_FromHere.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_FromHere_Click);
-            // 
-            // toolStripMenuItem_RangeOpe_MoveTo
-            // 
-            this.toolStripMenuItem_RangeOpe_MoveTo.Name = "toolStripMenuItem_RangeOpe_MoveTo";
-            this.toolStripMenuItem_RangeOpe_MoveTo.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_RangeOpe_MoveTo.Text = "ここまでを移動する";
-            this.toolStripMenuItem_RangeOpe_MoveTo.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_MoveTo_Click);
+            this.toolStripMenuItem_ToggleAutoResizeMode.Name = "toolStripMenuItem_ToggleAutoResizeMode";
+            this.toolStripMenuItem_ToggleAutoResizeMode.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_ToggleAutoResizeMode.Text = "自動ウインドウリサイズ切替";
+            this.toolStripMenuItem_ToggleAutoResizeMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoResizeMode_Click);
             // 
             // MainForm
             // 
@@ -351,6 +360,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_RangeOpe_FromHere;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_RangeOpe_MoveTo;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleAutoResizeMode;
     }
 }
 

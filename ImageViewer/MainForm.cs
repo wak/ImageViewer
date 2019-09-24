@@ -622,19 +622,15 @@ namespace ImageViewer
                     centerWindow();
                     break;
 
-                case 'A':
-                    toggleAutoResizeWindowMode();
-                    break;
-
                 case 'c':
                     centerWindow();
                     break;
 
-                case 'z':
+                case 'A':
                     showFirstImage();
                     break;
 
-                case 'x':
+                case 'z':
                     showLastImage();
                     break;
 
@@ -643,10 +639,10 @@ namespace ImageViewer
                     break;
 
                 case (char)Keys.Space:
-                    if (isRangeOperating)
-                        toolStripMenuItem_RangeOpe_MoveTo.PerformClick();
+                    if (!isRangeOperating)
+                        ToolStripMenuItem_RangeOpe_FromHere_Click(null, null);
                     else
-                        toolStripMenuItem_RangeOpe_FromHere.PerformClick();
+                        ToolStripMenuItem_ToggleAutoResizeMode_Click(null, null);
                     refreshWindow();
                     break;
             }
@@ -815,6 +811,8 @@ namespace ImageViewer
             toolStripMenuItem_CopyDirectoryPathToClipboard.Enabled = enabled;
             toolStripMenuItem_CopyFilePathToClipboard.Enabled = enabled;
             toolStripMenuItem_OpenInExplorer.Enabled = enabled;
+            toolStripMenuItem_ToggleAutoResizeMode.Enabled = enabled;
+            toolStripMenuItem_ToggleAutoResizeMode.Checked = autoResizeWindowMode;
 
             if (isRangeOperating)
             {
@@ -961,6 +959,11 @@ namespace ImageViewer
             mf.ShowDialog();
             mf.Dispose();
             reloadDirectory();
+        }
+
+        private void ToolStripMenuItem_ToggleAutoResizeMode_Click(object sender, EventArgs e)
+        {
+            toggleAutoResizeWindowMode();
         }
 
         #endregion
