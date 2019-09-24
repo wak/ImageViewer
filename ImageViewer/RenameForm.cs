@@ -6,6 +6,8 @@ namespace ImageViewer
 {
     public partial class RenameForm : Form
     {
+        const string REGEX = @"(?<filename>.*?)(?<separator> - )(?<comment>.*)(?<extension>\..*?)";
+
         public string result;
         private readonly List<char> INVALID_CHARACTERS = new List<char>(new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' });
 
@@ -16,13 +18,15 @@ namespace ImageViewer
             this.result = null;
             this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
             this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
+
+            updateCommentFromFilename();
             // this.textBox_filename.SelectionStart = 0;
             // this.textBox_filename.SelectionLength = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
         }
 
         private void RenameForm_Shown(object sender, EventArgs e)
         {
-            this.textBox_filename.Focus();
+            this.textBox_comment.Focus();
         }
 
         private void textBox_filename_KeyPress(object sender, KeyPressEventArgs e)
@@ -70,13 +74,74 @@ namespace ImageViewer
             if (nrIgnored > 0)
             {
                 this.textBox_filename.Text = newFilename;
-                this.textBox_filename.SelectionStart = beforeSelectionStart - nrIgnored;
+
+                if (beforeSelectionStart - nrIgnored >= 0)
+                    this.textBox_filename.SelectionStart = beforeSelectionStart - nrIgnored;
             }
+        }
+
+        private void updateCommentFromFilename()
+        {
+            System.Text.RegularExpressions.MatchCollection mc =
+                System.Text.RegularExpressions.Regex.Matches(
+                    this.textBox_filename.Text, REGEX);
+
+            if (mc.Count > 0)
+            {
+                this.textBox_comment.Text = mc[0].Groups["comment"].Value;
+            }
+            else
+            {
+                this.textBox_comment.Text = "";
+            }
+        }
+
+        private void updateFilenameFromComment()
+        {
+            System.Text.RegularExpressions.MatchCollection mc =
+                System.Text.RegularExpressions.Regex.Matches(
+                    this.textBox_filename.Text, REGEX);
+
+            string newfilename = null;
+
+            if (mc.Count > 0)
+            {
+                newfilename =
+                    string.Format("{0} - {1}{2}",
+                        mc[0].Groups["filename"].Value,
+                        this.textBox_comment.Text,
+                        System.IO.Path.GetExtension(this.textBox_filename.Text)
+                    );
+            }
+            else
+            {
+                newfilename =
+                    string.Format("{0} - {1}{2}",
+                        System.IO.Path.GetFileNameWithoutExtension(this.textBox_filename.Text),
+                        this.textBox_comment.Text,
+                        System.IO.Path.GetExtension(this.textBox_filename.Text)
+                    );
+            }
+
+            this.textBox_filename.Text = newfilename;
+            fixFilename();
         }
 
         private void textBox_filename_TextChanged(object sender, EventArgs e)
         {
-            fixFilename();
+            if (this.ActiveControl == textBox_filename)
+            {
+                fixFilename();
+                updateCommentFromFilename();
+            }
+        }
+
+        private void TextBox_comment_TextChanged(object sender, EventArgs e)
+        {
+            if (this.ActiveControl == textBox_comment)
+            {
+                updateFilenameFromComment();
+            }
         }
     }
 }
