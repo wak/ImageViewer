@@ -642,7 +642,7 @@ namespace ImageViewer
                     if (!isRangeOperating)
                         ToolStripMenuItem_RangeOpe_FromHere_Click(null, null);
                     else
-                        ToolStripMenuItem_ToggleAutoResizeMode_Click(null, null);
+                        ToolStripMenuItem_RangeOpe_MoveTo_Click(null, null);
                     refreshWindow();
                     break;
             }
