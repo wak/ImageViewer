@@ -124,8 +124,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon\black.ico" />
+    <Content Include="icon\rainbow2.ico" />
+    <Content Include="icon\square.ico" />
+    <Content Include="icon\triangle.ico" />
     <Content Include="icon\yellow.ico" />
-    <Content Include="icon\rainbow.ico" />
+    <Content Include="icon\rainbow1.ico" />
     <Content Include="icon\green.ico" />
     <Content Include="icon\app.ico" />
   </ItemGroup>

@@ -45,6 +45,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_AutoResizeWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyFilePathToClipboard = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,15 +53,17 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_RangeOpe_FromHere = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_RangeOpe_MoveTo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_MoveAllFromHere = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_MoveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ReloadDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ResetCustomView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_MoveAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_MoveAllFromHere = new System.Windows.Forms.ToolStripMenuItem();
+            this.虹2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.四角ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.多角ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -127,7 +130,10 @@
             this.toolStripMenuItem_Color_Default,
             this.toolStripMenuItem_Color_Black,
             this.toolStripMenuItem_Color_Yellow,
-            this.toolStripMenuItem_Color_Rainbow});
+            this.toolStripMenuItem_Color_Rainbow,
+            this.虹2ToolStripMenuItem,
+            this.四角ToolStripMenuItem,
+            this.多角ToolStripMenuItem});
             this.toolStripMenuItem_Color.Name = "toolStripMenuItem_Color";
             this.toolStripMenuItem_Color.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_Color.Text = "色";
@@ -135,33 +141,33 @@
             // toolStripMenuItem_Color_Default
             // 
             this.toolStripMenuItem_Color_Default.Name = "toolStripMenuItem_Color_Default";
-            this.toolStripMenuItem_Color_Default.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Color_Default.Tag = "DEFAULT";
+            this.toolStripMenuItem_Color_Default.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Default.Tag = "app";
             this.toolStripMenuItem_Color_Default.Text = "標準";
             this.toolStripMenuItem_Color_Default.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // toolStripMenuItem_Color_Black
             // 
             this.toolStripMenuItem_Color_Black.Name = "toolStripMenuItem_Color_Black";
-            this.toolStripMenuItem_Color_Black.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Color_Black.Tag = "BLACK";
+            this.toolStripMenuItem_Color_Black.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Black.Tag = "black";
             this.toolStripMenuItem_Color_Black.Text = "黒";
             this.toolStripMenuItem_Color_Black.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // toolStripMenuItem_Color_Yellow
             // 
             this.toolStripMenuItem_Color_Yellow.Name = "toolStripMenuItem_Color_Yellow";
-            this.toolStripMenuItem_Color_Yellow.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Color_Yellow.Tag = "YELLOW";
+            this.toolStripMenuItem_Color_Yellow.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Yellow.Tag = "yellow";
             this.toolStripMenuItem_Color_Yellow.Text = "黄";
             this.toolStripMenuItem_Color_Yellow.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // toolStripMenuItem_Color_Rainbow
             // 
             this.toolStripMenuItem_Color_Rainbow.Name = "toolStripMenuItem_Color_Rainbow";
-            this.toolStripMenuItem_Color_Rainbow.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Color_Rainbow.Tag = "RAINBOW";
-            this.toolStripMenuItem_Color_Rainbow.Text = "虹";
+            this.toolStripMenuItem_Color_Rainbow.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Color_Rainbow.Tag = "rainbow1";
+            this.toolStripMenuItem_Color_Rainbow.Text = "虹1";
             this.toolStripMenuItem_Color_Rainbow.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // toolStripSeparator5
@@ -214,6 +220,13 @@
             this.toolStripMenuItem_AutoResizeWindow.Text = "ウィンドウ幅を調整して中央表示";
             this.toolStripMenuItem_AutoResizeWindow.Click += new System.EventHandler(this.ToolStripMenuItem_AutoResizeWindow_Click);
             // 
+            // toolStripMenuItem_ToggleAutoResizeMode
+            // 
+            this.toolStripMenuItem_ToggleAutoResizeMode.Name = "toolStripMenuItem_ToggleAutoResizeMode";
+            this.toolStripMenuItem_ToggleAutoResizeMode.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_ToggleAutoResizeMode.Text = "自動ウインドウリサイズ切替";
+            this.toolStripMenuItem_ToggleAutoResizeMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoResizeMode_Click);
+            // 
             // toolStripMenuItem_SetRatio100
             // 
             this.toolStripMenuItem_SetRatio100.Name = "toolStripMenuItem_SetRatio100";
@@ -259,6 +272,20 @@
             this.toolStripMenuItem_RangeOpe_MoveTo.Text = "　　ここまでを移動する";
             this.toolStripMenuItem_RangeOpe_MoveTo.Click += new System.EventHandler(this.ToolStripMenuItem_RangeOpe_MoveTo_Click);
             // 
+            // toolStripMenuItem_MoveAllFromHere
+            // 
+            this.toolStripMenuItem_MoveAllFromHere.Name = "toolStripMenuItem_MoveAllFromHere";
+            this.toolStripMenuItem_MoveAllFromHere.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_MoveAllFromHere.Text = "ここから最後までを移動する";
+            this.toolStripMenuItem_MoveAllFromHere.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAllFromHere_Click);
+            // 
+            // toolStripMenuItem_MoveAll
+            // 
+            this.toolStripMenuItem_MoveAll.Name = "toolStripMenuItem_MoveAll";
+            this.toolStripMenuItem_MoveAll.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_MoveAll.Text = "すべてを移動する";
+            this.toolStripMenuItem_MoveAll.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAll_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -297,26 +324,29 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_ToggleAutoResizeMode
+            // 虹2ToolStripMenuItem
             // 
-            this.toolStripMenuItem_ToggleAutoResizeMode.Name = "toolStripMenuItem_ToggleAutoResizeMode";
-            this.toolStripMenuItem_ToggleAutoResizeMode.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_ToggleAutoResizeMode.Text = "自動ウインドウリサイズ切替";
-            this.toolStripMenuItem_ToggleAutoResizeMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoResizeMode_Click);
+            this.虹2ToolStripMenuItem.Name = "虹2ToolStripMenuItem";
+            this.虹2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.虹2ToolStripMenuItem.Tag = "rainbow2";
+            this.虹2ToolStripMenuItem.Text = "虹2";
+            this.虹2ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
-            // toolStripMenuItem_MoveAll
+            // 四角ToolStripMenuItem
             // 
-            this.toolStripMenuItem_MoveAll.Name = "toolStripMenuItem_MoveAll";
-            this.toolStripMenuItem_MoveAll.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_MoveAll.Text = "すべてを移動する";
-            this.toolStripMenuItem_MoveAll.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAll_Click);
+            this.四角ToolStripMenuItem.Name = "四角ToolStripMenuItem";
+            this.四角ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.四角ToolStripMenuItem.Tag = "square";
+            this.四角ToolStripMenuItem.Text = "四角";
+            this.四角ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
-            // toolStripMenuItem_MoveAllFromHere
+            // 多角ToolStripMenuItem
             // 
-            this.toolStripMenuItem_MoveAllFromHere.Name = "toolStripMenuItem_MoveAllFromHere";
-            this.toolStripMenuItem_MoveAllFromHere.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_MoveAllFromHere.Text = "ここから最後までを移動する";
-            this.toolStripMenuItem_MoveAllFromHere.Click += new System.EventHandler(this.ToolStripMenuItem_MoveAllFromHere_Click);
+            this.多角ToolStripMenuItem.Name = "多角ToolStripMenuItem";
+            this.多角ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.多角ToolStripMenuItem.Tag = "triangle";
+            this.多角ToolStripMenuItem.Text = "多角";
+            this.多角ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Color_Click);
             // 
             // MainForm
             // 
@@ -381,6 +411,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleAutoResizeMode;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MoveAllFromHere;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MoveAll;
+        private System.Windows.Forms.ToolStripMenuItem 虹2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 四角ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 多角ToolStripMenuItem;
     }
 }
 

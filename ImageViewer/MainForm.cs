@@ -39,7 +39,7 @@ namespace ImageViewer
             initializeInstanceVariables();
 
             InitializeComponent();
-            this.Icon = FormIcon.defaultIcon();
+            this.Icon = FormIcon.appIcon();
 
             this.MouseWheel += MainForm_MouseWheel;
 
@@ -923,26 +923,7 @@ namespace ImageViewer
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 
-            switch ((string)menu.Tag) {
-                case "DEFAULT":
-                    this.Icon = FormIcon.defaultIcon();
-                    break;
-
-                case "BLACK":
-                    this.Icon = FormIcon.blackIcon();
-                    break;
-
-                case "YELLOW":
-                    this.Icon = FormIcon.yellowIcon();
-                    break;
-
-                case "RAINBOW":
-                    this.Icon = FormIcon.rainbowIcon();
-                    break;
-
-                default:
-                    throw new Exception("unknown color.");
-            }
+            this.Icon = FormIcon.getIcon((string)menu.Tag);
         }
 
         private void ToolStripMenuItem_RangeOpe_FromHere_Click(object sender, EventArgs e)
@@ -1096,7 +1077,7 @@ namespace ImageViewer
             {
                 toolStripMenuItem_watchDirectory.Checked = false;
                 watchDirectoryMode = false;
-                this.Icon = FormIcon.defaultIcon();
+                this.Icon = FormIcon.appIcon();
             }
             else
             {
