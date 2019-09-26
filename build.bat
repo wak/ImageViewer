@@ -1,3 +1,5 @@
+@echo off
+
 set CSC=
 set OPT=
 
@@ -36,5 +38,19 @@ if EXIST C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe (
     set OPT=/win32manifest:ImageViewer\app.manifest
 )
 
-%CSC% %OPT% /target:winexe /r:Microsoft.VisualBasic.dll /win32icon:ImageViewer\icon\app.ico /out:ImageViewer.exe ImageViewer\*.cs
+echo ============================================================
+echo = CSC: %CSC%
+echo = OPT: %OPT%
+echo ============================================================
+
+%CSC% %OPT% /nologo /target:winexe /r:Microsoft.VisualBasic.dll /win32icon:ImageViewer\icon\app.ico /out:ImageViewer.exe ImageViewer\*.cs
+
+if %ERRORLEVEL% == 0 (
+  echo Build succeed.
+) else (
+  echo Build failed.
+)
+
+echo.
+
 pause
