@@ -1386,28 +1386,20 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
             {
                 case "app":
                     return appIcon();
-                    break;
                 case "black":
                     return blackIcon();
-                    break;
                 case "green":
                     return greenIcon();
-                    break;
                 case "rainbow1":
                     return rainbow1Icon();
-                    break;
                 case "rainbow2":
                     return rainbow2Icon();
-                    break;
                 case "square":
                     return squareIcon();
-                    break;
                 case "triangle":
                     return triangleIcon();
-                    break;
                 case "yellow":
                     return yellowIcon();
-                    break;
                 default:
                     throw new Exception("unknown icon");
             }

@@ -44,7 +44,6 @@ def emitGetIcon(files)
     $output += <<-STR
                 case "#{basename}":
                     return #{basename}Icon();
-                    break;
     STR
   }
   
