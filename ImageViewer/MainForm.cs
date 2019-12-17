@@ -743,8 +743,15 @@ namespace ImageViewer
                     break;
 
                 case MouseButtons.Middle:
-                    resetCustomView();
-                    refreshWindow();
+                    if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+                    {
+                        zoomNative();
+                    }
+                    else
+                    {
+                        resetCustomView();
+                        refreshWindow();
+                    }
                     break;
             }
         }
