@@ -249,6 +249,13 @@ namespace ImageViewer
             else
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
+
+                if (rcmRangeCopyModeSelecting)
+                {
+                    Pen p = new Pen(Color.Black, 1);
+                    e.Graphics.DrawRectangle(p, rcmX(), rcmY(), rcmWidth(), rcmHeight());
+                    p.Dispose();
+                }
             }
         }
 
@@ -429,6 +436,75 @@ namespace ImageViewer
 
         #endregion
 
+        #region 範囲コピー
+
+        private Boolean rcmRangeCopyMode = false;
+        private Boolean rcmRangeCopyModeSelecting = false;
+        private Point rcmStartPoint;
+        private Point rcmCurrentPoint;
+
+        private void copyRectangle()
+        {
+            using (Bitmap bmp = new Bitmap(pictureBox.Width, pictureBox.Height))
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    g.DrawImage(currentImage, currentRectangle);
+                    Clipboard.SetDataObject(bmp, true);
+
+                    Rectangle rect = new Rectangle(rcmX(), rcmY(), rcmWidth(), rcmHeight());
+                    Bitmap dest = bmp.Clone(rect, bmp.PixelFormat);
+
+                    Clipboard.SetImage(dest);
+                }
+            }
+        }
+
+        private void rcmEnterRangeCopyMode()
+        {
+            rcmRangeCopyMode = true;
+            rcmRangeCopyModeSelecting = false;
+            this.Cursor = Cursors.Cross;
+        }
+
+        private void rcmStartSelectingRange(Point startPoint)
+        {
+            rcmStartPoint = startPoint;
+            rcmRangeCopyModeSelecting = true;
+        }
+
+        private void rcmExitRangeCopyMode(Point endPoint)
+        {
+            rcmRangeCopyMode = false;
+            rcmRangeCopyModeSelecting = false;
+            this.Cursor = Cursors.Default;
+            copyRectangle();
+
+            refreshWindow();
+        }
+
+        private int rcmX()
+        {
+            return Math.Min(rcmStartPoint.X, rcmCurrentPoint.X);
+        }
+
+        private int rcmY()
+        {
+            return Math.Min(rcmStartPoint.Y, rcmCurrentPoint.Y);
+        }
+
+        private int rcmWidth()
+        {
+            return Math.Abs(rcmStartPoint.X - rcmCurrentPoint.X);
+        }
+
+        private int rcmHeight()
+        {
+            return Math.Abs(rcmStartPoint.Y - rcmCurrentPoint.Y);
+        }
+
+        #endregion
+
         #region Window調整
 
         private void toggleFullscreen()
@@ -552,6 +628,20 @@ namespace ImageViewer
             }
         }
 
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Control | Keys.C:
+                    copyToClipboard();
+                    break;
+
+                case Keys.Control | Keys.Shift | Keys.C:
+                    rcmEnterRangeCopyMode();
+                    break;
+            }
+        }
+
         private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
@@ -645,6 +735,10 @@ namespace ImageViewer
                         ToolStripMenuItem_RangeOpe_MoveTo_Click(null, null);
                     refreshWindow();
                     break;
+
+                case (char)Keys.Tab:
+                    rcmEnterRangeCopyMode();
+                    break;
             }
         }
 
@@ -732,6 +826,11 @@ namespace ImageViewer
 
                 refreshWindow();
             }
+            else if (rcmRangeCopyMode)
+            {
+                rcmCurrentPoint = e.Location;
+                refreshWindow();
+            }
         }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -739,7 +838,10 @@ namespace ImageViewer
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    mwiEnterMovingImageMode(e.Location);
+                    if (rcmRangeCopyMode)
+                        rcmStartSelectingRange(e.Location);
+                    else
+                        mwiEnterMovingImageMode(e.Location);
                     break;
 
                 case MouseButtons.Middle:
@@ -765,6 +867,8 @@ namespace ImageViewer
                         mwiExitMovingImageMode();
                     else if (cwmChangingWindowSize)
                         cwmExitChangingWindowMode();
+                    else if (rcmRangeCopyMode)
+                        rcmExitRangeCopyMode(e.Location);
 
                     break;
             }
@@ -909,6 +1013,11 @@ namespace ImageViewer
         private void ToolStripMenuItem_CopyToClipboard_Click(object sender, EventArgs e)
         {
             copyToClipboard();
+        }
+
+        private void ToolStripMenuItem_CopyRectangleToClipboard_Click(object sender, EventArgs e)
+        {
+            rcmEnterRangeCopyMode();
         }
 
         private void ToolStripMenuItem_rotateRight_Click(object sender, EventArgs e)
