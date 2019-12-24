@@ -346,3 +346,7 @@ MigrationBackup/
 ImageViewer.exe
 ImageViewer.exe.config
 ImageViewer-*.zip
+*.orig
+*.rej
+*.diff
+*.newcfg
