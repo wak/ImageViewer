@@ -24,7 +24,7 @@ Windows用の画像ビューアです。
 ## 使い方
 ### プログラムのビルド
 プログラムをビルドします。
-build.bat をダブルクリックします。
+build_with_msbuild.bat、または、build_with_csc.bat をダブルクリックします。
 
 うまくビルドできると、ImageViewer.exe が作成されます。
 
