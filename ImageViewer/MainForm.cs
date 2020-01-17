@@ -794,6 +794,8 @@ namespace ImageViewer
 
         #region ウインドウサイズ変更
         private Boolean cwmChangingWindowSize = false;
+        private BackgroundWorker resizeWindowBGWorker;
+        private ManualResetEvent cwmResetEvent = new ManualResetEvent(false);
 
         private void cwmEnterChangingWindowMode()
         {
@@ -815,6 +817,7 @@ namespace ImageViewer
         private void cwmExitChangingWindowMode()
         {
             resizeWindowBGWorker.CancelAsync();
+            cwmResetEvent.WaitOne();
 
             cwmChangingWindowSize = false;
             this.Capture = false;
@@ -824,14 +827,12 @@ namespace ImageViewer
         private delegate void DelegateChangeWindowSize();
         private void ResizeWindowBGWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (true)
+            while (!resizeWindowBGWorker.CancellationPending)
             {
-                if (resizeWindowBGWorker.CancellationPending)
-                    break;
-
-                Thread.Sleep(100); // 100ms
                 this.Invoke(new DelegateChangeWindowSize(this.cwmChangeWindowSize));
+                Thread.Sleep(100); // 100ms
             }
+            cwmResetEvent.Set();
         }
 
         private Point windowSize()
@@ -852,8 +853,6 @@ namespace ImageViewer
             this.Width = Cursor.Position.X - this.Location.X + (this.Width - ws.X) / 2 + 2;
             this.Height = Cursor.Position.Y - this.Location.Y + (this.Height - ws.Y) / 2 + 2;
         }
-
-        private BackgroundWorker resizeWindowBGWorker;
         #endregion
 
         #region 画像表示位置移動
