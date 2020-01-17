@@ -870,6 +870,21 @@ namespace ImageViewer
             wmiMovingImage = false;
             this.Cursor = Cursors.Default;
         }
+
+        private void mwiMoveImage(MouseEventArgs e)
+        {
+            int x = e.Location.X - wmiMovingImagePreviousPoint.X;
+            int y = e.Location.Y - wmiMovingImagePreviousPoint.Y;
+
+            currentDrawLocation.X += x;
+            currentDrawLocation.Y += y;
+
+            wmiMovingImagePreviousPoint = e.Location;
+            if (x != 0 || y != 0)
+                isFixedDrawLocation = true;
+
+            refreshWindow();
+        }
         #endregion
 
         #region ウィンドウ移動
@@ -927,17 +942,7 @@ namespace ImageViewer
             }
             else if (wmiMovingImage)
             {
-                int x = e.Location.X - wmiMovingImagePreviousPoint.X;
-                int y = e.Location.Y - wmiMovingImagePreviousPoint.Y;
-
-                currentDrawLocation.X += x;
-                currentDrawLocation.Y += y;
-
-                wmiMovingImagePreviousPoint = e.Location;
-                if (x != 0 || y != 0)
-                    isFixedDrawLocation = true;
-
-                refreshWindow();
+                mwiMoveImage(e);
             }
             else if (rcmRangeCopyMode)
             {
