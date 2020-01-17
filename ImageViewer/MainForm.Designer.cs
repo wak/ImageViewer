@@ -47,6 +47,7 @@
             this.toolStripMenuItem_OpenInExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_CopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_CopyRectangleToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_AutoResizeWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +65,7 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_CopyRectangleToClipboard = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_ToggleTopMost = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -101,6 +102,7 @@
             this.toolStripMenuItem_AutoResizeWindow,
             this.toolStripMenuItem_ToggleAutoResizeMode,
             this.toolStripMenuItem_SetRatio100,
+            this.toolStripMenuItem_ToggleTopMost,
             this.toolStripSeparator4,
             this.toolStripMenuItem_CopyFilePathToClipboard,
             this.toolStripMenuItem_CopyDirectoryPathToClipboard,
@@ -116,7 +118,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(243, 508);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(243, 530);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_watchDirectory
@@ -239,6 +241,13 @@
             this.toolStripMenuItem_CopyToClipboard.Text = "クリップボードにコピー";
             this.toolStripMenuItem_CopyToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyToClipboard_Click);
             // 
+            // toolStripMenuItem_CopyRectangleToClipboard
+            // 
+            this.toolStripMenuItem_CopyRectangleToClipboard.Name = "toolStripMenuItem_CopyRectangleToClipboard";
+            this.toolStripMenuItem_CopyRectangleToClipboard.Size = new System.Drawing.Size(242, 22);
+            this.toolStripMenuItem_CopyRectangleToClipboard.Text = "範囲を指定してクリップボードにコピー";
+            this.toolStripMenuItem_CopyRectangleToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyRectangleToClipboard_Click);
+            // 
             // toolStripMenuItem_AutoResizeWindow
             // 
             this.toolStripMenuItem_AutoResizeWindow.Name = "toolStripMenuItem_AutoResizeWindow";
@@ -350,12 +359,12 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_CopyRectangleToClipboard
+            // toolStripMenuItem_ToggleTopMost
             // 
-            this.toolStripMenuItem_CopyRectangleToClipboard.Name = "toolStripMenuItem_CopyRectangleToClipboard";
-            this.toolStripMenuItem_CopyRectangleToClipboard.Size = new System.Drawing.Size(242, 22);
-            this.toolStripMenuItem_CopyRectangleToClipboard.Text = "範囲を指定してクリップボードにコピー";
-            this.toolStripMenuItem_CopyRectangleToClipboard.Click += new System.EventHandler(this.ToolStripMenuItem_CopyRectangleToClipboard_Click);
+            this.toolStripMenuItem_ToggleTopMost.Name = "toolStripMenuItem_ToggleTopMost";
+            this.toolStripMenuItem_ToggleTopMost.Size = new System.Drawing.Size(242, 22);
+            this.toolStripMenuItem_ToggleTopMost.Text = "最前面に表示";
+            this.toolStripMenuItem_ToggleTopMost.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleTopMost_Click);
             // 
             // MainForm
             // 
@@ -425,6 +434,7 @@
         private System.Windows.Forms.ToolStripMenuItem 四角ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 多角ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_CopyRectangleToClipboard;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleTopMost;
     }
 }
 

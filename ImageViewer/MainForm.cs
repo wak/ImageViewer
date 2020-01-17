@@ -434,6 +434,11 @@ namespace ImageViewer
             refreshWindow();
         }
 
+        private void toggleTopMost()
+        {
+            this.TopMost = !this.TopMost;
+        }
+
         #endregion
 
         #region 範囲コピー
@@ -735,6 +740,10 @@ namespace ImageViewer
                     mwEnterMovingWindowMode();
                     break;
 
+                case 't':
+                    toggleTopMost();
+                    break;
+
                 case (char)Keys.Space:
                     if (!isRangeOperating)
                         ToolStripMenuItem_RangeOpe_FromHere_Click(null, null);
@@ -983,6 +992,8 @@ namespace ImageViewer
 
             toolStripMenuItem_MoveAllFromHere.Enabled = enabled;
             toolStripMenuItem_MoveAll.Enabled = enabled;
+
+            toolStripMenuItem_ToggleTopMost.Checked = this.TopMost;
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -1124,6 +1135,11 @@ namespace ImageViewer
         private void ToolStripMenuItem_ToggleAutoResizeMode_Click(object sender, EventArgs e)
         {
             toggleAutoResizeWindowMode();
+        }
+
+        private void ToolStripMenuItem_ToggleTopMost_Click(object sender, EventArgs e)
+        {
+            toggleTopMost();
         }
 
         #endregion
