@@ -731,6 +731,10 @@ namespace ImageViewer
                     deleteImage();
                     break;
 
+                case ',':
+                    mwEnterMovingWindowMode();
+                    break;
+
                 case (char)Keys.Space:
                     if (!isRangeOperating)
                         ToolStripMenuItem_RangeOpe_FromHere_Click(null, null);
@@ -789,6 +793,34 @@ namespace ImageViewer
             this.Cursor = Cursors.Default;
         }
 
+        #region ウィンドウ移動
+        private Boolean mwMovingWindow = false;
+        private void mwEnterMovingWindowMode()
+        {
+            mwMovingWindow = true;
+            Console.WriteLine(mwMovingWindow);
+            this.Cursor = Cursors.Cross;
+            this.pictureBox.Capture = true;
+
+            mwMoveWindowToCursorPosition();
+        }
+
+        private void mwMoveWindowToCursorPosition()
+        {
+            this.Location = new Point(
+                Cursor.Position.X - this.Width / 2,
+                Cursor.Position.Y - this.Height / 2
+                );
+        }
+
+        private void mwExitMovingWindowMode()
+        {
+            mwMovingWindow = false;
+            this.Cursor = Cursors.Default;
+            this.pictureBox.Capture = false;
+        }
+        #endregion
+
         private void MainForm_MouseWheel(object sender, MouseEventArgs e)
         {
             if (isControlKeyEnabled())
@@ -809,6 +841,7 @@ namespace ImageViewer
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
+            Console.WriteLine(mwMovingWindow);
             if (cwmChangingWindowSize)
             {
                 // 微妙にマウス位置がずれて実装が難しい。
@@ -834,6 +867,10 @@ namespace ImageViewer
                 rcmCurrentPoint = e.Location;
                 refreshWindow();
             }
+            else if (mwMovingWindow)
+            {
+                mwMoveWindowToCursorPosition();
+            }
         }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -843,6 +880,8 @@ namespace ImageViewer
                 case MouseButtons.Left:
                     if (rcmRangeCopyMode)
                         rcmStartSelectingRange(e.Location);
+                    else if (mwMovingWindow)
+                        mwExitMovingWindowMode();
                     else
                         mwiEnterMovingImageMode(e.Location);
                     break;
