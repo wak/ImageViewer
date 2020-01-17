@@ -673,8 +673,11 @@ namespace ImageViewer
                     break;
 
                 case '0':
-                case '=':
                     zoomReset();
+                    break;
+
+                case '=':
+                    zoomNative();
                     break;
 
                 case 'q':
