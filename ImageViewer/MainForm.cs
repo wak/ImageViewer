@@ -776,11 +776,25 @@ namespace ImageViewer
 
         #region マウス操作
 
+        private void resetMouseMode()
+        {
+            if (cwmChangingWindowSize)
+                cwmExitChangingWindowMode();
+
+            if (wmiMovingImage)
+                mwiExitMovingImageMode();
+
+            if (mwMovingWindow)
+                mwExitMovingWindowMode();
+        }
+
         #region ウインドウサイズ変更
         private Boolean cwmChangingWindowSize = false;
 
         private void cwmEnterChangingWindowMode()
         {
+            resetMouseMode();
+
             cwmChangingWindowSize = true;
             this.Cursor = Cursors.SizeAll;
             this.Capture = true; // フォームの縁のクリックを取得するため。
@@ -844,6 +858,8 @@ namespace ImageViewer
 
         private void mwiEnterMovingImageMode(Point p)
         {
+            resetMouseMode();
+
             wmiMovingImage = true;
             wmiMovingImagePreviousPoint = p;
             this.Cursor = Cursors.SizeAll;
@@ -860,6 +876,8 @@ namespace ImageViewer
         private Boolean mwMovingWindow = false;
         private void mwEnterMovingWindowMode()
         {
+            resetMouseMode();
+
             mwMovingWindow = true;
             this.Cursor = Cursors.Cross;
             this.pictureBox.Capture = true;
@@ -1192,6 +1210,16 @@ namespace ImageViewer
         private void ToolStripMenuItem_ToggleTopMost_Click(object sender, EventArgs e)
         {
             toggleTopMost();
+        }
+
+        private void ToolStripMenuItem_MoveWindow_Click(object sender, EventArgs e)
+        {
+            mwEnterMovingWindowMode();
+        }
+
+        private void ToolStripMenuItem_ChangeWindowSize_Click(object sender, EventArgs e)
+        {
+            cwmEnterChangingWindowMode();
         }
 
         #endregion
