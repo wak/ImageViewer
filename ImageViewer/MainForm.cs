@@ -757,6 +757,10 @@ namespace ImageViewer
                     refreshWindow();
                     break;
 
+                case (char)Keys.Enter:
+                    resetMouseMode();
+                    break;
+
                 case (char)Keys.Tab:
                     rcmEnterRangeCopyMode();
                     break;
@@ -896,6 +900,11 @@ namespace ImageViewer
             mwMovingWindow = true;
             this.Cursor = Cursors.Cross;
             this.pictureBox.Capture = true;
+
+            Cursor.Position = new Point(
+                this.Location.X + this.Width / 2,
+                this.Location.Y + this.Height / 2
+                );
 
             mwMoveWindowToCursorPosition();
         }
