@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 
 namespace ImageViewer
@@ -697,7 +699,6 @@ namespace ImageViewer
 
                 case 'm':
                     toggleFormBorderStyleNone();
-                    //cwmEnterChangingWindowMode();
                     break;
 
                 case 'g':
@@ -740,6 +741,10 @@ namespace ImageViewer
                     mwEnterMovingWindowMode();
                     break;
 
+                case '.':
+                    cwmEnterChangingWindowMode();
+                    break;
+
                 case 't':
                     toggleTopMost();
                     break;
@@ -771,23 +776,71 @@ namespace ImageViewer
 
         #region マウス操作
 
-        private Boolean wmiMovingImage = false;
-        private Point wmiMovingImagePreviousPoint;
-
+        #region ウインドウサイズ変更
         private Boolean cwmChangingWindowSize = false;
 
         private void cwmEnterChangingWindowMode()
         {
             cwmChangingWindowSize = true;
             this.Cursor = Cursors.SizeAll;
+            this.Capture = true; // フォームの縁のクリックを取得するため。
+            Cursor.Position = new Point(this.Location.X + windowSize().X, this.Location.Y + windowSize().Y);
+
+            // フォーム外のマウス操作を取得するため。
+            // Win32APIを呼び出したくないため、スレッドで対応する。
+            resizeWindowBGWorker = new BackgroundWorker();
+            resizeWindowBGWorker.DoWork += ResizeWindowBGWorker_DoWork;
+            resizeWindowBGWorker.WorkerSupportsCancellation = true;
+            resizeWindowBGWorker.RunWorkerAsync();
         }
 
         private void cwmExitChangingWindowMode()
         {
+            resizeWindowBGWorker.CancelAsync();
+
             cwmChangingWindowSize = false;
             this.Capture = false;
             this.Cursor = Cursors.Default;
         }
+
+        private delegate void DelegateChangeWindowSize();
+        private void ResizeWindowBGWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                if (resizeWindowBGWorker.CancellationPending)
+                    break;
+
+                Thread.Sleep(100); // 100ms
+                this.Invoke(new DelegateChangeWindowSize(this.cwmChangeWindowSize));
+            }
+        }
+
+        private Point windowSize()
+        {
+            Rectangle a = this.DesktopBounds;
+            Rectangle b = this.RectangleToScreen(this.DisplayRectangle);
+
+            Rectangle windowRect = new Rectangle(b.X, a.Y, b.Width, b.Y - a.Y + b.Height);
+
+            return new Point(windowRect.Width, windowRect.Height);
+        }
+
+        private void cwmChangeWindowSize()
+        {
+            Point ws = windowSize();
+            
+            // フォーム内をクリックするように、少し大きめにする。
+            this.Width = Cursor.Position.X - this.Location.X + (this.Width - ws.X) / 2 + 2;
+            this.Height = Cursor.Position.Y - this.Location.Y + (this.Height - ws.Y) / 2 + 2;
+        }
+
+        private BackgroundWorker resizeWindowBGWorker;
+        #endregion
+
+        #region 画像表示位置移動
+        private Boolean wmiMovingImage = false;
+        private Point wmiMovingImagePreviousPoint;
 
         private void mwiEnterMovingImageMode(Point p)
         {
@@ -801,13 +854,13 @@ namespace ImageViewer
             wmiMovingImage = false;
             this.Cursor = Cursors.Default;
         }
+        #endregion
 
         #region ウィンドウ移動
         private Boolean mwMovingWindow = false;
         private void mwEnterMovingWindowMode()
         {
             mwMovingWindow = true;
-            Console.WriteLine(mwMovingWindow);
             this.Cursor = Cursors.Cross;
             this.pictureBox.Capture = true;
 
@@ -850,12 +903,9 @@ namespace ImageViewer
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            Console.WriteLine(mwMovingWindow);
             if (cwmChangingWindowSize)
             {
-                // 微妙にマウス位置がずれて実装が難しい。
-                // 高DPIの問題？クライアント座標・スクリーン座標変換の問題？フォーム影の問題？
-                return;
+                cwmChangeWindowSize();
             }
             else if (wmiMovingImage)
             {
@@ -887,7 +937,9 @@ namespace ImageViewer
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (rcmRangeCopyMode)
+                    if (cwmChangingWindowSize)
+                        cwmExitChangingWindowMode();
+                    else if (rcmRangeCopyMode)
                         rcmStartSelectingRange(e.Location);
                     else if (mwMovingWindow)
                         mwExitMovingWindowMode();
