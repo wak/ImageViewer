@@ -6,7 +6,7 @@ namespace ImageViewer
 {
     public partial class RenameForm : Form
     {
-        const string REGEX = @"(?<filename>.*?)(?<separator> - )(?<comment>.*)(?<extension>\..*?)";
+        const string REGEX = @"(?<filename>.*?)(?<separator> +- )(?<comment>.*)(?<extension>\..*?)";
 
         public string result;
         private readonly List<char> INVALID_CHARACTERS = new List<char>(new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' });
@@ -102,26 +102,28 @@ namespace ImageViewer
                 System.Text.RegularExpressions.Regex.Matches(
                     this.textBox_filename.Text, REGEX);
 
+            string filenameBase;
+            string filenameSep;
+            
+            if (mc.Count > 0)
+                filenameBase = mc[0].Groups["filename"].Value;
+            else
+                filenameBase = System.IO.Path.GetFileNameWithoutExtension(this.textBox_filename.Text);
+
+            if (this.textBox_comment.Text.Length > 0)
+                filenameSep = " - ";
+            else
+                filenameSep = "";
+
             string newfilename = null;
 
-            if (mc.Count > 0)
-            {
-                newfilename =
-                    string.Format("{0} - {1}{2}",
-                        mc[0].Groups["filename"].Value,
-                        this.textBox_comment.Text,
-                        System.IO.Path.GetExtension(this.textBox_filename.Text)
-                    );
-            }
-            else
-            {
-                newfilename =
-                    string.Format("{0} - {1}{2}",
-                        System.IO.Path.GetFileNameWithoutExtension(this.textBox_filename.Text),
-                        this.textBox_comment.Text,
-                        System.IO.Path.GetExtension(this.textBox_filename.Text)
-                    );
-            }
+            newfilename =
+                string.Format("{0}{1}{2}{3}",
+                    filenameBase,
+                    filenameSep,
+                    this.textBox_comment.Text,
+                    System.IO.Path.GetExtension(this.textBox_filename.Text)
+                );
 
             this.textBox_filename.Text = newfilename;
             fixFilename();
