@@ -690,7 +690,10 @@ namespace ImageViewer
                 case 'q':
                 case 'w':
                 case (char)Keys.Escape:
-                    Application.Exit();
+                    if (anyMouseMode())
+                        resetMouseMode();
+                    else
+                        Application.Exit();
                     break;
 
                 case 'f':
@@ -745,6 +748,17 @@ namespace ImageViewer
                     cwmEnterChangingWindowMode();
                     break;
 
+                case '/':
+                    enableWatchDirectoryMode();
+                    this.FormBorderStyle = FormBorderStyle.None;
+
+                    System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
+                    this.Height = (int)(s.Bounds.Height / 8);
+                    this.Width = (int)(s.Bounds.Width / 15);
+                    this.TopMost = true;
+                    mwEnterMovingWindowMode();
+                    break;
+
                 case 't':
                     toggleTopMost();
                     break;
@@ -790,6 +804,11 @@ namespace ImageViewer
 
             if (mwMovingWindow)
                 mwExitMovingWindowMode();
+        }
+
+        private bool anyMouseMode()
+        {
+            return cwmChangingWindowSize || wmiMovingImage || mwMovingWindow;
         }
 
         #region ウインドウサイズ変更
@@ -988,6 +1007,14 @@ namespace ImageViewer
                         resetCustomView();
                         refreshWindow();
                     }
+                    break;
+
+                case MouseButtons.XButton1: // backward
+                    toggleWatchDirectoryMode();
+                    break;
+
+                case MouseButtons.XButton2: // forward
+                    zoomNative();
                     break;
             }
         }
@@ -1340,18 +1367,34 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_watchDirectory_Click(object sender, EventArgs e)
         {
+            toggleWatchDirectoryMode();
+        }
+
+        private void toggleWatchDirectoryMode()
+        {
             if (watchDirectoryMode)
             {
-                toolStripMenuItem_watchDirectory.Checked = false;
-                watchDirectoryMode = false;
-                this.Icon = FormIcon.appIcon();
+                disableWatchDirectoryMode();
             }
             else
             {
-                toolStripMenuItem_watchDirectory.Checked = true;
-                watchDirectoryMode = true;
-                this.Icon = FormIcon.greenIcon();
+                enableWatchDirectoryMode();
             }
+        }
+
+        private void enableWatchDirectoryMode()
+        {
+            toolStripMenuItem_watchDirectory.Checked = true;
+            watchDirectoryMode = true;
+            this.Icon = FormIcon.greenIcon();
+            updateDirectoryWatcher();
+        }
+
+        private void disableWatchDirectoryMode()
+        {
+            toolStripMenuItem_watchDirectory.Checked = false;
+            watchDirectoryMode = false;
+            this.Icon = FormIcon.appIcon();
             updateDirectoryWatcher();
         }
 
