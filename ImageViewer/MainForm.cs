@@ -520,21 +520,27 @@ namespace ImageViewer
             {
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Maximized;
+                this.pictureBox.BorderStyle = BorderStyle.None;
             }
             else
             {
                 this.FormBorderStyle = FormBorderStyle.Sizable;
                 this.WindowState = FormWindowState.Normal;
+                this.pictureBox.BorderStyle = BorderStyle.None;
             }
         }
 
         private void toggleWindowMaximized()
         {
             if (this.WindowState == FormWindowState.Normal)
+            {
                 this.WindowState = FormWindowState.Maximized;
+                this.pictureBox.BorderStyle = BorderStyle.None;
+            }
             else
             {
                 this.WindowState = FormWindowState.Normal;
+                this.pictureBox.BorderStyle = BorderStyle.None;
                 refreshWindow(); // AutoResizeMode時にうまく中央表示できないため。
             }
         }
@@ -542,9 +548,15 @@ namespace ImageViewer
         private void toggleFormBorderStyleNone()
         {
             if (this.FormBorderStyle == FormBorderStyle.Sizable)
+            {
                 this.FormBorderStyle = FormBorderStyle.None;
+                this.pictureBox.BorderStyle = BorderStyle.FixedSingle;
+            }
             else
+            {
                 this.FormBorderStyle = FormBorderStyle.Sizable;
+                this.pictureBox.BorderStyle = BorderStyle.None;
+            }
         }
 
         private void toggleAutoResizeWindowMode()
@@ -756,6 +768,7 @@ namespace ImageViewer
                     this.Height = (int)(s.Bounds.Height / 8);
                     this.Width = (int)(s.Bounds.Width / 15);
                     this.TopMost = true;
+                    this.pictureBox.BorderStyle = BorderStyle.FixedSingle;
                     mwEnterMovingWindowMode();
                     break;
 
