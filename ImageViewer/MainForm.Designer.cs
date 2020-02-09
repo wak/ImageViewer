@@ -61,8 +61,8 @@
             this.toolStripMenuItem_rotateRight = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_rotateLeft = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem_AutoResizeWindow = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_ToggleAutoResizeMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_AutoFitWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_ToggleAutoFitMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_SetRatio100 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ReloadDirectory = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,8 +107,8 @@
             this.toolStripMenuItem_rotateRight,
             this.toolStripMenuItem_rotateLeft,
             this.toolStripSeparator1,
-            this.toolStripMenuItem_AutoResizeWindow,
-            this.toolStripMenuItem_ToggleAutoResizeMode,
+            this.toolStripMenuItem_AutoFitWindow,
+            this.toolStripMenuItem_ToggleAutoFitMode,
             this.toolStripMenuItem_SetRatio100,
             this.toolStripSeparator4,
             this.toolStripMenuItem_ReloadDirectory,
@@ -345,17 +345,17 @@
             // 
             // toolStripMenuItem_AutoResizeWindow
             // 
-            this.toolStripMenuItem_AutoResizeWindow.Name = "toolStripMenuItem_AutoResizeWindow";
-            this.toolStripMenuItem_AutoResizeWindow.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_AutoResizeWindow.Text = "ウィンドウ幅を調整して中央表示";
-            this.toolStripMenuItem_AutoResizeWindow.Click += new System.EventHandler(this.ToolStripMenuItem_AutoResizeWindow_Click);
+            this.toolStripMenuItem_AutoFitWindow.Name = "toolStripMenuItem_AutoResizeWindow";
+            this.toolStripMenuItem_AutoFitWindow.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_AutoFitWindow.Text = "ウィンドウ幅を調整して中央表示";
+            this.toolStripMenuItem_AutoFitWindow.Click += new System.EventHandler(this.ToolStripMenuItem_AutoFitWindow_Click);
             // 
             // toolStripMenuItem_ToggleAutoResizeMode
             // 
-            this.toolStripMenuItem_ToggleAutoResizeMode.Name = "toolStripMenuItem_ToggleAutoResizeMode";
-            this.toolStripMenuItem_ToggleAutoResizeMode.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_ToggleAutoResizeMode.Text = "自動ウインドウリサイズ切替";
-            this.toolStripMenuItem_ToggleAutoResizeMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoResizeMode_Click);
+            this.toolStripMenuItem_ToggleAutoFitMode.Name = "toolStripMenuItem_ToggleAutoResizeMode";
+            this.toolStripMenuItem_ToggleAutoFitMode.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_ToggleAutoFitMode.Text = "自動ウインドウリサイズ切替";
+            this.toolStripMenuItem_ToggleAutoFitMode.Click += new System.EventHandler(this.ToolStripMenuItem_ToggleAutoFitWindowMode_Click);
             // 
             // toolStripMenuItem_SetRatio100
             // 
@@ -443,7 +443,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ExitApplication;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ResetCustomView;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_AutoResizeWindow;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_AutoFitWindow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_watchDirectory;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
@@ -456,7 +456,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Black;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Yellow;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Color_Rainbow;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleAutoResizeMode;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ToggleAutoFitMode;
         private System.Windows.Forms.ToolStripMenuItem 虹2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 四角ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 多角ToolStripMenuItem;

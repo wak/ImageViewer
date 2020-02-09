@@ -27,7 +27,7 @@ namespace ImageViewer
         private bool isFixedZoomRatio;
         private bool isFixedDrawLocation;
 
-        private bool autoResizeWindowMode = false;
+        private bool autoFitWindowMode = false;
 
         private bool overwrapWait;
 
@@ -199,9 +199,9 @@ namespace ImageViewer
             currentImagePath = imageList[currentImageListIndex];
             currentImage = imageLoader.loadImage(currentImagePath);
 
-            if (autoResizeWindowMode)
+            if (autoFitWindowMode)
             {
-                autoResizeWindow();
+                autoFitWindow();
             }
 
             refreshWindow();
@@ -226,7 +226,7 @@ namespace ImageViewer
             if (!isFixedDrawLocation)
                 calcDefaultDrawLocation();
 
-            if (autoResizeWindowMode)
+            if (autoFitWindowMode)
             {
                 centerWindow();
                 calcDefaultZoomRatio();
@@ -551,7 +551,7 @@ namespace ImageViewer
             {
                 this.WindowState = FormWindowState.Normal;
                 this.pictureBox.BorderStyle = BorderStyle.None;
-                refreshWindow(); // AutoResizeMode時にうまく中央表示できないため。
+                refreshWindow(); // AutoFitMode時にうまく中央表示できないため。
             }
         }
 
@@ -569,14 +569,13 @@ namespace ImageViewer
             }
         }
 
-        private void toggleAutoResizeWindowMode()
+        private void toggleAutoFitWindowMode()
         {
-            autoResizeWindowMode = !autoResizeWindowMode;
+            autoFitWindowMode = !autoFitWindowMode;
 
-            if (autoResizeWindowMode)
+            if (autoFitWindowMode)
             {
-                normalizeWindow();
-                autoResizeWindow();
+                autoFitWindow();
             }
             refreshWindow();
         }
@@ -587,7 +586,7 @@ namespace ImageViewer
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void autoResizeWindow()
+        private void autoFitWindow()
         {
             if (currentImage == null)
                 return;
@@ -740,9 +739,8 @@ namespace ImageViewer
                     break;
 
                 case 'a':
-                    autoResizeWindowMode = false;
-                    normalizeWindow();
-                    autoResizeWindow();
+                    autoFitWindowMode = false;
+                    autoFitWindow();
                     centerWindow();
                     break;
 
@@ -1103,12 +1101,12 @@ namespace ImageViewer
 
             toolStripMenuItem_ReloadDirectory.Enabled = true;
             toolStripMenuItem_CopyToClipboard.Enabled = enabled;
-            toolStripMenuItem_AutoResizeWindow.Enabled = enabled;
+            toolStripMenuItem_AutoFitWindow.Enabled = enabled;
             toolStripMenuItem_CopyDirectoryPathToClipboard.Enabled = enabled;
             toolStripMenuItem_CopyFilePathToClipboard.Enabled = enabled;
             toolStripMenuItem_OpenInExplorer.Enabled = enabled;
-            toolStripMenuItem_ToggleAutoResizeMode.Enabled = enabled;
-            toolStripMenuItem_ToggleAutoResizeMode.Checked = autoResizeWindowMode;
+            toolStripMenuItem_ToggleAutoFitMode.Enabled = enabled;
+            toolStripMenuItem_ToggleAutoFitMode.Checked = autoFitWindowMode;
             toolStripMenuItem_rotateRight.Enabled = enabled;
             toolStripMenuItem_rotateLeft.Enabled = enabled;
             toolStripMenuItem_SetRatio100.Enabled = enabled;
@@ -1191,9 +1189,9 @@ namespace ImageViewer
             refreshWindow();
         }
 
-        private void ToolStripMenuItem_AutoResizeWindow_Click(object sender, EventArgs e)
+        private void ToolStripMenuItem_AutoFitWindow_Click(object sender, EventArgs e)
         {
-            autoResizeWindow();
+            autoFitWindow();
             centerWindow();
         }
 
@@ -1266,9 +1264,9 @@ namespace ImageViewer
             reloadDirectory();
         }
 
-        private void ToolStripMenuItem_ToggleAutoResizeMode_Click(object sender, EventArgs e)
+        private void ToolStripMenuItem_ToggleAutoFitWindowMode_Click(object sender, EventArgs e)
         {
-            toggleAutoResizeWindowMode();
+            toggleAutoFitWindowMode();
         }
 
         private void ToolStripMenuItem_ToggleTopMost_Click(object sender, EventArgs e)
