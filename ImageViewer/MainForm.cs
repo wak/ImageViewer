@@ -9,7 +9,7 @@ namespace ImageViewer
 {
     public partial class MainForm : Form
     {
-        const int PICTURE_BORDER_SIZE = 10;
+        const int PICTURE_BORDER_SIZE = 0;
 
         private ImageLoader imageLoader = new ImageLoader();
 
@@ -67,6 +67,8 @@ namespace ImageViewer
 
         private void updateImageList(string path)
         {
+            overwrapWait = false;
+
             if (path == null)
             {
                 currentDirectoryPath = null;
@@ -259,6 +261,24 @@ namespace ImageViewer
                     p.Dispose();
                 }
             }
+
+            if (overwrapWait)
+            {
+                SolidBrush b = new SolidBrush(Color.FromArgb(100, 115, 199, 255));
+                e.Graphics.FillRectangle(b, 0, 0, pictureBox.Width, pictureBox.Height);
+                b.Dispose();
+
+                using (Font font2 = new Font("Consolas", 15, FontStyle.Bold, GraphicsUnit.Point))
+                {
+                    Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
+
+                    TextFormatFlags flags = TextFormatFlags.HorizontalCenter |
+                        TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+
+                    TextRenderer.DrawText(e.Graphics, "(overwrapped)", font2, rect2, Color.Blue, flags);
+                    e.Graphics.DrawRectangle(Pens.Transparent, rect2);
+                }
+            }
         }
 
         private void updateWindowTitle()
@@ -272,16 +292,6 @@ namespace ImageViewer
             {
                 if (currentImage == null)
                     newTitle += " !!LOAD ERROR!!";
-
-                if (overwrapWait)
-                {
-                    pictureBox.BackColor = Color.FromArgb(115, 199, 255);
-                    newTitle += " (!!OVERWRAPPED!!)";
-                }
-                else
-                {
-                    pictureBox.BackColor = SystemColors.Control;
-                }
 
                 if (isFixedZoomRatio)
                     newTitle += "[FZ]";
@@ -1020,6 +1030,7 @@ namespace ImageViewer
                         resetCustomView();
                         refreshWindow();
                     }
+                    overwrapWait = false;
                     break;
 
                 case MouseButtons.XButton1: // backward
