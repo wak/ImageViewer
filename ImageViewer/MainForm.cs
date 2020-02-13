@@ -359,8 +359,11 @@ namespace ImageViewer
             }
             else
             {
+                if (!overwrapWait)
+                {
+                    currentImageListIndex += 1;
+                }
                 overwrapWait = false;
-                currentImageListIndex += 1;
             }
 
             changeImage();
@@ -384,8 +387,11 @@ namespace ImageViewer
             }
             else
             {
+                if (!overwrapWait)
+                {
+                    currentImageListIndex -= 1;
+                }
                 overwrapWait = false;
-                currentImageListIndex -= 1;
             }
 
             changeImage();
@@ -1005,6 +1011,8 @@ namespace ImageViewer
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            overwrapWait = false;
+
             switch (e.Button)
             {
                 case MouseButtons.Left:
