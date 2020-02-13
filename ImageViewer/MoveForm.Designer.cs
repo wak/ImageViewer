@@ -42,7 +42,7 @@
             this.button_Close.Location = new System.Drawing.Point(503, 244);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(63, 23);
-            this.button_Close.TabIndex = 1;
+            this.button_Close.TabIndex = 2;
             this.button_Close.Text = "閉じる";
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.Button_Close_Click);
@@ -53,7 +53,7 @@
             this.button_Move.Location = new System.Drawing.Point(421, 244);
             this.button_Move.Name = "button_Move";
             this.button_Move.Size = new System.Drawing.Size(63, 23);
-            this.button_Move.TabIndex = 2;
+            this.button_Move.TabIndex = 1;
             this.button_Move.Text = "移動";
             this.button_Move.UseVisualStyleBackColor = true;
             this.button_Move.Click += new System.EventHandler(this.Button_Move_Click);

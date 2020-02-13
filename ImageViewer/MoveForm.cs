@@ -116,9 +116,9 @@ namespace ImageViewer
             }
             else
             {
-                MessageBox.Show(
-                    string.Format("Move all {0} items succeed.", imageList.Count),
-                    "Complete!", MessageBoxButtons.OK, MessageBoxIcon.None);
+                //MessageBox.Show(
+                //    string.Format("Move all {0} items succeed.", imageList.Count),
+                //    "Complete!", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 this.Close();
             }
