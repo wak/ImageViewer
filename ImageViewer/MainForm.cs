@@ -10,6 +10,7 @@ namespace ImageViewer
     public partial class MainForm : Form
     {
         const int PICTURE_BORDER_SIZE = 0;
+        const long OVERWRAP_WAIT_MSEC = 200; // 200ms
 
         private ImageLoader imageLoader = new ImageLoader();
 
@@ -30,6 +31,7 @@ namespace ImageViewer
         private bool autoFitWindowMode = false;
 
         private bool overwrapWait;
+        private DateTime overwrapedTime;
 
         private bool initialized = false;
 
@@ -61,13 +63,13 @@ namespace ImageViewer
             currentZoomRatio = 1.0;
             isFixedZoomRatio = false;
             currentImagePath = null;
-            overwrapWait = false;
+            turnOffOverwrapWait();
             currentDrawLocation.X = currentDrawLocation.Y = 0;
         }
 
         private void updateImageList(string path)
         {
-            overwrapWait = false;
+            turnOffOverwrapWait();
 
             if (path == null)
             {
@@ -264,11 +266,11 @@ namespace ImageViewer
 
             if (overwrapWait)
             {
-                SolidBrush b = new SolidBrush(Color.FromArgb(100, 115, 199, 255));
+                SolidBrush b = new SolidBrush(Color.FromArgb(190, 210, 210, 210));
                 e.Graphics.FillRectangle(b, 0, 0, pictureBox.Width, pictureBox.Height);
                 b.Dispose();
 
-                using (Font font2 = new Font("Consolas", 15, FontStyle.Bold, GraphicsUnit.Point))
+                using (Font font2 = new Font("Meiryo UI", 20, FontStyle.Bold, GraphicsUnit.Point))
                 {
                     Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
 
@@ -341,6 +343,28 @@ namespace ImageViewer
             currentDrawLocation.Y = (pictureBox.Height - (int)(currentImage.Height * currentZoomRatio)) / 2;
         }
 
+        private void turnOnOverwrapWait()
+        {
+            overwrapedTime = DateTime.Now;
+            overwrapWait = true;
+        }
+
+        private bool turnOffOverwrapWait()
+        {
+            double elapsedMiliSeconds = (DateTime.Now - overwrapedTime).TotalMilliseconds;
+
+            if (!overwrapWait)
+                return true;
+
+            if (elapsedMiliSeconds > OVERWRAP_WAIT_MSEC)
+            {
+                overwrapWait = false;
+                return true;
+            }
+
+            return false;
+        }
+
         private void showNextImage()
         {
             prepareToChangeImage();
@@ -349,12 +373,12 @@ namespace ImageViewer
             {
                 if (!overwrapWait)
                 {
-                    overwrapWait = true;
+                    turnOnOverwrapWait();
                 }
                 else
                 {
-                    overwrapWait = false;
-                    currentImageListIndex = 0;
+                    if (turnOffOverwrapWait())
+                        currentImageListIndex = 0;
                 }
             }
             else
@@ -363,7 +387,7 @@ namespace ImageViewer
                 {
                     currentImageListIndex += 1;
                 }
-                overwrapWait = false;
+                turnOffOverwrapWait();
             }
 
             changeImage();
@@ -377,12 +401,12 @@ namespace ImageViewer
             {
                 if (!overwrapWait)
                 {
-                    overwrapWait = true;
+                    turnOnOverwrapWait();
                 }
                 else
                 {
-                    overwrapWait = false;
-                    currentImageListIndex = imageList.Count - 1;
+                    if (turnOffOverwrapWait())
+                        currentImageListIndex = imageList.Count - 1;
                 }
             }
             else
@@ -391,7 +415,7 @@ namespace ImageViewer
                 {
                     currentImageListIndex -= 1;
                 }
-                overwrapWait = false;
+                turnOffOverwrapWait();
             }
 
             changeImage();
@@ -717,6 +741,12 @@ namespace ImageViewer
                 case 'q':
                 case 'w':
                 case (char)Keys.Escape:
+                    if (overwrapWait)
+                    {
+                        turnOffOverwrapWait();
+                        refreshWindow();
+                        break;
+                    }
                     if (anyMouseMode())
                         resetMouseMode();
                     else
@@ -1011,7 +1041,7 @@ namespace ImageViewer
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            overwrapWait = false;
+            turnOffOverwrapWait();
 
             switch (e.Button)
             {
@@ -1036,7 +1066,7 @@ namespace ImageViewer
                         resetCustomView();
                         refreshWindow();
                     }
-                    overwrapWait = false;
+                    turnOffOverwrapWait();
                     break;
 
                 case MouseButtons.XButton1: // backward
