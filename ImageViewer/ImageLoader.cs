@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 
 namespace ImageViewer
 {
-    class ImageCache
+    public class ImageCache
     {
         public string path;
         public Image image;
     }
 
-    class ImageLoader
+    public class ImageLoader
     {
         const int MAX_CACHE_IMAGES = 3;
 
@@ -31,11 +32,7 @@ namespace ImageViewer
             ImageCache c = new ImageCache();
             try
             {
-                using (FileStream stream = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-                {
-                    c.path = path;
-                    c.image = Image.FromStream(stream);
-                }
+                loadImage2(path, c);
             }
             catch (Exception)
             {
@@ -49,6 +46,15 @@ namespace ImageViewer
 
             Console.WriteLine("read file");
             return c.image;
+        }
+
+        protected virtual void loadImage2(string path, ImageCache c)
+        {
+            using (FileStream stream = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                c.path = path;
+                c.image = Image.FromStream(stream);
+            }
         }
 
         private Image findCache(string path)
@@ -69,6 +75,26 @@ namespace ImageViewer
                 }
             }
             return null;
+        }
+    }
+
+    public class ZipImageLoader : ImageLoader
+    {
+        ZipArchive archive;
+
+        public ZipImageLoader(ZipArchive a)
+        {
+            archive = a;
+        }
+
+        protected override void loadImage2(string path, ImageCache c)
+        {
+            ZipArchiveEntry e = archive.GetEntry(path);
+            if (e == null)
+                throw new Exception();
+
+            c.path = path;
+            c.image = Image.FromStream(e.Open());
         }
     }
 }

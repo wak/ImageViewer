@@ -71,6 +71,11 @@ namespace ImageViewer
             currentDrawLocation.X = currentDrawLocation.Y = 0;
         }
 
+        private bool isZip()
+        {
+            return imageList is ZipImageList;
+        }
+
         private void updateImageList(string path)
         {
             turnOffOverwrapWait();
@@ -89,6 +94,15 @@ namespace ImageViewer
 
             if (System.IO.File.Exists(path))
             {
+                if (System.IO.Path.GetExtension(path).ToLower().EndsWith(".zip"))
+                {
+                    ZipImageList zipImageList = new ZipImageList(path);
+
+                    imageList = zipImageList;
+                    currentImageListIndex = 0;
+                    imageLoader = zipImageList.getImageLoader();
+                    return;
+                }
                 filepath = path;
                 directory = System.IO.Path.GetDirectoryName(path);
             }
@@ -121,6 +135,9 @@ namespace ImageViewer
 
         private void renameImageFilename()
         {
+            if (isZip())
+                return;
+
             RenameForm form = new RenameForm(currentImagePath);
             string newFilename = null;
 
@@ -149,6 +166,8 @@ namespace ImageViewer
 
         private void reloadDirectory()
         {
+            if (isZip())
+                return;
             updateImageList(currentDirectoryPath);
         }
 
@@ -311,6 +330,9 @@ namespace ImageViewer
 
                 if (isFixedDrawLocation)
                     flags += "F";
+
+                if (isZip())
+                    newTitle += "[ZIP]";
 
                 if (flags.Length > 0)
                     newTitle += "[" + flags + "]";
@@ -1333,6 +1355,9 @@ namespace ImageViewer
 
         private void moveItems(int index1, int index2)
         {
+            if (isZip())
+                return;
+
             int fromIndex = Math.Min(index1, currentImageListIndex);
             int count = Math.Abs(index2 - index1) + 1;
 

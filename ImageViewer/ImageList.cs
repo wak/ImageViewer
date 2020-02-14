@@ -1,88 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 
-public class ImageList
+namespace ImageViewer
 {
-    private readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
-    private List<string> imageList = new List<string>();
-
-    public ImageList()
+    public class ImageList
     {
-        // nothing to do (empty class)
-    }
+        protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
+        protected List<string> imageList = new List<string>();
 
-    public ImageList(string folderPath)
-    {
-        this.findImages(folderPath);
-    }
-
-    //private ImageList(List<string> list)
-    //{
-    //    this.imageList = list;
-    //}
-
-    private void findImages(string folderPath)
-    {
-        string[] allPathes = System.IO.Directory.GetFiles(folderPath);
-
-        foreach (string path in allPathes)
+        public ImageList()
         {
-            string extension = System.IO.Path.GetExtension(path);
+            // nothing to do (empty class)
+        }
 
-            if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
+        public ImageList(string folderPath)
+        {
+            this.findImages(folderPath);
+        }
+
+        //private ImageList(List<string> list)
+        //{
+        //    this.imageList = list;
+        //}
+
+        private void findImages(string folderPath)
+        {
+            string[] allPathes = System.IO.Directory.GetFiles(folderPath);
+
+            foreach (string path in allPathes)
             {
-                Console.WriteLine(path);
-                imageList.Add(System.IO.Path.GetFullPath(path));
+                string extension = System.IO.Path.GetExtension(path);
+
+                if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
+                {
+                    Console.WriteLine(path);
+                    imageList.Add(System.IO.Path.GetFullPath(path));
+                }
+                imageList.Sort();
             }
-            imageList.Sort();
         }
-    }
 
-    public int findIndex(string filepath)
-    {
-        int index = 0;
-
-        if (filepath == null)
-            return -1;
-
-        filepath = System.IO.Path.GetFileName(filepath);
-        foreach (string imagePath in imageList)
+        public int findIndex(string filepath)
         {
-            string imageFilename = System.IO.Path.GetFileName(imagePath);
+            int index = 0;
 
-            if (imageFilename == filepath)
-                return index;
+            if (filepath == null)
+                return -1;
 
-            index += 1;
+            filepath = System.IO.Path.GetFileName(filepath);
+            foreach (string imagePath in imageList)
+            {
+                string imageFilename = System.IO.Path.GetFileName(imagePath);
+
+                if (imageFilename == filepath)
+                    return index;
+
+                index += 1;
+            }
+
+            return -1;
         }
 
-        return -1;
+        public ImageList GetRange(int index, int count)
+        {
+            ImageList newList = new ImageList();
+            newList.imageList = imageList.GetRange(index, count);
+
+            return newList;
+        }
+
+        public bool contains(string filepath)
+        {
+            if (findIndex(filepath) >= 0)
+                return true;
+            else
+                return false;
+        }
+
+        public int Count
+        {
+            get { return imageList.Count; }
+        }
+
+        public string this[int index]
+        {
+            get { return imageList[index]; }
+        }
+
     }
 
-    public ImageList GetRange(int index, int count)
+    public class ZipImageList : ImageList
     {
-        ImageList newList = new ImageList();
-        newList.imageList = imageList.GetRange(index, count);
+        ZipArchive archive;
 
-        return newList;
+        public ZipImageList(string zipPath)
+        {
+            archive = ZipFile.OpenRead(zipPath);
+
+            foreach (ZipArchiveEntry e in archive.Entries)
+            {
+                string extension = System.IO.Path.GetExtension(e.FullName);
+
+                if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
+                {
+                    imageList.Add(e.FullName);
+                    Console.WriteLine(e.FullName);
+                }
+            }
+        }
+
+        public ImageLoader getImageLoader()
+        {
+            return new ZipImageLoader(archive);
+        }
     }
-
-    public bool contains(string filepath)
-    {
-        if (findIndex(filepath) >= 0)
-            return true;
-        else
-            return false;
-    }
-
-    public int Count
-    {
-        get { return imageList.Count; }
-    }
-
-    public string this[int index]
-    {
-        get { return imageList[index]; }
-    }
-
 }
