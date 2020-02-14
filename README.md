@@ -17,11 +17,17 @@ Windows用の画像ビューアです。
   - キャプチャ画像の整理
     - たくさんのキャプチャファイルのファイル名にコメントを追記したり、
       範囲を指定して別のフォルダに移動することができます。
-    
+
+## 必要要件
+- .NET Framework 4.5以降
+
+ZIPファイル内のイメージも閲覧できるように、.NET Framework 4.5以降が必要になりました。
+
 ## 使い方
+
 ### プログラムのビルド
 プログラムをビルドします。
-build_with_msbuild.bat、または、build_with_csc.bat をダブルクリックします。
+build_with_msbuild.bat をダブルクリックします。
 
 うまくビルドできると、ImageViewer.exe が作成されます。
 
@@ -29,15 +35,12 @@ build_with_msbuild.bat、または、build_with_csc.bat をダブルクリック
 ### プログラムの配置
 プログラムをインストールします。
 
-1. 設定ファイルの作成
-    - ImageViewer/App.config をコピーして、ImageViewer.exe.config を作成してください。
-   
-2. プログラムの配置
+1. プログラムの配置
    以下のファイルを任意のフォルダに配置してください。(例: C:\apps\ImageViewer\)
-   - ImageViewer.exe
-   - ImageViewer.exe.config
+   - bin\Release\ImageViewer.exe
+   - bin\Release\ImageViewer.exe.config
      
-3. 画像ファイルへの関連付け
+2. 画像ファイルへの関連付け
    - .pngや.jpgなどの拡張子をImageViewer.exeに関連付けてください。
 
 
@@ -77,6 +80,7 @@ ImageViewerは、マウス・キーボードで操作します。
 | その他         | ファイル名の変更                       | r                                      |
 |                | フォルダ監視                           | マウス戻るボタン                       |
 |                | ファイルの移動                         | Space(範囲選択開始)→Space(移動)       |
+|                | 画像切り替えに待ち時間を追加           | s                                      |
 |                | キャプチャ補助準備                     | /                                      |
 |                | ファイルをゴミ箱へ移動                 | d                                      |
 |                | ウィンドウの移動                       | ,                                      |
