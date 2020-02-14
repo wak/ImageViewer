@@ -12,6 +12,8 @@ namespace ImageViewer
         const int PICTURE_BORDER_SIZE = 0;
         const long OVERWRAP_WAIT_MSEC = 200; // 200ms
 
+        long CHANGE_IMAGE_WAIT_MSEC = 0;
+
         private ImageLoader imageLoader = new ImageLoader();
 
         private ImageList imageList;
@@ -32,6 +34,8 @@ namespace ImageViewer
 
         private bool overwrapWait;
         private DateTime overwrapedTime;
+
+        private DateTime lastImageChangedTime;
 
         private bool initialized = false;
 
@@ -286,28 +290,35 @@ namespace ImageViewer
         private void updateWindowTitle()
         {
             string newTitle = "";
+            string flags = "";
 
             if (isRangeOperating)
                 newTitle += "【選択】";
 
             if (imageList.Count > 0)
             {
-                if (currentImage == null)
-                    newTitle += " !!LOAD ERROR!!";
-
-                if (isFixedZoomRatio)
-                    newTitle += "[FZ]";
-
-                if (isFixedDrawLocation)
-                    newTitle += "[FL]";
-
                 newTitle += string.Format(
                     " [{0," + imageList.Count.ToString("#").Length + "}/{1}]",
                     currentImageListIndex + 1,
                     imageList.Count
                 );
 
-                newTitle += string.Format(" {0:0.00}x, {1})",
+                if (currentImage == null)
+                    newTitle += " !!LOAD ERROR!!";
+
+                if (isFixedZoomRatio)
+                    flags += "Z";
+
+                if (isFixedDrawLocation)
+                    flags += "F";
+
+                if (flags.Length > 0)
+                    newTitle += "[" + flags + "]";
+
+                if (CHANGE_IMAGE_WAIT_MSEC > 0)
+                    newTitle += string.Format("[{0}ms]", CHANGE_IMAGE_WAIT_MSEC);
+
+                newTitle += string.Format(" {0:0.00}x: {1})",
                     currentZoomRatio,
                     System.IO.Path.GetFileName(currentImagePath));
             }
@@ -365,6 +376,25 @@ namespace ImageViewer
             return false;
         }
 
+        private void changeImageListIndex(int index)
+        {
+            lastImageChangedTime = DateTime.Now;
+            currentImageListIndex = index;
+        }
+
+        private bool isChangeImageWaitElapsed()
+        {
+            if (CHANGE_IMAGE_WAIT_MSEC <= 0)
+                return true;
+
+            double elapsedMiliSeconds = (DateTime.Now - lastImageChangedTime).TotalMilliseconds;
+
+            if (elapsedMiliSeconds > CHANGE_IMAGE_WAIT_MSEC)
+                return true;
+            else
+                return false;
+        }
+
         private void showNextImage()
         {
             prepareToChangeImage();
@@ -378,14 +408,14 @@ namespace ImageViewer
                 else
                 {
                     if (turnOffOverwrapWait())
-                        currentImageListIndex = 0;
+                        changeImageListIndex(0);
                 }
             }
             else
             {
                 if (!overwrapWait)
                 {
-                    currentImageListIndex += 1;
+                    changeImageListIndex(currentImageListIndex + 1);
                 }
                 turnOffOverwrapWait();
             }
@@ -406,14 +436,14 @@ namespace ImageViewer
                 else
                 {
                     if (turnOffOverwrapWait())
-                        currentImageListIndex = imageList.Count - 1;
+                        changeImageListIndex(imageList.Count - 1);
                 }
             }
             else
             {
                 if (!overwrapWait)
                 {
-                    currentImageListIndex -= 1;
+                    changeImageListIndex(currentImageListIndex - 1);
                 }
                 turnOffOverwrapWait();
             }
@@ -706,11 +736,15 @@ namespace ImageViewer
             {
                 case '2':
                 case 'j':
+                    if (!isChangeImageWaitElapsed())
+                        break;
                     showNextImage();
                     break;
 
                 case '1':
                 case 'k':
+                    if (!isChangeImageWaitElapsed())
+                        break;
                     showPreviousImage();
                     break;
 
@@ -786,6 +820,14 @@ namespace ImageViewer
 
                 case 'A':
                     showFirstImage();
+                    break;
+
+                case 's':
+                    if (CHANGE_IMAGE_WAIT_MSEC > 0)
+                        CHANGE_IMAGE_WAIT_MSEC = 0;
+                    else
+                        CHANGE_IMAGE_WAIT_MSEC = 250;
+                    refreshWindow();
                     break;
 
                 case 'z':
