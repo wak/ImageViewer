@@ -124,6 +124,9 @@ namespace ImageViewer
                 return;
             }
 
+            if (imageLoader is ZipImageLoader)
+                imageLoader = new ImageLoader();
+
             imageList = new ImageList(directory);
             currentDirectoryPath = directory;
             currentImagePath = filepath;
