@@ -387,11 +387,10 @@ namespace ImageViewer
 
         private bool turnOffOverwrapWait()
         {
-            double elapsedMiliSeconds = (DateTime.Now - overwrapedTime).TotalMilliseconds;
-
             if (!overwrapWait)
                 return true;
 
+            double elapsedMiliSeconds = (DateTime.Now - overwrapedTime).TotalMilliseconds;
             if (elapsedMiliSeconds > OVERWRAP_WAIT_MSEC)
             {
                 overwrapWait = false;
