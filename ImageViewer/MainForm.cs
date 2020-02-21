@@ -20,6 +20,8 @@ namespace ImageViewer
         private string currentDirectoryPath;
         private string currentImagePath;
 
+        private PaintBoard paintBoard = new PaintBoard();
+
         private Image currentImage;
         private int currentImageListIndex;
 
@@ -281,6 +283,7 @@ namespace ImageViewer
             else
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
+                paintBoard.draw(e.Graphics);
 
                 if (rcmRangeCopyModeSelecting)
                 {
@@ -927,6 +930,9 @@ namespace ImageViewer
 
             if (mwMovingWindow)
                 mwExitMovingWindowMode();
+
+            if (pmDrawLineMode)
+                pmExitDrawLineMode();
         }
 
         private bool anyMouseMode()
@@ -1066,6 +1072,27 @@ namespace ImageViewer
         }
         #endregion
 
+        #region お絵かき
+        bool pmDrawLineMode = false;
+
+        private void pmEnterDrawLineMode()
+        {
+            pmDrawLineMode = true;
+            paintBoard.newLine();
+        }
+
+        private void pmAddLinePoint(Point p)
+        {
+            paintBoard.addPoint(p);
+            refreshWindow();
+        }
+
+        private void pmExitDrawLineMode()
+        {
+            pmDrawLineMode = false;
+        }
+        #endregion
+
         private void MainForm_MouseWheel(object sender, MouseEventArgs e)
         {
             if (isControlKeyEnabled())
@@ -1103,7 +1130,13 @@ namespace ImageViewer
             {
                 mwMoveWindowToCursorPosition();
             }
+            else if(pmDrawLineMode)
+            {
+                pmAddLinePoint(e.Location);
+            }
         }
+
+        private Point rightClickPosition;
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1122,6 +1155,11 @@ namespace ImageViewer
                         mwiEnterMovingImageMode(e.Location);
                     break;
 
+                case MouseButtons.Right:
+                    rightClickPosition = e.Location;
+                    pmEnterDrawLineMode();
+                    break;
+
                 case MouseButtons.Middle:
                     if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
                     {
@@ -1133,6 +1171,7 @@ namespace ImageViewer
                         refreshWindow();
                     }
                     turnOffOverwrapWait();
+                    paintBoard.clear();
                     break;
 
                 case MouseButtons.XButton1: // backward
@@ -1156,9 +1195,21 @@ namespace ImageViewer
                         cwmExitChangingWindowMode();
                     else if (rcmRangeCopyMode)
                         rcmExitRangeCopyMode(e.Location);
+                    break;
+
+                case MouseButtons.Right:
+                    pmExitDrawLineMode();
+                    if (rightClickPosition == e.Location)
+                        contextMenuStrip1.Show(pictureBox, e.Location);
 
                     break;
             }
+        }
+
+        private void PictureBox_DoubleClick(object sender, EventArgs e)
+        {
+            paintBoard.clear();
+            refreshWindow();
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)

@@ -75,6 +75,7 @@
     <Compile Include="MoveForm.Designer.cs">
       <DependentUpon>MoveForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PaintBoard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenameForm.cs">
