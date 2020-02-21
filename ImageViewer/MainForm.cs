@@ -925,11 +925,11 @@ namespace ImageViewer
                     break;
 
                 case (char)Keys.Enter:
-                    resetMouseMode();
+                    launchExplorer();
                     break;
 
                 case (char)Keys.Tab:
-                    rcmEnterRangeCopyMode();
+                    askOpen();
                     break;
             }
         }
@@ -1312,7 +1312,12 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(
+            launchExplorer();
+        }
+
+        private void launchExplorer()
+        {
+            System.Diagnostics.Process process = System.Diagnostics.Process.Start(
                 "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImagePath)
             );
         }
