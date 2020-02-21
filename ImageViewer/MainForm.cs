@@ -21,6 +21,7 @@ namespace ImageViewer
         private string currentImagePath;
 
         private PaintBoard paintBoard = new PaintBoard();
+        private Point paintBaseLocation = new Point(0, 0);
 
         private Image currentImage;
         private int currentImageListIndex;
@@ -306,7 +307,7 @@ namespace ImageViewer
             else
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
-                paintBoard.draw(e.Graphics);
+                paintBoard.draw(e.Graphics, paintBaseLocation);
 
                 if (rcmRangeCopyModeSelecting)
                 {
@@ -1057,6 +1058,9 @@ namespace ImageViewer
             currentDrawLocation.X += x;
             currentDrawLocation.Y += y;
 
+            paintBaseLocation.X += x;
+            paintBaseLocation.Y += y;
+
             wmiMovingImagePreviousPoint = e.Location;
             if (x != 0 || y != 0)
                 isFixedDrawLocation = true;
@@ -1110,7 +1114,8 @@ namespace ImageViewer
 
         private void pmAddLinePoint(Point p)
         {
-            paintBoard.addPoint(p);
+            Point newP = new Point(p.X - paintBaseLocation.X, p.Y - paintBaseLocation.Y);
+            paintBoard.addPoint(newP);
             refreshWindow();
         }
 

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Linq;
 
 namespace ImageViewer
 {
@@ -14,22 +13,16 @@ namespace ImageViewer
             points.Add(p);
         }
 
-        public void draw(Graphics g)
+        public void draw(Graphics g, Point baseLocation)
         {
-            if (points.Count == 0)
+            if (points.Count <= 1)
                 return;
 
-            Point previousP;
-
-            previousP = points[0];
+            var drawPoints = points.Select(p => new Point(p.X + baseLocation.X, p.Y + baseLocation.Y));
 
             using (Pen pen = new Pen(Color.FromArgb(255, 255, 0, 0), 5))
             {
-                foreach (Point p in points)
-                {
-                    g.DrawLine(pen, previousP, p);
-                    previousP = p;
-                }
+                g.DrawLines(pen, drawPoints.ToArray());
             }
         }
 
@@ -63,11 +56,11 @@ namespace ImageViewer
             currentLine.addPoint(p);
         }
 
-        public void draw(Graphics g)
+        public void draw(Graphics g, Point baseLocation)
         {
             foreach (Line l in lines)
             {
-                l.draw(g);
+                l.draw(g, baseLocation);
             }
         }
 
