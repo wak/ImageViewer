@@ -215,6 +215,29 @@ namespace ImageViewer
             }
         }
 
+        private void askOpen()
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+
+                ofd.InitialDirectory = currentDirectoryPath;
+                ofd.Filter = "対応ファイル|*.bmp;*.jpg;*.jpeg;*.png;*.zip";
+                ofd.Title = "開く";
+
+                //ダイアログを表示する
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    updateImageList(ofd.FileName);
+                    changeImage();
+                }
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
+        }
+
         #region Window描画
 
         private void changeImage()
@@ -845,6 +868,10 @@ namespace ImageViewer
                     centerWindow();
                     break;
 
+                case 'F':
+                    askOpen();
+                    break;
+
                 case 'A':
                     showFirstImage();
                     break;
@@ -1440,6 +1467,11 @@ namespace ImageViewer
         private void ToolStripMenuItem_ChangeWindowSize_Click(object sender, EventArgs e)
         {
             cwmEnterChangingWindowMode();
+        }
+
+        private void ToolStripMenuItem_openFile_Click(object sender, EventArgs e)
+        {
+            askOpen();
         }
 
         #endregion
