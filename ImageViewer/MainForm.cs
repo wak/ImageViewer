@@ -968,6 +968,16 @@ namespace ImageViewer
             return cwmChangingWindowSize || wmiMovingImage || mwMovingWindow;
         }
 
+        private Point pointSub(Point l, Point r)
+        {
+            return new Point(l.X - r.X, l.Y - r.Y);
+        }
+
+        private Point pointAdd(Point l, Point r)
+        {
+            return new Point(l.X + r.X, l.Y + r.Y);
+        }
+
         #region ウインドウサイズ変更
         private Boolean cwmChangingWindowSize = false;
         private BackgroundWorker resizeWindowBGWorker;
@@ -1071,28 +1081,45 @@ namespace ImageViewer
 
         #region ウィンドウ移動
         private Boolean mwMovingWindow = false;
-        private void mwEnterMovingWindowMode()
+        private Point mvMoveDelta;
+        private void mwEnterMovingWindowMode(bool center = true)
         {
+            this.Cursor = Cursors.NoMove2D;
             resetMouseMode();
 
             mwMovingWindow = true;
-            this.Cursor = Cursors.Cross;
             this.pictureBox.Capture = true;
 
-            Cursor.Position = new Point(
-                this.Location.X + this.Width / 2,
-                this.Location.Y + this.Height / 2
-                );
+            Point centerPoint = new Point(
+                    this.Location.X + this.Width / 2,
+                    this.Location.Y + this.Height / 2
+                    );
+            if (center)
+            {
+                Cursor.Position = centerPoint;
+                mvMoveDelta = new Point(0, 0);
+            }
+            else
+            {
+                mvMoveDelta = pointSub(centerPoint, middleClickScreenPosition);
+            }
 
             mwMoveWindowToCursorPosition();
         }
 
         private void mwMoveWindowToCursorPosition()
         {
-            this.Location = new Point(
-                Cursor.Position.X - this.Width / 2,
-                Cursor.Position.Y - this.Height / 2
-                );
+            // フォーム外でコマンドから移動モードを開始した場合、
+            // Waitカーソルになっているため、再設定する。
+            this.Cursor = Cursors.NoMove2D;
+
+            this.Location = pointAdd(
+                new Point(
+                    Cursor.Position.X - this.Width / 2,
+                    Cursor.Position.Y - this.Height / 2
+                ),
+                mvMoveDelta
+            );
         }
 
         private void mwExitMovingWindowMode()
@@ -1162,13 +1189,14 @@ namespace ImageViewer
             {
                 mwMoveWindowToCursorPosition();
             }
-            else if(pmDrawLineMode)
+            else if (pmDrawLineMode)
             {
                 pmAddLinePoint(e.Location);
             }
         }
 
         private Point rightClickPosition;
+        private Point middleClickScreenPosition;
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1189,21 +1217,14 @@ namespace ImageViewer
 
                 case MouseButtons.Right:
                     rightClickPosition = e.Location;
+                    Cursor.Current = Cursors.Hand;
                     pmEnterDrawLineMode();
                     break;
 
                 case MouseButtons.Middle:
-                    if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
-                    {
-                        zoomNative();
-                    }
-                    else
-                    {
-                        resetCustomView();
-                        refreshWindow();
-                    }
-                    turnOffOverwrapWait();
-                    paintBoard.clear();
+                    this.Cursor = Cursors.NoMove2D;
+                    middleClickScreenPosition = pictureBox.PointToScreen(e.Location);
+                    mwEnterMovingWindowMode(false);
                     break;
 
                 case MouseButtons.XButton1: // backward
@@ -1218,6 +1239,8 @@ namespace ImageViewer
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
+            Cursor.Current = Cursors.Default;
+
             switch (e.Button)
             {
                 case MouseButtons.Left:
@@ -1233,6 +1256,26 @@ namespace ImageViewer
                     pmExitDrawLineMode();
                     if (rightClickPosition == e.Location)
                         contextMenuStrip1.Show(pictureBox, e.Location);
+                    break;
+
+                case MouseButtons.Middle:
+                    if (mwMovingWindow)
+                        mwExitMovingWindowMode();
+
+                    if (middleClickScreenPosition != pictureBox.PointToScreen(e.Location))
+                        break;
+
+                    if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+                    {
+                        zoomNative();
+                    }
+                    else
+                    {
+                        resetCustomView();
+                        refreshWindow();
+                    }
+                    turnOffOverwrapWait();
+                    paintBoard.clear();
 
                     break;
             }
