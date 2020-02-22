@@ -381,6 +381,14 @@ namespace ImageViewer
 
         #region 画像描画ビュー変更
 
+        private void resetToDefaultView()
+        {
+            resetCustomView();
+            refreshWindow();
+            turnOffOverwrapWait();
+            paintBoard.clear();
+        }
+
         private double calcZoomRatio(int outerHeight, int outerWidth, int imageHeight, int imageWidth)
         {
             double ratio;
@@ -522,6 +530,14 @@ namespace ImageViewer
             currentZoomRatio = 1.0;
             isFixedZoomRatio = false;
             refreshWindow();
+        }
+
+        private void toggleZoomNative()
+        {
+            if (currentZoomRatio == 1.0)
+                zoomReset();
+            else
+                zoomNative();
         }
 
         private void zoomIn()
@@ -917,6 +933,10 @@ namespace ImageViewer
                     toggleTopMost();
                     break;
 
+                case 'e':
+                    launchExplorer();
+                    break;
+
                 case (char)Keys.Space:
                     if (!isRangeOperating)
                         ToolStripMenuItem_RangeOpe_FromHere_Click(null, null);
@@ -926,11 +946,18 @@ namespace ImageViewer
                     break;
 
                 case (char)Keys.Enter:
-                    launchExplorer();
+                    if (anyMouseMode())
+                        resetMouseMode();
+                    else
+                        toggleZoomNative();
                     break;
 
                 case (char)Keys.Tab:
                     askOpen();
+                    break;
+
+                case (char)Keys.Back:
+                    resetToDefaultView();
                     break;
             }
         }
@@ -1232,7 +1259,7 @@ namespace ImageViewer
                     break;
 
                 case MouseButtons.XButton2: // forward
-                    zoomNative();
+                    toggleZoomNative();
                     break;
             }
         }
@@ -1271,11 +1298,8 @@ namespace ImageViewer
                     }
                     else
                     {
-                        resetCustomView();
-                        refreshWindow();
+                        resetToDefaultView();
                     }
-                    turnOffOverwrapWait();
-                    paintBoard.clear();
 
                     break;
             }
