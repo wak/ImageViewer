@@ -1584,7 +1584,8 @@ namespace ImageViewer
         private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
         {
             reloadDirectory();
-            showLastImage();
+            currentImageListIndex = imageList.lastUpdatedFileIndex;
+            changeImage();
         }
 
         private void ToolStripMenuItem_watchDirectory_Click(object sender, EventArgs e)

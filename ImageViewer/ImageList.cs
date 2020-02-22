@@ -8,10 +8,11 @@ namespace ImageViewer
     {
         protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
         protected List<string> imageList = new List<string>();
+        public int lastUpdatedFileIndex;
 
         public ImageList()
         {
-            // nothing to do (empty class)
+            lastUpdatedFileIndex = -1;
         }
 
         public ImageList(string folderPath)
@@ -26,6 +27,7 @@ namespace ImageViewer
 
         private void findImages(string folderPath)
         {
+            DateTime lastUpdated = new DateTime(0);
             string[] allPathes = System.IO.Directory.GetFiles(folderPath);
 
             foreach (string path in allPathes)
@@ -36,6 +38,12 @@ namespace ImageViewer
                 {
                     Console.WriteLine(path);
                     imageList.Add(System.IO.Path.GetFullPath(path));
+
+                    if (lastUpdated < System.IO.File.GetLastWriteTime(path))
+                    {
+                        lastUpdated = System.IO.File.GetLastWriteTime(path);
+                        lastUpdatedFileIndex = imageList.Count - 1;
+                    }
                 }
                 imageList.Sort();
             }
