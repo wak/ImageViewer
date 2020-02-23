@@ -6,19 +6,19 @@ namespace ImageViewer
 {
     class Line
     {
-        public List<Point> points = new List<Point>();
+        public List<PointF> points = new List<PointF>();
 
-        public void addPoint(Point p)
+        public void addPoint(PointF p)
         {
             points.Add(p);
         }
 
-        public void draw(Graphics g, Point baseLocation)
+        public void draw(Graphics g, Point baseLocation, float zoom)
         {
             if (points.Count <= 1)
                 return;
 
-            var drawPoints = points.Select(p => new Point(p.X + baseLocation.X, p.Y + baseLocation.Y));
+            var drawPoints = points.Select(p => new PointF(p.X * zoom + baseLocation.X, p.Y * zoom + baseLocation.Y));
 
             using (Pen pen = new Pen(Color.FromArgb(255, 255, 0, 0), 5))
             {
@@ -51,16 +51,16 @@ namespace ImageViewer
             lines.Add(currentLine);
         }
 
-        public void addPoint(Point p)
+        public void addPoint(PointF p)
         {
             currentLine.addPoint(p);
         }
 
-        public void draw(Graphics g, Point baseLocation)
+        public void draw(Graphics g, Point baseLocation, float zoom)
         {
             foreach (Line l in lines)
             {
-                l.draw(g, baseLocation);
+                l.draw(g, baseLocation, zoom);
             }
         }
 

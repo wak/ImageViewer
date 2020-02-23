@@ -21,13 +21,12 @@ namespace ImageViewer
         private string currentImagePath;
 
         private PaintBoard paintBoard = new PaintBoard();
-        private Point paintBaseLocation = new Point(0, 0);
 
         private Image currentImage;
         private int currentImageListIndex;
 
         private Rectangle currentRectangle;
-        private double currentZoomRatio;
+        private float currentZoomRatio;
         private Point currentDrawLocation;
 
         private bool isFixedZoomRatio;
@@ -80,7 +79,7 @@ namespace ImageViewer
             currentDirectoryPath = null;
             currentImageListIndex = 0;
             currentImage = null;
-            currentZoomRatio = 1.0;
+            currentZoomRatio = 1.0f;
             isFixedZoomRatio = false;
             currentImagePath = null;
             turnOffOverwrapWait();
@@ -330,7 +329,7 @@ namespace ImageViewer
             else
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
-                paintBoard.draw(e.Graphics, paintBaseLocation);
+                paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
 
                 if (rcmRangeCopyModeSelecting)
                 {
@@ -412,14 +411,14 @@ namespace ImageViewer
             paintBoard.clear();
         }
 
-        private double calcZoomRatio(int outerHeight, int outerWidth, int imageHeight, int imageWidth)
+        private float calcZoomRatio(int outerHeight, int outerWidth, int imageHeight, int imageWidth)
         {
-            double ratio;
+            float ratio;
 
-            ratio = Math.Min((double)(outerWidth - PICTURE_BORDER_SIZE * 2) / imageWidth,
-                             (double)(outerHeight - PICTURE_BORDER_SIZE * 2) / imageHeight);
+            ratio = Math.Min((float)(outerWidth - PICTURE_BORDER_SIZE * 2) / imageWidth,
+                             (float)(outerHeight - PICTURE_BORDER_SIZE * 2) / imageHeight);
 
-            return Math.Min(ratio, 1.0);
+            return Math.Min(ratio, 1.0f);
         }
 
         private void calcDefaultZoomRatio()
@@ -550,14 +549,14 @@ namespace ImageViewer
 
         private void zoomReset()
         {
-            currentZoomRatio = 1.0;
+            currentZoomRatio = 1.0f;
             isFixedZoomRatio = false;
             refreshWindow();
         }
 
         private void toggleZoomNative()
         {
-            if (currentZoomRatio == 1.0)
+            if (currentZoomRatio == 1.0f)
                 zoomReset();
             else
                 zoomNative();
@@ -565,21 +564,21 @@ namespace ImageViewer
 
         private void zoomIn()
         {
-            currentZoomRatio += 0.1;
+            currentZoomRatio += 0.1f;
             isFixedZoomRatio = true;
             refreshWindow();
         }
 
         private void zoomOut()
         {
-            currentZoomRatio -= 0.1;
+            currentZoomRatio = Math.Max(0.0f, currentZoomRatio - 0.1f);
             isFixedZoomRatio = true;
             refreshWindow();
         }
 
         private void zoomNative()
         {
-            currentZoomRatio = 1.0;
+            currentZoomRatio = 1.0f;
             isFixedZoomRatio = true;
             refreshWindow();
         }
@@ -1117,9 +1116,6 @@ namespace ImageViewer
             currentDrawLocation.X += x;
             currentDrawLocation.Y += y;
 
-            paintBaseLocation.X += x;
-            paintBaseLocation.Y += y;
-
             wmiMovingImagePreviousPoint = e.Location;
             if (x != 0 || y != 0)
                 isFixedDrawLocation = true;
@@ -1190,7 +1186,7 @@ namespace ImageViewer
 
         private void pmAddLinePoint(Point p)
         {
-            Point newP = new Point(p.X - paintBaseLocation.X, p.Y - paintBaseLocation.Y);
+            PointF newP = new PointF((p.X - currentDrawLocation.X) / currentZoomRatio, (p.Y - currentDrawLocation.Y) / currentZoomRatio);
             paintBoard.addPoint(newP);
             refreshWindow();
         }
