@@ -617,7 +617,6 @@ namespace ImageViewer
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
                     g.DrawImage(currentImage, currentRectangle);
-                    Clipboard.SetDataObject(bmp, true);
 
                     Rectangle rect = new Rectangle(rcmX(), rcmY(), rcmWidth(), rcmHeight());
                     Bitmap dest = bmp.Clone(rect, bmp.PixelFormat);
