@@ -1581,6 +1581,11 @@ namespace ImageViewer
             askOpen();
         }
 
+        private void toolStripMenuItem_openTreeView_Click(object sender, EventArgs e)
+        {
+            showImageTree();
+        }
+
         #endregion
 
         #region ウインドウ幅保存・復元
