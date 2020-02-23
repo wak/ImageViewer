@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
+using System.Runtime.Serialization;
 
 namespace ImageViewer
 {
-    public class ImageList
+    public class ImageList : IEnumerable<string>
     {
         protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
         protected List<string> imageList = new List<string>();
@@ -19,11 +21,6 @@ namespace ImageViewer
         {
             this.findImages(folderPath);
         }
-
-        //private ImageList(List<string> list)
-        //{
-        //    this.imageList = list;
-        //}
 
         private void findImages(string folderPath)
         {
@@ -86,6 +83,16 @@ namespace ImageViewer
                 return false;
         }
 
+        public IEnumerator<string> GetEnumerator()
+        {
+            return new ImageListEnumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new ImageListEnumerator(this);
+        }
+
         public int Count
         {
             get { return imageList.Count; }
@@ -96,6 +103,38 @@ namespace ImageViewer
             get { return imageList[index]; }
         }
 
+        private class ImageListEnumerator : IEnumerator<string>
+        {
+            private ImageList imageList;
+            private int currentIndex = -1;
+
+            public ImageListEnumerator(ImageList imageList)
+            {
+                this.imageList = imageList;
+            }
+
+            public string Current { get { return imageList[currentIndex]; } }
+            object IEnumerator.Current { get { return imageList[currentIndex]; } }
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+                currentIndex += 1;
+
+                if (imageList.Count <= currentIndex)
+                    return false;
+                else
+                    return true;
+            }
+
+            public void Reset()
+            {
+                currentIndex = -1;
+            }
+        }
     }
 
     public class ZipImageList : ImageList

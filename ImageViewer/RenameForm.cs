@@ -6,16 +6,20 @@ namespace ImageViewer
 {
     public partial class RenameForm : Form
     {
-        const string REGEX = @"(?<filename>.*?)(?<separator> +- )(?<comment>.*)(?<extension>\..*?)";
+        const string REGEX = @"(?<filename>.*?)\s+(?<separator>-+)\s*(?<comment>.*)(?<extension>\..*?)";
 
         public string result;
+        private ImageTree imageTree;
+        private string originalAbsPath;
         private readonly List<char> INVALID_CHARACTERS = new List<char>(new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' });
 
-        public RenameForm(string oldFilePath)
+        public RenameForm(string oldFilePath, ImageTree imageTree)
         {
             InitializeComponent();
 
             this.result = null;
+            this.imageTree = imageTree;
+            this.originalAbsPath = oldFilePath;
             this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
             this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
 
@@ -31,15 +35,33 @@ namespace ImageViewer
 
         private void textBox_filename_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter)
+            switch (e.KeyChar)
             {
-                e.Handled = true;
-                desideFilename();
+                case (char)Keys.Enter:
+                    e.Handled = true;
+                    desideFilename();
+                    break;
+
+                case (char)Keys.Escape:
+                    e.Handled = true;
+                    this.Close();
+                    break;
             }
-            if (e.KeyChar == (char) Keys.Escape)
+        }
+
+        private void textBox_comment_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
             {
-                e.Handled = true;
-                this.Close();
+                case Keys.Up:
+                    e.Handled = true;
+                    updateFilenameFromComment(-1);
+                    break;
+
+                case Keys.Down:
+                    e.Handled = true;
+                    updateFilenameFromComment(1);
+                    break;
             }
         }
 
@@ -82,38 +104,34 @@ namespace ImageViewer
 
         private void updateCommentFromFilename()
         {
-            System.Text.RegularExpressions.MatchCollection mc =
-                System.Text.RegularExpressions.Regex.Matches(
-                    this.textBox_filename.Text, REGEX);
+            ImageFile f = new ImageFile(this.textBox_filename.Text);
 
-            if (mc.Count > 0)
-            {
-                this.textBox_comment.Text = mc[0].Groups["comment"].Value;
-            }
-            else
-            {
-                this.textBox_comment.Text = "";
-            }
+            this.textBox_comment.Text = f.comment;
+            updateBreadcrumbs(f.commentLevel);
         }
 
-        private void updateFilenameFromComment()
+        private void updateFilenameFromComment(int commentLevelAdd = 0)
         {
-            System.Text.RegularExpressions.MatchCollection mc =
-                System.Text.RegularExpressions.Regex.Matches(
-                    this.textBox_filename.Text, REGEX);
+            ImageFile f = new ImageFile(this.textBox_filename.Text);
 
             string filenameBase;
-            string filenameSep;
-            
-            if (mc.Count > 0)
-                filenameBase = mc[0].Groups["filename"].Value;
-            else
-                filenameBase = System.IO.Path.GetFileNameWithoutExtension(this.textBox_filename.Text);
+            filenameBase = System.IO.Path.GetFileNameWithoutExtension(f.filenameWithoutComment);
 
+            int commentLevel;
             if (this.textBox_comment.Text.Length > 0)
-                filenameSep = " - ";
+            {
+                commentLevel = f.commentLevel + commentLevelAdd;
+                if (commentLevel <= 0)
+                    commentLevel = 1;
+            }
             else
-                filenameSep = "";
+            {
+                commentLevel = 0;
+            }
+
+            string filenameSep = "";
+            if (commentLevel > 0)
+                filenameSep = " " + new string('-', commentLevel) + " ";
 
             string newfilename = null;
 
@@ -127,6 +145,25 @@ namespace ImageViewer
 
             this.textBox_filename.Text = newfilename;
             fixFilename();
+
+            updateBreadcrumbs(commentLevel);
+        }
+
+        private void updateBreadcrumbs(int level)
+        {
+            var tree = imageTree.findTreeByAbsPath(originalAbsPath);
+            List<string> parts = tree.breadcrumbs("(root)");
+            if (tree.files[0].absPath == originalAbsPath)
+                parts.RemoveAt(parts.Count - 1);
+
+            this.labelCurrentBreadcrumbs.Text = string.Join(" > ", parts);
+            if (level <= 1)
+            {
+                this.labelNewBreadcrumbs.Text = "(root)";
+                return;
+            }
+
+            this.labelNewBreadcrumbs.Text = string.Join(" > ", parts.GetRange(0, Math.Min(parts.Count, level)));
         }
 
         private void textBox_filename_TextChanged(object sender, EventArgs e)

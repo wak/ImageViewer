@@ -61,6 +61,19 @@ namespace ImageViewer
             changeImage();
         }
 
+        private void showImageTree()
+        {
+            var treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageList));
+            treeForm.itemSelected += ((selectedFile) => changeImage(selectedFile));
+            treeForm.itemArranged += (() => reloadDirectory());
+            treeForm.Show();
+        }
+
+        private void TreeForm_itemSelected(ImageFile selectedFile)
+        {
+            changeImage(selectedFile);
+        }
+
         private void initializeInstanceVariables()
         {
             imageList = new ImageList();
@@ -144,7 +157,10 @@ namespace ImageViewer
             if (isZip())
                 return;
 
-            RenameForm form = new RenameForm(currentImagePath);
+            if (imageList.Count == 0)
+                return;
+
+            RenameForm form = new RenameForm(currentImagePath, new ImageTree(imageList));
             string newFilename = null;
 
             if (form.ShowDialog() != DialogResult.OK)
@@ -241,13 +257,20 @@ namespace ImageViewer
 
         #region Window描画
 
-        private void changeImage()
+        private void changeImage(ImageFile imageFile = null)
         {
             if (imageList.Count == 0)
             {
                 currentImage = null;
                 refreshWindow();
                 return;
+            }
+
+            if (imageFile != null)
+            {
+                int newIndex = imageList.findIndex(imageFile.absPath);
+                if (newIndex >= 0)
+                    currentImageListIndex = newIndex;
             }
 
             currentImagePath = imageList[currentImageListIndex];
@@ -930,7 +953,7 @@ namespace ImageViewer
                     break;
 
                 case 't':
-                    toggleTopMost();
+                    showImageTree();
                     break;
 
                 case 'e':
@@ -1389,6 +1412,9 @@ namespace ImageViewer
 
         private void launchExplorer()
         {
+            if (currentImagePath == null)
+                return;
+
             System.Diagnostics.Process process = System.Diagnostics.Process.Start(
                 "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImagePath)
             );
@@ -1488,7 +1514,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_RangeOpe_FromHere_Click(object sender, EventArgs e)
         {
-            if (currentImage == null)
+            if (imageList.Count == 0)
                 return;
             isRangeOperating = true;
             isRangeOperate_StartPosition = currentImageListIndex;
@@ -1496,6 +1522,8 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_RangeOpe_MoveTo_Click(object sender, EventArgs e)
         {
+            if (imageList.Count == 0)
+                return;
             isRangeOperating = false;
             moveItems(isRangeOperate_StartPosition, currentImageListIndex);
         }
@@ -1513,6 +1541,8 @@ namespace ImageViewer
         private void moveItems(int index1, int index2)
         {
             if (isZip())
+                return;
+            if (imageList.Count == 0)
                 return;
 
             int fromIndex = Math.Min(index1, currentImageListIndex);
