@@ -28,56 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TreeForm));
             this.treeView = new System.Windows.Forms.TreeView();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.listView = new System.Windows.Forms.ListView();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonArrange = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.buttonReload = new System.Windows.Forms.Button();
+            this.treeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ToolStripMenuItem_rename = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_downLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_upLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripMenuItem_downTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_upTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.buttonReLevel = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.treeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView
             // 
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.Location = new System.Drawing.Point(3, 3);
+            this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(280, 357);
+            this.treeView.Size = new System.Drawing.Size(215, 328);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.25317F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.74683F));
-            this.tableLayoutPanel1.Controls.Add(this.treeView, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.listView, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 351F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(632, 363);
-            this.tableLayoutPanel1.TabIndex = 2;
+            this.treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDown);
             // 
             // listView
             // 
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.HideSelection = false;
-            this.listView.Location = new System.Drawing.Point(289, 3);
+            this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(340, 357);
+            this.listView.Size = new System.Drawing.Size(426, 328);
             this.listView.TabIndex = 1;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
-            this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
+            this.listView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_ItemSelectionChanged);
             // 
             // buttonClose
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClose.Location = new System.Drawing.Point(538, 369);
+            this.buttonClose.Location = new System.Drawing.Point(551, 346);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(82, 30);
             this.buttonClose.TabIndex = 3;
@@ -88,7 +88,7 @@
             // buttonArrange
             // 
             this.buttonArrange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonArrange.Location = new System.Drawing.Point(12, 369);
+            this.buttonArrange.Location = new System.Drawing.Point(12, 346);
             this.buttonArrange.Name = "buttonArrange";
             this.buttonArrange.Size = new System.Drawing.Size(82, 30);
             this.buttonArrange.TabIndex = 4;
@@ -96,19 +96,130 @@
             this.buttonArrange.UseVisualStyleBackColor = true;
             this.buttonArrange.Click += new System.EventHandler(this.buttonArrange_Click);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.listView);
+            this.splitContainer1.Size = new System.Drawing.Size(645, 328);
+            this.splitContainer1.SplitterDistance = 215;
+            this.splitContainer1.TabIndex = 5;
+            // 
+            // buttonReload
+            // 
+            this.buttonReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReload.Location = new System.Drawing.Point(133, 346);
+            this.buttonReload.Name = "buttonReload";
+            this.buttonReload.Size = new System.Drawing.Size(82, 30);
+            this.buttonReload.TabIndex = 6;
+            this.buttonReload.Text = "リロード";
+            this.buttonReload.UseVisualStyleBackColor = true;
+            this.buttonReload.Click += new System.EventHandler(this.buttonReload_Click);
+            // 
+            // treeMenu
+            // 
+            this.treeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_rename,
+            this.toolStripSeparator6,
+            this.ToolStripMenuItem_upLevel,
+            this.ToolStripMenuItem_downLevel,
+            this.toolStripSeparator7,
+            this.ToolStripMenuItem_upTreeLevel,
+            this.ToolStripMenuItem_downTreeLevel});
+            this.treeMenu.Name = "treeMenu";
+            this.treeMenu.Size = new System.Drawing.Size(193, 126);
+            // 
+            // ToolStripMenuItem_rename
+            // 
+            this.ToolStripMenuItem_rename.Name = "ToolStripMenuItem_rename";
+            this.ToolStripMenuItem_rename.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_rename.Text = "名前を変更";
+            this.ToolStripMenuItem_rename.Click += new System.EventHandler(this.ToolStripMenuItem_rename_Click);
+            // 
+            // ToolStripMenuItem_downLevel
+            // 
+            this.ToolStripMenuItem_downLevel.Name = "ToolStripMenuItem_downLevel";
+            this.ToolStripMenuItem_downLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_downLevel.Tag = "down";
+            this.ToolStripMenuItem_downLevel.Text = "階層を下げる";
+            this.ToolStripMenuItem_downLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            // 
+            // ToolStripMenuItem_upLevel
+            // 
+            this.ToolStripMenuItem_upLevel.Name = "ToolStripMenuItem_upLevel";
+            this.ToolStripMenuItem_upLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_upLevel.Tag = "up";
+            this.ToolStripMenuItem_upLevel.Text = "階層を上げる";
+            this.ToolStripMenuItem_upLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(189, 6);
+            // 
+            // ToolStripMenuItem_downTreeLevel
+            // 
+            this.ToolStripMenuItem_downTreeLevel.Name = "ToolStripMenuItem_downTreeLevel";
+            this.ToolStripMenuItem_downTreeLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_downTreeLevel.Tag = "treeDown";
+            this.ToolStripMenuItem_downTreeLevel.Text = "サブツリーの階層を下げる";
+            this.ToolStripMenuItem_downTreeLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            // 
+            // ToolStripMenuItem_upTreeLevel
+            // 
+            this.ToolStripMenuItem_upTreeLevel.Name = "ToolStripMenuItem_upTreeLevel";
+            this.ToolStripMenuItem_upTreeLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_upTreeLevel.Tag = "treeUp";
+            this.ToolStripMenuItem_upTreeLevel.Text = "サブツリーの階層を上げる";
+            this.ToolStripMenuItem_upTreeLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(189, 6);
+            // 
+            // buttonReLevel
+            // 
+            this.buttonReLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReLevel.Location = new System.Drawing.Point(279, 346);
+            this.buttonReLevel.Name = "buttonReLevel";
+            this.buttonReLevel.Size = new System.Drawing.Size(148, 30);
+            this.buttonReLevel.TabIndex = 8;
+            this.buttonReLevel.Text = "仮想ツリーレベルを再設定";
+            this.buttonReLevel.UseVisualStyleBackColor = true;
+            this.buttonReLevel.Click += new System.EventHandler(this.buttonReLevel_Click);
+            // 
             // TreeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 405);
+            this.ClientSize = new System.Drawing.Size(645, 382);
+            this.Controls.Add(this.buttonReLevel);
+            this.Controls.Add(this.buttonReload);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonArrange);
             this.Controls.Add(this.buttonClose);
-            this.Controls.Add(this.tableLayoutPanel1);
             this.KeyPreview = true;
             this.Name = "TreeForm";
-            this.Text = "Tree";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "仮想ツリー管理";
+            this.Load += new System.EventHandler(this.TreeForm_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TreeForm_KeyPress);
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.treeMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -116,9 +227,19 @@
         #endregion
 
         private System.Windows.Forms.TreeView treeView;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonArrange;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button buttonReload;
+        private System.Windows.Forms.ContextMenuStrip treeMenu;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_rename;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_downLevel;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_upLevel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_upTreeLevel;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_downTreeLevel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.Button buttonReLevel;
     }
 }

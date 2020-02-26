@@ -8,8 +8,11 @@ namespace ImageViewer
         public string name;
         public ImageTree parent;
         public int commentLevel;
+        public int treeLevel;
         public List<ImageTree> nodes;
         public List<ImageFile> files;
+
+        private ImageList imageList = null;
 
         private ImageTree(ImageFile f = null, ImageTree parent = null)
         {
@@ -17,20 +20,28 @@ namespace ImageViewer
             this.nodes = new List<ImageTree>();
             this.files = new List<ImageFile>();
 
+            if (parent == null)
+                treeLevel = 0;
+            else
+                treeLevel = parent.treeLevel + 1;
+
+            clear();
+
             if (f != null)
             {
                 this.name = f.comment;
                 this.commentLevel = f.commentLevel;
                 this.files.Add(f);
             }
-            else
-            {
-                this.name = "";
-                this.commentLevel = 0;
-            }
         }
 
         public ImageTree(ImageList imageList) : this(null, null)
+        {
+            this.imageList = imageList;
+            setupTree(imageList);
+        }
+
+        private void setupTree(ImageList imageList)
         {
             int currentLevel = 0;
             ImageTree currentNode = this;
@@ -58,6 +69,58 @@ namespace ImageViewer
                     currentNode.addEntry(f);
                 }
             }
+        }
+
+        internal bool contains(ImageFile file)
+        {
+            if (file == null)
+                return false;
+
+            foreach (var f in files)
+                if (f.absPath == file.absPath)
+                    return true;
+
+            return false;
+        }
+
+        // 破壊的
+        public void upLevel(bool recursive = false)
+        {
+            if (files.Count > 0)
+                files[0].changeLevel(treeLevel - 1);
+
+            if (recursive)
+                foreach (var t in nodes)
+                    t.upLevel(true);
+        }
+
+        // 破壊的
+        public void downLevel(bool recursive = false)
+        {
+            if (files.Count > 0)
+                files[0].changeLevel(treeLevel + 1);
+
+            if (recursive)
+                foreach (var t in nodes)
+                    t.downLevel(true);
+        }
+
+        public void reload()
+        {
+            if (!isRoot())
+                throw new NotImplementedException("reload should root node.");
+
+            imageList.reload();
+            clear();
+            setupTree(imageList);
+        }
+
+        private void clear()
+        {
+            nodes.Clear();
+            files.Clear();
+            name = "";
+            commentLevel = 0;
         }
 
         public bool isRoot()
@@ -139,6 +202,16 @@ namespace ImageViewer
             {
                 dump_(level + 1, n);
             }
+        }
+
+        internal void fixLevel(bool recursive = true)
+        {
+            if (files.Count > 0)
+                files[0].changeLevel(treeLevel);
+
+            if (recursive)
+                foreach (var t in nodes)
+                    t.fixLevel(true);
         }
     }
 }

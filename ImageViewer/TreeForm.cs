@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace ImageViewer
 {
@@ -8,11 +10,15 @@ namespace ImageViewer
     {
         public delegate void ItemSelectedEventHandler(ImageFile selectedFile);
         public delegate void ItemArrangedEventHandler();
+        public delegate void RepositoryChangedEventHandler();
         public event ItemSelectedEventHandler itemSelected;
         public event ItemArrangedEventHandler itemArranged;
+        public event RepositoryChangedEventHandler repositoryChanged;
 
         private ImageTree imageTree;
         private string baseDirectory;
+
+        private List<ImageFile> viewingFiles = new List<ImageFile>();
 
         public TreeForm(string _baseDirectory, ImageTree tree)
         {
@@ -20,27 +26,41 @@ namespace ImageViewer
 
             baseDirectory = _baseDirectory;
             imageTree = tree;
-            addNodes(treeView.Nodes, imageTree);
+            setupNodes();
+        }
 
+        private void setupNodes()
+        {
+            imageTree.dump();
+            treeView.Nodes.Clear();
+
+            setupNodes_(treeView.Nodes, imageTree);
             treeView.ExpandAll();
+            treeView.Select();
             treeView.Focus();
         }
 
-        private void addNodes(TreeNodeCollection myNodes, ImageTree imageNode)
+        private void setupNodes_(TreeNodeCollection myNodes, ImageTree imageNode)
         {
             string nodeName = (imageNode.isRoot() ? "(root)" : imageNode.name);
             TreeNode myNode = new TreeNode(nodeName);
             myNode.Tag = imageNode;
             myNodes.Add(myNode);
 
+            foreach (var oldview in viewingFiles)
+                if (imageNode.contains(oldview))
+                    treeView.SelectedNode = myNode;
+
             foreach (var inode in imageNode.nodes)
             {
-                addNodes(myNode.Nodes, inode);
+                setupNodes_(myNode.Nodes, inode);
             }
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            viewingFiles = new List<ImageFile>();
+
             ImageTree node = (ImageTree)e.Node.Tag;
 
             listView.Clear();
@@ -49,18 +69,44 @@ namespace ImageViewer
             {
                 var item = new ListViewItem(n.filename);
 
+                viewingFiles.Add(n);
+
                 item.Tag = n;
                 listView.Items.Add(item);
             }
 
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             listView.Columns[0].Width -= 5;
+
+            if (listView.Items.Count > 0)
+                listView.Items[0].Selected = true;
         }
 
-        private void listView_DoubleClick(object sender, System.EventArgs e)
+        public void reload()
+        {
+            imageTree.reload();
+            setupNodes();
+        }
+
+        private void change()
+        {
+            reload();
+
+            if (repositoryChanged != null)
+                repositoryChanged();
+        }
+
+        private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (itemSelected != null)
-                itemSelected((ImageFile)listView.SelectedItems[0].Tag);
+                itemSelected((ImageFile)(e.Item.Tag));
+        }
+
+        private void TreeForm_Load(object sender, EventArgs e)
+        {
+            this.Location = new Point(
+                this.Owner.Location.X + (this.Owner.Width - this.Width) / 2,
+                this.Owner.Location.Y + (this.Owner.Height - this.Height) / 2);
         }
 
         private void TreeForm_KeyPress(object sender, KeyPressEventArgs e)
@@ -71,6 +117,12 @@ namespace ImageViewer
                     e.Handled = true;
                     break;
 
+                case 'r':
+                    reload();
+                    break;
+
+                case 'w':
+                case 'q':
                 case (char)Keys.Escape:
                     e.Handled = true;
                     Close();
@@ -83,6 +135,12 @@ namespace ImageViewer
             Close();
         }
 
+        private void buttonReload_Click(object sender, EventArgs e)
+        {
+            reload();
+        }
+
+        #region フォルダ分け
         private void buttonArrange_Click(object sender, System.EventArgs e)
         {
             var result =
@@ -187,6 +245,103 @@ namespace ImageViewer
             }
 
             return succeed;
+        }
+        #endregion
+
+        private void ToolStripMenuItem_rename_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+            var renameForm = new RenameForm(tree.files[0].absPath, tree);
+            if (renameForm.ShowDialog() == DialogResult.OK)
+                change();
+        }
+
+        private bool hasSelectedTree()
+        {
+            if (treeView.SelectedNode == null)
+                return false;
+
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+
+            if (tree.files.Count == 0)
+                return false;
+
+            return true;
+        }
+
+        private void ToolStripMenuItem_upLevel_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+
+            switch ((string)menu.Tag)
+            {
+                case "up":
+                    tree.upLevel();
+                    break;
+
+                case "down":
+                    tree.downLevel();
+                    break;
+
+                case "treeUp":
+                    tree.upLevel(true);
+                    break;
+
+                case "treeDown":
+                    tree.downLevel(true);
+                    break;
+
+                default:
+                    throw new Exception("bug");
+            }
+
+            change();
+        }
+
+        private void treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var selectedNode = treeView.GetNodeAt(e.X, e.Y);
+                treeView.SelectedNode = selectedNode;
+
+                if (selectedNode != null)
+                {
+                    updateTreeMenuStatus((ImageTree)(treeView.SelectedNode.Tag));
+                    treeMenu.Show(treeView, e.Location);
+                }
+            }
+        }
+
+        private void updateTreeMenuStatus(ImageTree selected)
+        {
+            ToolStripMenuItem_rename.Enabled = (selected.files.Count > 0);
+
+            bool upEnabled = (selected.treeLevel > 1);
+            ToolStripMenuItem_upLevel.Enabled = upEnabled;
+            ToolStripMenuItem_upTreeLevel.Enabled = upEnabled;
+
+            bool downEnabled = true;
+            if (selected.isRoot())
+                downEnabled = false;
+            if (!selected.isRoot() && selected.parent.files.Count > 0 && selected.parent.nodes[0] == selected)
+                downEnabled = false;
+
+            ToolStripMenuItem_downLevel.Enabled = downEnabled;
+            ToolStripMenuItem_downTreeLevel.Enabled = downEnabled;
+        }
+
+        private void buttonReLevel_Click(object sender, EventArgs e)
+        {
+            imageTree.fixLevel();
+            change();
         }
     }
 }

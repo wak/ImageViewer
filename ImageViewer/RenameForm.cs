@@ -72,8 +72,15 @@ namespace ImageViewer
 
         private void desideFilename()
         {
-            this.result = this.textBox_filename.Text;
-            this.DialogResult = DialogResult.OK;
+            string dirname = System.IO.Path.GetDirectoryName(originalAbsPath);
+            string newFilepath = System.IO.Path.Combine(dirname, this.textBox_filename.Text);
+
+            if (FSUtility.rename(originalAbsPath, newFilepath))
+            {
+                this.result = newFilepath;
+                this.DialogResult = DialogResult.OK;
+            }
+
             this.Close();
         }
 

@@ -12,14 +12,32 @@ namespace ImageViewer
         protected List<string> imageList = new List<string>();
         public int lastUpdatedFileIndex;
 
+        private string repoPath = null;
+
         public ImageList()
         {
-            lastUpdatedFileIndex = -1;
+            clear();
         }
 
         public ImageList(string folderPath)
         {
+            this.repoPath = folderPath;
             this.findImages(folderPath);
+        }
+
+        public void reload()
+        {
+            if (repoPath != null)
+            {
+                clear();
+                this.findImages(repoPath);
+            }
+        }
+
+        private void clear()
+        {
+            lastUpdatedFileIndex = -1;
+            imageList.Clear();
         }
 
         private void findImages(string folderPath)

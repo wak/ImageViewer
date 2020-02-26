@@ -44,6 +44,8 @@ namespace ImageViewer
         private bool isRangeOperating = false;
         private int isRangeOperate_StartPosition = 0;
 
+        private TreeForm treeForm = null;
+
         public MainForm(string path)
         {
             initializeInstanceVariables();
@@ -62,10 +64,11 @@ namespace ImageViewer
 
         private void showImageTree()
         {
-            var treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageList));
+            treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageList));
             treeForm.itemSelected += ((selectedFile) => changeImage(selectedFile));
             treeForm.itemArranged += (() => reloadDirectory());
-            treeForm.Show();
+            treeForm.FormClosed += ((a, b) => treeForm = null);
+            treeForm.Show(this);
         }
 
         private void TreeForm_itemSelected(ImageFile selectedFile)
@@ -160,29 +163,17 @@ namespace ImageViewer
                 return;
 
             RenameForm form = new RenameForm(currentImagePath, new ImageTree(imageList));
-            string newFilename = null;
 
-            if (form.ShowDialog() != DialogResult.OK)
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                return;
-            }
-            newFilename = form.result;
-            form.Dispose();
+                string newFilepath = form.result;
+                form.Dispose();
 
-            string dirname = System.IO.Path.GetDirectoryName(currentImagePath);
-            string newFilepath = System.IO.Path.Combine(dirname, newFilename);
-            try
-            {
-                System.IO.File.Move(currentImagePath, newFilepath);
+                updateImageList(newFilepath);
+                if (treeForm != null)
+                    treeForm.reload();
+                refreshWindow();
             }
-            catch (Exception e)
-            {
-                MessageBox.Show("名前変更に失敗しました。\n\n" + e.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            updateImageList(newFilepath);
-            refreshWindow();
         }
 
         private void reloadDirectory()
@@ -867,6 +858,11 @@ namespace ImageViewer
                     {
                         turnOffOverwrapWait();
                         refreshWindow();
+                        break;
+                    }
+                    if (treeForm != null)
+                    {
+                        treeForm.Close();
                         break;
                     }
                     if (anyMouseMode())

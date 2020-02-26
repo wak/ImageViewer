@@ -1,16 +1,24 @@
-﻿namespace ImageViewer
+﻿using System;
+using System.Windows.Forms;
+
+namespace ImageViewer
 {
     public class ImageFile
     {
         const string REGEX = @"(?<filename>.*?)\s+(?<separator>-+)\s*(?<comment>.*)(?<extension>\..*?)";
 
-        public readonly string absPath;
-        public readonly string filename;
-        public readonly string filenameWithoutComment;
-        public readonly string comment;
-        public readonly int commentLevel;
+        public string absPath;
+        public string filename;
+        public string filenameWithoutComment;
+        public string comment;
+        public int commentLevel;
 
         public ImageFile(string path)
+        {
+            updateProperty(path);
+        }
+
+        private void updateProperty(string path)
         {
             this.absPath = System.IO.Path.GetFullPath(path);
             this.filename = System.IO.Path.GetFileName(path);
@@ -29,6 +37,52 @@
                 commentLevel = 0;
                 filenameWithoutComment = filename;
             }
+        }
+
+        public void changeLevel(int level)
+        {
+            if (level <= 0)
+                return;
+
+            if (level > 0 && comment == null)
+                return;
+
+            rename(buildFilePath(level));
+        }
+
+        private bool rename(string newName)
+        {
+            if (FSUtility.rename(absPath, newName))
+            {
+                updateProperty(newName);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private string buildFilePath(int newLevel)
+        {
+            string newFilename;
+
+            if (newLevel <= 0)
+            {
+                newFilename = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(absPath), filenameWithoutComment);
+            }
+            else
+            {
+                string extension = System.IO.Path.GetExtension(absPath);
+                string head = System.IO.Path.GetFileNameWithoutExtension(filenameWithoutComment);
+                string separator = new string('-', newLevel);
+                newFilename = System.IO.Path.Combine(
+                    System.IO.Path.GetDirectoryName(absPath), 
+                    string.Format("{0} {1} {2}{3}", head, separator, comment, extension)
+                );
+            }
+
+            return newFilename;
         }
 
         private System.Text.RegularExpressions.MatchCollection match()
