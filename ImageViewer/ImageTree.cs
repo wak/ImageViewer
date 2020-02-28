@@ -12,7 +12,7 @@ namespace ImageViewer
         public List<ImageTree> nodes;
         public List<ImageFile> files;
 
-        private ImageRepository imageList = null;
+        public ImageRepository imageList = null;
 
         private ImageTree(ImageFile f = null, ImageTree parent = null)
         {
@@ -48,7 +48,7 @@ namespace ImageViewer
 
             foreach (var f in imageList)
             {
-                if (f.hasComment())
+                if (f.HasComment())
                 {
                     while (currentNode.commentLevel >= f.CommentLevel)
                         currentNode = currentNode.parent;

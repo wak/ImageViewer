@@ -60,6 +60,10 @@ namespace ImageViewer
                         lastUpdatedFileIndex = imageList.Count - 1;
                     }
                 }
+                else if (extension.EndsWith(".iv"))
+                {
+                    imageList.Add(new MetaFile(System.IO.Path.GetFullPath(path)));
+                }
                 imageList.Sort();
             }
         }

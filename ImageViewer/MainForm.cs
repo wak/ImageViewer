@@ -16,7 +16,16 @@ namespace ImageViewer
 
         private ImageRepository imageList;
         private ImageFile currentImageFile;
-        private Image currentImage;
+        private Image currentImage
+        {
+            get
+            {
+                if (currentImageFile == null)
+                    return null;
+                else
+                    return currentImageFile.LoadImage();
+            }
+        }
         private int currentImageListIndex;
 
         private string currentDirectoryPath
@@ -88,7 +97,6 @@ namespace ImageViewer
         {
             imageList = new ImageRepository();
             currentImageListIndex = 0;
-            currentImage = null;
             currentZoomRatio = 1.0f;
             isFixedZoomRatio = false;
             currentImageFile = null;
@@ -109,7 +117,6 @@ namespace ImageViewer
             {
                 currentImageFile = null;
                 currentImageListIndex = 0;
-                currentImage = null;
                 return;
             }
 
@@ -253,7 +260,7 @@ namespace ImageViewer
         {
             if (imageList.Count == 0)
             {
-                currentImage = null;
+                currentImageFile = null;
                 refreshWindow();
                 return;
             }
@@ -266,7 +273,6 @@ namespace ImageViewer
             }
 
             currentImageFile = imageList[currentImageListIndex];
-            currentImage = currentImageFile.LoadImage();
 
             if (autoFitWindowMode)
             {
@@ -278,7 +284,7 @@ namespace ImageViewer
 
         private void prepareToChangeImage()
         {
-            currentImage = null;
+            currentImageFile = null;
         }
 
         private void refreshWindow()
@@ -315,11 +321,11 @@ namespace ImageViewer
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (currentImage == null)
+            if (currentImageFile == null)
             {
                 e.Graphics.Clear(Color.WhiteSmoke);
             }
-            else
+            else if (currentImageFile.IsImage())
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
                 paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
@@ -329,6 +335,19 @@ namespace ImageViewer
                     Pen p = new Pen(Color.Black, 1);
                     e.Graphics.DrawRectangle(p, rcmX(), rcmY(), rcmWidth(), rcmHeight());
                     p.Dispose();
+                }
+            }
+            else if (currentImageFile.HasComment())
+            {
+                using (Font font2 = new Font("Meiryo UI", 30, FontStyle.Bold, GraphicsUnit.Point))
+                {
+                    Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
+
+                    TextFormatFlags flags = TextFormatFlags.HorizontalCenter |
+                        TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+
+                    TextRenderer.DrawText(e.Graphics, currentImageFile.Comment, font2, rect2, Color.Blue, flags);
+                    e.Graphics.DrawRectangle(Pens.Transparent, rect2);
                 }
             }
 
@@ -367,7 +386,7 @@ namespace ImageViewer
                     imageList.Count
                 );
 
-                if (currentImage == null)
+                if (currentImageFile == null)
                     newTitle += " !!LOAD ERROR!!";
 
                 if (isFixedZoomRatio)

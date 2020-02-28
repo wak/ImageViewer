@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TreeForm));
             this.treeView = new System.Windows.Forms.TreeView();
             this.listView = new System.Windows.Forms.ListView();
             this.buttonClose = new System.Windows.Forms.Button();
@@ -38,12 +37,15 @@
             this.buttonReload = new System.Windows.Forms.Button();
             this.treeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ToolStripMenuItem_rename = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_downLevel = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_upLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.ToolStripMenuItem_downTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_upTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_addIV = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_removeIV = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripMenuItem_upLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_downLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripMenuItem_upTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_downTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonReLevel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -131,13 +133,16 @@
             this.treeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ToolStripMenuItem_rename,
             this.toolStripSeparator6,
+            this.ToolStripMenuItem_addIV,
+            this.ToolStripMenuItem_removeIV,
+            this.toolStripSeparator1,
             this.ToolStripMenuItem_upLevel,
             this.ToolStripMenuItem_downLevel,
             this.toolStripSeparator7,
             this.ToolStripMenuItem_upTreeLevel,
             this.ToolStripMenuItem_downTreeLevel});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(193, 126);
+            this.treeMenu.Size = new System.Drawing.Size(193, 198);
             // 
             // ToolStripMenuItem_rename
             // 
@@ -146,13 +151,29 @@
             this.ToolStripMenuItem_rename.Text = "名前を変更";
             this.ToolStripMenuItem_rename.Click += new System.EventHandler(this.ToolStripMenuItem_rename_Click);
             // 
-            // ToolStripMenuItem_downLevel
+            // toolStripSeparator6
             // 
-            this.ToolStripMenuItem_downLevel.Name = "ToolStripMenuItem_downLevel";
-            this.ToolStripMenuItem_downLevel.Size = new System.Drawing.Size(192, 22);
-            this.ToolStripMenuItem_downLevel.Tag = "down";
-            this.ToolStripMenuItem_downLevel.Text = "階層を下げる";
-            this.ToolStripMenuItem_downLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(189, 6);
+            // 
+            // ToolStripMenuItem_addIV
+            // 
+            this.ToolStripMenuItem_addIV.Name = "ToolStripMenuItem_addIV";
+            this.ToolStripMenuItem_addIV.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_addIV.Text = "階層を追加";
+            this.ToolStripMenuItem_addIV.Click += new System.EventHandler(this.ToolStripMenuItem_addIV_Click);
+            // 
+            // ToolStripMenuItem_removeIV
+            // 
+            this.ToolStripMenuItem_removeIV.Name = "ToolStripMenuItem_removeIV";
+            this.ToolStripMenuItem_removeIV.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_removeIV.Text = "階層を削除（.ivのみ）";
+            this.ToolStripMenuItem_removeIV.Click += new System.EventHandler(this.ToolStripMenuItem_removeIV_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(189, 6);
             // 
             // ToolStripMenuItem_upLevel
             // 
@@ -162,18 +183,18 @@
             this.ToolStripMenuItem_upLevel.Text = "階層を上げる";
             this.ToolStripMenuItem_upLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
             // 
-            // toolStripSeparator6
+            // ToolStripMenuItem_downLevel
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(189, 6);
+            this.ToolStripMenuItem_downLevel.Name = "ToolStripMenuItem_downLevel";
+            this.ToolStripMenuItem_downLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_downLevel.Tag = "down";
+            this.ToolStripMenuItem_downLevel.Text = "階層を下げる";
+            this.ToolStripMenuItem_downLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
             // 
-            // ToolStripMenuItem_downTreeLevel
+            // toolStripSeparator7
             // 
-            this.ToolStripMenuItem_downTreeLevel.Name = "ToolStripMenuItem_downTreeLevel";
-            this.ToolStripMenuItem_downTreeLevel.Size = new System.Drawing.Size(192, 22);
-            this.ToolStripMenuItem_downTreeLevel.Tag = "treeDown";
-            this.ToolStripMenuItem_downTreeLevel.Text = "サブツリーの階層を下げる";
-            this.ToolStripMenuItem_downTreeLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(189, 6);
             // 
             // ToolStripMenuItem_upTreeLevel
             // 
@@ -183,10 +204,13 @@
             this.ToolStripMenuItem_upTreeLevel.Text = "サブツリーの階層を上げる";
             this.ToolStripMenuItem_upTreeLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
             // 
-            // toolStripSeparator7
+            // ToolStripMenuItem_downTreeLevel
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(189, 6);
+            this.ToolStripMenuItem_downTreeLevel.Name = "ToolStripMenuItem_downTreeLevel";
+            this.ToolStripMenuItem_downTreeLevel.Size = new System.Drawing.Size(192, 22);
+            this.ToolStripMenuItem_downTreeLevel.Tag = "treeDown";
+            this.ToolStripMenuItem_downTreeLevel.Text = "サブツリーの階層を下げる";
+            this.ToolStripMenuItem_downTreeLevel.Click += new System.EventHandler(this.ToolStripMenuItem_upLevel_Click);
             // 
             // buttonReLevel
             // 
@@ -241,5 +265,8 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_downTreeLevel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.Button buttonReLevel;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_addIV;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_removeIV;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

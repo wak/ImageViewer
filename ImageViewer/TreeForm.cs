@@ -43,6 +43,9 @@ namespace ImageViewer
         private void setupNodes_(TreeNodeCollection myNodes, ImageTree imageNode)
         {
             string nodeName = (imageNode.isRoot() ? "(root)" : imageNode.name);
+            if (imageNode.files.Count > 0 && !imageNode.files[0].IsImage())
+                nodeName += " (*)";
+
             TreeNode myNode = new TreeNode(nodeName);
             myNode.Tag = imageNode;
             myNodes.Add(myNode);
@@ -336,12 +339,85 @@ namespace ImageViewer
 
             ToolStripMenuItem_downLevel.Enabled = downEnabled;
             ToolStripMenuItem_downTreeLevel.Enabled = downEnabled;
+
+            ToolStripMenuItem_removeIV.Enabled = !selected.files[0].IsImage();
         }
 
         private void buttonReLevel_Click(object sender, EventArgs e)
         {
             imageTree.fixLevel();
             change();
+        }
+
+        private void ToolStripMenuItem_addIV_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+
+            var newPath = Path.Combine(
+                tree.files[0].DirPath,
+                makePreviousFilename(tree.files[0]));
+
+            FSUtility.Touch(newPath);
+            imageTree.reload();
+            var renameForm = new RenameForm(newPath, imageTree);
+            renameForm.setCommentLevel(tree.treeLevel);
+            renameForm.ShowDialog();
+
+            change();
+        }
+
+        private void ToolStripMenuItem_removeIV_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+
+            if (tree.files[0].AbsPath.EndsWith(".iv"))
+                File.Delete(tree.files[0].AbsPath);
+
+            change();
+        }
+
+        private string makePreviousFilename(ImageFile target)
+        {
+            string prefix = "";
+            ImageFile previous = null;
+
+            foreach (var i in imageTree.imageList)
+            {
+                if (!i.IsImage())
+                    continue;
+                if (i.Equals(target))
+                    break;
+                previous = i;
+            }
+
+            if (previous != null)
+                prefix = Path.GetFileNameWithoutExtension(previous.FilenameWithoutComment);
+
+            string newName = null;
+
+            for (int i = 1; i < 10; i++)
+            {
+                bool uniq = true;
+                newName = string.Format("{0}[{1:d}].iv", prefix, i);
+
+                foreach (var image in imageTree.imageList)
+                    if (image.FilenameWithoutComment == newName)
+                        uniq = false;
+
+                if (uniq)
+                    break;
+            }
+
+            // 10個も作ることはきっとない。
+            return newName;
         }
     }
 }

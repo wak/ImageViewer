@@ -35,8 +35,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.labelNewBreadcrumbs = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.labelCurrentBreadcrumbs = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -92,7 +90,7 @@
             // labelNewBreadcrumbs
             // 
             this.labelNewBreadcrumbs.AutoSize = true;
-            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(88, 191);
+            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(88, 172);
             this.labelNewBreadcrumbs.Name = "labelNewBreadcrumbs";
             this.labelNewBreadcrumbs.Size = new System.Drawing.Size(70, 12);
             this.labelNewBreadcrumbs.TabIndex = 6;
@@ -101,37 +99,17 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 191);
+            this.label3.Location = new System.Drawing.Point(23, 172);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 12);
             this.label3.TabIndex = 7;
             this.label3.Text = "変更階層：";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 165);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 12);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "現在階層：";
-            // 
-            // labelCurrentBreadcrumbs
-            // 
-            this.labelCurrentBreadcrumbs.AutoSize = true;
-            this.labelCurrentBreadcrumbs.Location = new System.Drawing.Point(88, 165);
-            this.labelCurrentBreadcrumbs.Name = "labelCurrentBreadcrumbs";
-            this.labelCurrentBreadcrumbs.Size = new System.Drawing.Size(70, 12);
-            this.labelCurrentBreadcrumbs.TabIndex = 9;
-            this.labelCurrentBreadcrumbs.Text = "breadcrumbs";
             // 
             // RenameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(413, 238);
-            this.Controls.Add(this.labelCurrentBreadcrumbs);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.labelNewBreadcrumbs);
             this.Controls.Add(this.label2);
@@ -160,7 +138,5 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelNewBreadcrumbs;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label labelCurrentBreadcrumbs;
     }
 }

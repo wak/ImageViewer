@@ -1,11 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace ImageViewer
 {
-    class FSUtility
+    static class FSUtility
     {
-        static public bool rename(string from, string to)
+        static public bool Rename(string from, string to)
         {
             if (from == to)
                 return true;
@@ -19,6 +20,14 @@ namespace ImageViewer
             {
                 MessageBox.Show("名前の変更に失敗しました。\n\n" + e.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
+        }
+
+        static public void Touch(string path)
+        {
+            if (!File.Exists(path))
+            {
+                File.Create(path).Close();
             }
         }
     }

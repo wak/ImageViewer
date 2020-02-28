@@ -5,14 +5,15 @@ using System.Windows.Forms;
 
 namespace ImageViewer
 {
-    public class ImageFile : IComparable<ImageFile>
+    public class ImageFile : IComparable<ImageFile>, IEquatable<ImageFile>
     {
         private static readonly ImageLoader imageLoader = new ImageLoader();
 
-        const string REGEX = @"(?<filename>.*?)\s+(?<separator>-+)\s*(?<comment>.*)(?<extension>\..*?)";
+        const string REGEX = @"(?<filename>.*?)\s+(?<separator>-+)\s*(?<comment>.*)(?<extension>\..+)";
 
         public string AbsPath;
-        public string Filename;
+        public string DirPath { get { return System.IO.Path.GetDirectoryName(AbsPath); } }
+        public string Filename { get { return System.IO.Path.GetFileName(AbsPath); } }
         public string FilenameWithoutComment;
         public string Comment;
         public int CommentLevel;
@@ -25,7 +26,6 @@ namespace ImageViewer
         private void updateProperty(string path)
         {
             this.AbsPath = System.IO.Path.GetFullPath(path);
-            this.Filename = System.IO.Path.GetFileName(path);
 
             var mc = Regex.Matches(Filename, REGEX);
 
@@ -59,14 +59,19 @@ namespace ImageViewer
             Rename(BuildFilePath(level));
         }
 
-        public bool hasComment()
+        public bool HasComment()
         {
             return Comment != null;
         }
 
+        public virtual bool IsImage()
+        {
+            return true;
+        }
+
         private bool Rename(string newName)
         {
-            if (FSUtility.rename(AbsPath, newName))
+            if (FSUtility.Rename(AbsPath, newName))
             {
                 updateProperty(newName);
                 return true;
@@ -103,6 +108,11 @@ namespace ImageViewer
         {
             return AbsPath.CompareTo(other.AbsPath);
         }
+
+        public bool Equals(ImageFile other)
+        {
+            return AbsPath == other.AbsPath;
+        }
     }
 
     public class ZippedImageFile : ImageFile
@@ -118,6 +128,16 @@ namespace ImageViewer
         public override Image LoadImage()
         {
             return ZipImageLoader.loadImage(AbsPath);
+        }
+    }
+
+    public class MetaFile : ImageFile
+    {
+        public MetaFile(string path) : base(path) { }
+
+        public override bool IsImage()
+        {
+            return false;
         }
     }
 }
