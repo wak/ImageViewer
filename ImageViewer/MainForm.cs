@@ -14,16 +14,24 @@ namespace ImageViewer
 
         long CHANGE_IMAGE_WAIT_MSEC = 0;
 
-        private ImageLoader imageLoader = new ImageLoader();
+        private ImageRepository imageList;
+        private ImageFile currentImageFile;
+        private Image currentImage;
+        private int currentImageListIndex;
 
-        private ImageList imageList;
-        private string currentDirectoryPath;
-        private string currentImagePath;
+        private string currentDirectoryPath
+        {
+            get
+            {
+                if (currentImageFile == null)
+                    return imageList.repoPath;
+                else
+                    return imageList.repoPath;
+            }
+        }
 
         private PaintBoard paintBoard = new PaintBoard();
 
-        private Image currentImage;
-        private int currentImageListIndex;
 
         private Rectangle currentRectangle;
         private float currentZoomRatio;
@@ -78,13 +86,12 @@ namespace ImageViewer
 
         private void initializeInstanceVariables()
         {
-            imageList = new ImageList();
-            currentDirectoryPath = null;
+            imageList = new ImageRepository();
             currentImageListIndex = 0;
             currentImage = null;
             currentZoomRatio = 1.0f;
             isFixedZoomRatio = false;
-            currentImagePath = null;
+            currentImageFile = null;
             turnOffOverwrapWait();
             currentDrawLocation.X = currentDrawLocation.Y = 0;
         }
@@ -100,14 +107,14 @@ namespace ImageViewer
 
             if (path == null)
             {
-                currentDirectoryPath = null;
-                currentImagePath = null;
+                currentImageFile = null;
                 currentImageListIndex = 0;
                 currentImage = null;
                 return;
             }
 
-            string filepath, directory;
+            string filepath;
+            string directory;
             path = System.IO.Path.GetFullPath(path);
 
             if (System.IO.File.Exists(path))
@@ -118,7 +125,6 @@ namespace ImageViewer
 
                     imageList = zipImageList;
                     currentImageListIndex = 0;
-                    imageLoader = zipImageList.getImageLoader();
                     return;
                 }
                 filepath = path;
@@ -126,8 +132,8 @@ namespace ImageViewer
             }
             else if (System.IO.Directory.Exists(path))
             {
-                if (currentImagePath != null && currentImagePath.Contains(path))
-                    filepath = currentImagePath;
+                if (currentImageFile != null && currentImageFile.AbsPath.Contains(path))
+                    filepath = currentImageFile.AbsPath;
                 else
                     filepath = null;
                 directory = path;
@@ -142,12 +148,8 @@ namespace ImageViewer
                 return;
             }
 
-            if (imageLoader is ZipImageLoader)
-                imageLoader = new ImageLoader();
-
-            imageList = new ImageList(directory);
-            currentDirectoryPath = directory;
-            currentImagePath = filepath;
+            imageList = new ImageRepository(directory);
+            currentImageFile = imageList.FindImage(filepath);
             currentImageListIndex = Math.Max(imageList.findIndex(filepath), 0);
 
             changeImage();
@@ -162,7 +164,7 @@ namespace ImageViewer
             if (imageList.Count == 0)
                 return;
 
-            RenameForm form = new RenameForm(currentImagePath, new ImageTree(imageList));
+            RenameForm form = new RenameForm(currentImageFile.AbsPath, new ImageTree(imageList));
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -194,7 +196,7 @@ namespace ImageViewer
             if (currentImage == null)
                 return;
 
-            DialogResult result = MessageBox.Show("Delete " + currentImagePath + " ?", "Delete File", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("Delete " + currentImageFile.AbsPath + " ?", "Delete File", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.No)
                 return;
 
@@ -207,7 +209,7 @@ namespace ImageViewer
                 // ゴミ箱の設定にて「削除の確認メッセージを表示する」にチェックが入っている場合に
                 // 「ゴミ箱に移動するか」も問われるため、上の削除確認MessageBoxと重複してしまう。
                 //
-                FileSystem.DeleteFile(currentImagePath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                FileSystem.DeleteFile(currentImageFile.AbsPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
 
                 int save = currentImageListIndex;
                 reloadDirectory();
@@ -258,13 +260,13 @@ namespace ImageViewer
 
             if (imageFile != null)
             {
-                int newIndex = imageList.findIndex(imageFile.absPath);
+                int newIndex = imageList.findIndex(imageFile.AbsPath);
                 if (newIndex >= 0)
                     currentImageListIndex = newIndex;
             }
 
-            currentImagePath = imageList[currentImageListIndex];
-            currentImage = imageLoader.loadImage(currentImagePath);
+            currentImageFile = imageList[currentImageListIndex];
+            currentImage = currentImageFile.LoadImage();
 
             if (autoFitWindowMode)
             {
@@ -384,8 +386,7 @@ namespace ImageViewer
                     newTitle += string.Format("[{0}ms]", CHANGE_IMAGE_WAIT_MSEC);
 
                 newTitle += string.Format(" {0:0.00}x: {1})",
-                    currentZoomRatio,
-                    System.IO.Path.GetFileName(currentImagePath));
+                    currentZoomRatio, currentImageFile.Filename);
             }
             this.Text = newTitle;
         }
@@ -1403,17 +1404,17 @@ namespace ImageViewer
 
         private void launchExplorer()
         {
-            if (currentImagePath == null)
+            if (currentImageFile == null)
                 return;
 
             System.Diagnostics.Process process = System.Diagnostics.Process.Start(
-                "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImagePath)
+                "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImageFile.AbsPath)
             );
         }
 
         private void ToolStripMenuItem_CopyFilePathToClipboard_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(currentImagePath);
+            Clipboard.SetText(currentImageFile.AbsPath);
         }
 
         private void ToolStripMenuItem_CopyDirectoryPathToClipboard_Click(object sender, EventArgs e)
@@ -1539,7 +1540,7 @@ namespace ImageViewer
             int fromIndex = Math.Min(index1, currentImageListIndex);
             int count = Math.Abs(index2 - index1) + 1;
 
-            ImageList range = imageList.GetRange(fromIndex, count);
+            ImageRepository range = imageList.GetRange(fromIndex, count);
             MoveForm mf = new MoveForm(range);
 
             mf.ShowDialog();
@@ -1639,8 +1640,8 @@ namespace ImageViewer
             {
                 if (imageDirectoryWatcher != null)
                 {
-                    if (imageDirectoryWatcher.Path == this.currentImagePath)
-                        return;
+                    //if (imageDirectoryWatcher.Path == currentImageFile.AbsPath)
+                    //    return;
                     imageDirectoryWatcher.EnableRaisingEvents = false;
                     imageDirectoryWatcher.Dispose();
                     imageDirectoryWatcher = null;

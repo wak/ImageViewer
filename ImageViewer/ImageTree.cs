@@ -12,7 +12,7 @@ namespace ImageViewer
         public List<ImageTree> nodes;
         public List<ImageFile> files;
 
-        private ImageList imageList = null;
+        private ImageRepository imageList = null;
 
         private ImageTree(ImageFile f = null, ImageTree parent = null)
         {
@@ -29,33 +29,31 @@ namespace ImageViewer
 
             if (f != null)
             {
-                this.name = f.comment;
-                this.commentLevel = f.commentLevel;
+                this.name = f.Comment;
+                this.commentLevel = f.CommentLevel;
                 this.files.Add(f);
             }
         }
 
-        public ImageTree(ImageList imageList) : this(null, null)
+        public ImageTree(ImageRepository imageList) : this(null, null)
         {
             this.imageList = imageList;
             setupTree(imageList);
         }
 
-        private void setupTree(ImageList imageList)
+        private void setupTree(ImageRepository imageList)
         {
             int currentLevel = 0;
             ImageTree currentNode = this;
 
-            foreach (string s in imageList)
+            foreach (var f in imageList)
             {
-                var f = new ImageFile(s);
-
                 if (f.hasComment())
                 {
-                    while (currentNode.commentLevel >= f.commentLevel)
+                    while (currentNode.commentLevel >= f.CommentLevel)
                         currentNode = currentNode.parent;
 
-                    if (f.commentLevel == currentLevel)
+                    if (f.CommentLevel == currentLevel)
                     {
                         currentNode = currentNode.newSiblingNode(f);
                     }
@@ -77,7 +75,7 @@ namespace ImageViewer
                 return false;
 
             foreach (var f in files)
-                if (f.absPath == file.absPath)
+                if (f.AbsPath == file.AbsPath)
                     return true;
 
             return false;
@@ -87,7 +85,7 @@ namespace ImageViewer
         public void upLevel(bool recursive = false)
         {
             if (files.Count > 0)
-                files[0].changeLevel(treeLevel - 1);
+                files[0].ChangeLevel(treeLevel - 1);
 
             if (recursive)
                 foreach (var t in nodes)
@@ -98,7 +96,7 @@ namespace ImageViewer
         public void downLevel(bool recursive = false)
         {
             if (files.Count > 0)
-                files[0].changeLevel(treeLevel + 1);
+                files[0].ChangeLevel(treeLevel + 1);
 
             if (recursive)
                 foreach (var t in nodes)
@@ -150,7 +148,7 @@ namespace ImageViewer
         {
             foreach (var f in files)
             {
-                if (f.absPath == absPath)
+                if (f.AbsPath == absPath)
                     return this;
             }
 
@@ -195,7 +193,7 @@ namespace ImageViewer
 
             foreach (ImageFile entry in node.files)
             {
-                Console.WriteLine(indent + "  - " + entry.filename);
+                Console.WriteLine(indent + "  - " + entry.Filename);
             }
 
             foreach (ImageTree n in node.nodes)
@@ -207,7 +205,7 @@ namespace ImageViewer
         internal void fixLevel(bool recursive = true)
         {
             if (files.Count > 0)
-                files[0].changeLevel(treeLevel);
+                files[0].ChangeLevel(treeLevel);
 
             if (recursive)
                 foreach (var t in nodes)

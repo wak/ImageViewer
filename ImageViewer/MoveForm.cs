@@ -9,7 +9,7 @@ namespace ImageViewer
 {
     public partial class MoveForm : Form
     {
-        private ImageList imageList = null;
+        private ImageRepository imageList = null;
         private string srcDirectory = null;
         private string targetDirectory = null;
 
@@ -19,19 +19,19 @@ namespace ImageViewer
 
         private List<bool> results = new List<bool>();
 
-        public MoveForm(ImageList imageList)
+        public MoveForm(ImageRepository imageList)
         {
             InitializeComponent();
 
             this.KeyPreview = true;
 
-            this.srcDirectory = System.IO.Path.GetDirectoryName(imageList[0]);
+            this.srcDirectory = imageList.repoPath;
             this.imageList = imageList;
 
             listView.Items.Clear();
             for (int i = 0; i < imageList.Count; i++)
             {
-                this.listView.Items.Add(new ListViewItem(new string[] { "", imageList[i] }));
+                this.listView.Items.Add(new ListViewItem(new string[] { "", imageList[i].Filename }));
             }
             columnHeader_Path.Width = -1;
 
@@ -149,7 +149,7 @@ namespace ImageViewer
                 Console.WriteLine("do " + i.ToString());
                 currentTargetIndex = i;
 
-                string srcFilepath = imageList[i];
+                string srcFilepath = imageList[i].AbsPath;
                 string srcFilename = System.IO.Path.GetFileName(srcFilepath);
                 string dstFilepath = System.IO.Path.Combine(targetDirectory, srcFilename);
 

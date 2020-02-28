@@ -113,8 +113,8 @@ namespace ImageViewer
         {
             ImageFile f = new ImageFile(this.textBox_filename.Text);
 
-            this.textBox_comment.Text = f.comment;
-            updateBreadcrumbs(f.commentLevel);
+            this.textBox_comment.Text = f.Comment;
+            updateBreadcrumbs(f.CommentLevel);
         }
 
         private void updateFilenameFromComment(int commentLevelAdd = 0)
@@ -122,12 +122,12 @@ namespace ImageViewer
             ImageFile f = new ImageFile(this.textBox_filename.Text);
 
             string filenameBase;
-            filenameBase = System.IO.Path.GetFileNameWithoutExtension(f.filenameWithoutComment);
+            filenameBase = System.IO.Path.GetFileNameWithoutExtension(f.FilenameWithoutComment);
 
             int commentLevel;
             if (this.textBox_comment.Text.Length > 0)
             {
-                commentLevel = f.commentLevel + commentLevelAdd;
+                commentLevel = f.CommentLevel + commentLevelAdd;
                 if (commentLevel <= 0)
                     commentLevel = 1;
             }
@@ -160,7 +160,7 @@ namespace ImageViewer
         {
             var tree = imageTree.findTreeByAbsPath(originalAbsPath);
             List<string> parts = tree.breadcrumbs("(root)");
-            if (tree.files[0].absPath == originalAbsPath)
+            if (tree.files[0].AbsPath == originalAbsPath)
                 parts.RemoveAt(parts.Count - 1);
 
             this.labelCurrentBreadcrumbs.Text = string.Join(" > ", parts);

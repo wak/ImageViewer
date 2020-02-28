@@ -6,20 +6,20 @@ using System.Runtime.Serialization;
 
 namespace ImageViewer
 {
-    public class ImageList : IEnumerable<string>
+    public class ImageRepository : IEnumerable<ImageFile>
     {
         protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
-        protected List<string> imageList = new List<string>();
+        protected List<ImageFile> imageList = new List<ImageFile>();
         public int lastUpdatedFileIndex;
 
-        private string repoPath = null;
+        public string repoPath = null;
 
-        public ImageList()
+        public ImageRepository()
         {
             clear();
         }
 
-        public ImageList(string folderPath)
+        public ImageRepository(string folderPath)
         {
             this.repoPath = folderPath;
             this.findImages(folderPath);
@@ -52,7 +52,7 @@ namespace ImageViewer
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
                     Console.WriteLine(path);
-                    imageList.Add(System.IO.Path.GetFullPath(path));
+                    imageList.Add(new ImageFile(System.IO.Path.GetFullPath(path)));
 
                     if (lastUpdated < System.IO.File.GetLastWriteTime(path))
                     {
@@ -64,19 +64,16 @@ namespace ImageViewer
             }
         }
 
-        public int findIndex(string filepath)
+        public int findIndex(string absPath)
         {
             int index = 0;
 
-            if (filepath == null)
+            if (absPath == null)
                 return -1;
 
-            filepath = System.IO.Path.GetFileName(filepath);
-            foreach (string imagePath in imageList)
+            foreach (var imagePath in imageList)
             {
-                string imageFilename = System.IO.Path.GetFileName(imagePath);
-
-                if (imageFilename == filepath)
+                if (imagePath.AbsPath == absPath)
                     return index;
 
                 index += 1;
@@ -85,9 +82,19 @@ namespace ImageViewer
             return -1;
         }
 
-        public ImageList GetRange(int index, int count)
+        public ImageFile FindImage(string filepath)
         {
-            ImageList newList = new ImageList();
+            int index = findIndex(filepath);
+
+            if (index == -1)
+                return null;
+            else
+                return this[index];
+        }
+
+        public ImageRepository GetRange(int index, int count)
+        {
+            ImageRepository newList = new ImageRepository();
             newList.imageList = imageList.GetRange(index, count);
 
             return newList;
@@ -101,7 +108,7 @@ namespace ImageViewer
                 return false;
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public IEnumerator<ImageFile> GetEnumerator()
         {
             return new ImageListEnumerator(this);
         }
@@ -116,22 +123,22 @@ namespace ImageViewer
             get { return imageList.Count; }
         }
 
-        public string this[int index]
+        public ImageFile this[int index]
         {
             get { return imageList[index]; }
         }
 
-        private class ImageListEnumerator : IEnumerator<string>
+        private class ImageListEnumerator : IEnumerator<ImageFile>
         {
-            private ImageList imageList;
+            private ImageRepository imageList;
             private int currentIndex = -1;
 
-            public ImageListEnumerator(ImageList imageList)
+            public ImageListEnumerator(ImageRepository imageList)
             {
                 this.imageList = imageList;
             }
 
-            public string Current { get { return imageList[currentIndex]; } }
+            public ImageFile Current { get { return imageList[currentIndex]; } }
             object IEnumerator.Current { get { return imageList[currentIndex]; } }
 
             public void Dispose()
@@ -155,13 +162,14 @@ namespace ImageViewer
         }
     }
 
-    public class ZipImageList : ImageList
+    public class ZipImageList : ImageRepository
     {
         ZipArchive archive;
 
         public ZipImageList(string zipPath)
         {
             archive = ZipFile.OpenRead(zipPath);
+            var zipImageLoader = new ZipImageLoader(archive);
 
             foreach (ZipArchiveEntry e in archive.Entries)
             {
@@ -169,15 +177,10 @@ namespace ImageViewer
 
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
-                    imageList.Add(e.FullName);
+                    imageList.Add(new ZippedImageFile(e.FullName, zipImageLoader));
                     Console.WriteLine(e.FullName);
                 }
             }
-        }
-
-        public ImageLoader getImageLoader()
-        {
-            return new ZipImageLoader(archive);
         }
     }
 }

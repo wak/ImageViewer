@@ -63,7 +63,7 @@
     <Compile Include="FormIcon.cs" />
     <Compile Include="FSUtility.cs" />
     <Compile Include="ImageFile.cs" />
-    <Compile Include="ImageList.cs" />
+    <Compile Include="ImageRepository.cs" />
     <Compile Include="ImageLoader.cs" />
     <Compile Include="ImageTree.cs" />
     <Compile Include="MainForm.cs">

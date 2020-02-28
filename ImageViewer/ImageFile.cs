@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace ImageViewer
 {
-    public class ImageFile
+    public class ImageFile : IComparable<ImageFile>
     {
+        private static readonly ImageLoader imageLoader = new ImageLoader();
+
         const string REGEX = @"(?<filename>.*?)\s+(?<separator>-+)\s*(?<comment>.*)(?<extension>\..*?)";
 
-        public string absPath;
-        public string filename;
-        public string filenameWithoutComment;
-        public string comment;
-        public int commentLevel;
+        public string AbsPath;
+        public string Filename;
+        public string FilenameWithoutComment;
+        public string Comment;
+        public int CommentLevel;
 
         public ImageFile(string path)
         {
@@ -20,39 +24,49 @@ namespace ImageViewer
 
         private void updateProperty(string path)
         {
-            this.absPath = System.IO.Path.GetFullPath(path);
-            this.filename = System.IO.Path.GetFileName(path);
+            this.AbsPath = System.IO.Path.GetFullPath(path);
+            this.Filename = System.IO.Path.GetFileName(path);
 
-            var mc = match();
+            var mc = Regex.Matches(Filename, REGEX);
 
             if (mc.Count > 0)
             {
-                comment = mc[0].Groups["comment"].Value;
-                commentLevel = mc[0].Groups["separator"].Length;
-                filenameWithoutComment = mc[0].Groups["filename"].Value + mc[0].Groups["extension"].Value;
+                Comment = mc[0].Groups["comment"].Value;
+                CommentLevel = mc[0].Groups["separator"].Length;
+                FilenameWithoutComment = mc[0].Groups["filename"].Value + mc[0].Groups["extension"].Value;
             }
             else
             {
-                comment = null;
-                commentLevel = 0;
-                filenameWithoutComment = filename;
+                Comment = null;
+                CommentLevel = 0;
+                FilenameWithoutComment = Filename;
             }
         }
 
-        public void changeLevel(int level)
+        public virtual Image LoadImage()
+        {
+            return imageLoader.loadImage(AbsPath);
+        }
+
+        public void ChangeLevel(int level)
         {
             if (level <= 0)
                 return;
 
-            if (level > 0 && comment == null)
+            if (level > 0 && Comment == null)
                 return;
 
-            rename(buildFilePath(level));
+            Rename(BuildFilePath(level));
         }
 
-        private bool rename(string newName)
+        public bool hasComment()
         {
-            if (FSUtility.rename(absPath, newName))
+            return Comment != null;
+        }
+
+        private bool Rename(string newName)
+        {
+            if (FSUtility.rename(AbsPath, newName))
             {
                 updateProperty(newName);
                 return true;
@@ -63,36 +77,47 @@ namespace ImageViewer
             }
         }
 
-        private string buildFilePath(int newLevel)
+        private string BuildFilePath(int newLevel)
         {
             string newFilename;
 
             if (newLevel <= 0)
             {
-                newFilename = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(absPath), filenameWithoutComment);
+                newFilename = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(AbsPath), FilenameWithoutComment);
             }
             else
             {
-                string extension = System.IO.Path.GetExtension(absPath);
-                string head = System.IO.Path.GetFileNameWithoutExtension(filenameWithoutComment);
+                string extension = System.IO.Path.GetExtension(AbsPath);
+                string head = System.IO.Path.GetFileNameWithoutExtension(FilenameWithoutComment);
                 string separator = new string('-', newLevel);
                 newFilename = System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(absPath), 
-                    string.Format("{0} {1} {2}{3}", head, separator, comment, extension)
+                    System.IO.Path.GetDirectoryName(AbsPath), 
+                    string.Format("{0} {1} {2}{3}", head, separator, Comment, extension)
                 );
             }
 
             return newFilename;
         }
 
-        private System.Text.RegularExpressions.MatchCollection match()
+        public int CompareTo(ImageFile other)
         {
-            return System.Text.RegularExpressions.Regex.Matches(filename, REGEX);
+            return AbsPath.CompareTo(other.AbsPath);
+        }
+    }
+
+    public class ZippedImageFile : ImageFile
+    {
+        private ZipImageLoader ZipImageLoader;
+
+        public ZippedImageFile(string path, ZipImageLoader zipImageLoader) : base(path)
+        {
+            AbsPath = path;
+            ZipImageLoader = zipImageLoader;
         }
 
-        public bool hasComment()
+        public override Image LoadImage()
         {
-            return comment != null;
+            return ZipImageLoader.loadImage(AbsPath);
         }
     }
 }

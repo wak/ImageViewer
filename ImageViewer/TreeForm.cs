@@ -67,7 +67,7 @@ namespace ImageViewer
             listView.Columns.Add("ファイル名");
             foreach (var n in node.files)
             {
-                var item = new ListViewItem(n.filename);
+                var item = new ListViewItem(n.Filename);
 
                 viewingFiles.Add(n);
 
@@ -218,18 +218,18 @@ namespace ImageViewer
 
                 foreach (var f in myNode.files)
                 {
-                    string dstname = Path.Combine(dirname, f.filename);
+                    string dstname = Path.Combine(dirname, f.Filename);
 
                     Console.WriteLine("  move to " + dstname);
 
-                    if (File.Exists(dstname) || !File.Exists(f.absPath))
+                    if (File.Exists(dstname) || !File.Exists(f.AbsPath))
                     {
                         succeed = false;
                     }
                     else
                     {
                         if (!dryRun)
-                            File.Move(f.absPath, dstname);
+                            File.Move(f.AbsPath, dstname);
                     }
                 }
 
@@ -254,7 +254,7 @@ namespace ImageViewer
                 return;
 
             var tree = (ImageTree)treeView.SelectedNode.Tag;
-            var renameForm = new RenameForm(tree.files[0].absPath, tree);
+            var renameForm = new RenameForm(tree.files[0].AbsPath, tree);
             if (renameForm.ShowDialog() == DialogResult.OK)
                 change();
         }
