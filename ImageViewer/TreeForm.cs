@@ -365,7 +365,8 @@ namespace ImageViewer
             imageTree.reload();
             var renameForm = new RenameForm(newPath, imageTree);
             renameForm.setCommentLevel(tree.treeLevel);
-            renameForm.ShowDialog();
+            if (renameForm.ShowDialog() != DialogResult.OK)
+                File.Delete(newPath);
 
             change();
         }
@@ -389,7 +390,7 @@ namespace ImageViewer
             string prefix = "";
             ImageFile previous = null;
 
-            foreach (var i in imageTree.imageList)
+            foreach (var i in imageTree.imageRepository)
             {
                 if (!i.IsImage())
                     continue;
@@ -408,7 +409,7 @@ namespace ImageViewer
                 bool uniq = true;
                 newName = string.Format("{0}[{1:d}].iv", prefix, i);
 
-                foreach (var image in imageTree.imageList)
+                foreach (var image in imageTree.imageRepository)
                     if (image.FilenameWithoutComment == newName)
                         uniq = false;
 

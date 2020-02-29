@@ -32,6 +32,7 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_openFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_openTreeView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_watchDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_Color = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,7 +73,7 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_openTreeView = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_showBreadcrumbs = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -97,6 +98,7 @@
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_openFile,
+            this.toolStripMenuItem_showBreadcrumbs,
             this.toolStripMenuItem_openTreeView,
             this.toolStripSeparator2,
             this.toolStripMenuItem_watchDirectory,
@@ -123,7 +125,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 486);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 508);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_openFile
@@ -132,6 +134,13 @@
             this.toolStripMenuItem_openFile.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_openFile.Text = "開く";
             this.toolStripMenuItem_openFile.Click += new System.EventHandler(this.ToolStripMenuItem_openFile_Click);
+            // 
+            // toolStripMenuItem_openTreeView
+            // 
+            this.toolStripMenuItem_openTreeView.Name = "toolStripMenuItem_openTreeView";
+            this.toolStripMenuItem_openTreeView.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_openTreeView.Text = "ツリー表示";
+            this.toolStripMenuItem_openTreeView.Click += new System.EventHandler(this.toolStripMenuItem_openTreeView_Click);
             // 
             // toolStripSeparator2
             // 
@@ -420,12 +429,12 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_openTreeView
+            // toolStripMenuItem_showBreadcrumbs
             // 
-            this.toolStripMenuItem_openTreeView.Name = "toolStripMenuItem_openTreeView";
-            this.toolStripMenuItem_openTreeView.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_openTreeView.Text = "ツリー表示";
-            this.toolStripMenuItem_openTreeView.Click += new System.EventHandler(this.toolStripMenuItem_openTreeView_Click);
+            this.toolStripMenuItem_showBreadcrumbs.Name = "toolStripMenuItem_showBreadcrumbs";
+            this.toolStripMenuItem_showBreadcrumbs.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_showBreadcrumbs.Text = "パンくずリストを表示";
+            this.toolStripMenuItem_showBreadcrumbs.Click += new System.EventHandler(this.toolStripMenuItem_showBreadcrumbs_Click);
             // 
             // MainForm
             // 
@@ -503,6 +512,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_openFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_openTreeView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_showBreadcrumbs;
     }
 }
 

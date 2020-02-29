@@ -59,7 +59,7 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(215, 328);
+            this.treeView.Size = new System.Drawing.Size(395, 328);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             this.treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDown);
@@ -70,7 +70,7 @@
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(426, 328);
+            this.listView.Size = new System.Drawing.Size(246, 328);
             this.listView.TabIndex = 1;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -114,7 +114,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listView);
             this.splitContainer1.Size = new System.Drawing.Size(645, 328);
-            this.splitContainer1.SplitterDistance = 215;
+            this.splitContainer1.SplitterDistance = 395;
             this.splitContainer1.TabIndex = 5;
             // 
             // buttonReload
@@ -142,7 +142,7 @@
             this.ToolStripMenuItem_upTreeLevel,
             this.ToolStripMenuItem_downTreeLevel});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(193, 198);
+            this.treeMenu.Size = new System.Drawing.Size(193, 176);
             // 
             // ToolStripMenuItem_rename
             // 

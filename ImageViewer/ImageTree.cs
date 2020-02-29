@@ -12,7 +12,7 @@ namespace ImageViewer
         public List<ImageTree> nodes;
         public List<ImageFile> files;
 
-        public ImageRepository imageList = null;
+        public ImageRepository imageRepository = null;
 
         private ImageTree(ImageFile f = null, ImageTree parent = null)
         {
@@ -37,7 +37,7 @@ namespace ImageViewer
 
         public ImageTree(ImageRepository imageList) : this(null, null)
         {
-            this.imageList = imageList;
+            this.imageRepository = imageList;
             setupTree(imageList);
         }
 
@@ -108,9 +108,9 @@ namespace ImageViewer
             if (!isRoot())
                 throw new NotImplementedException("reload should root node.");
 
-            imageList.reload();
+            imageRepository.reload();
             clear();
-            setupTree(imageList);
+            setupTree(imageRepository);
         }
 
         private void clear()

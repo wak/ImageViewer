@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization;
 
 namespace ImageViewer
 {
+    public static class ImageRepositoryFactory
+    {
+        public static ImageRepository openRepository(string path)
+        {
+            if (Path.GetExtension(path).ToLower().EndsWith(".zip"))
+                return new ZippedImageRepository(path);
+            else
+                return new ImageRepository(path);
+        }
+    }
+
     public class ImageRepository : IEnumerable<ImageFile>
     {
         protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
@@ -13,6 +25,7 @@ namespace ImageViewer
         public int lastUpdatedFileIndex;
 
         public string repoPath = null;
+        public ImageTree tree = null;
 
         public ImageRepository()
         {
@@ -22,7 +35,7 @@ namespace ImageViewer
         public ImageRepository(string folderPath)
         {
             this.repoPath = folderPath;
-            this.findImages(folderPath);
+            reload();
         }
 
         public void reload()
@@ -31,7 +44,13 @@ namespace ImageViewer
             {
                 clear();
                 this.findImages(repoPath);
+                tree = new ImageTree(this);
             }
+        }
+
+        public virtual bool IsReadonly()
+        {
+            return false;
         }
 
         private void clear()
@@ -166,11 +185,11 @@ namespace ImageViewer
         }
     }
 
-    public class ZipImageList : ImageRepository
+    public class ZippedImageRepository : ImageRepository
     {
         ZipArchive archive;
 
-        public ZipImageList(string zipPath)
+        public ZippedImageRepository(string zipPath)
         {
             archive = ZipFile.OpenRead(zipPath);
             var zipImageLoader = new ZipImageLoader(archive);
@@ -185,6 +204,11 @@ namespace ImageViewer
                     Console.WriteLine(e.FullName);
                 }
             }
+        }
+
+        public override bool IsReadonly()
+        {
+            return true;
         }
     }
 }

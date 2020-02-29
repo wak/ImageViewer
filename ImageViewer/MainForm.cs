@@ -14,7 +14,7 @@ namespace ImageViewer
 
         long CHANGE_IMAGE_WAIT_MSEC = 0;
 
-        private ImageRepository imageList;
+        private ImageRepository imageRepository;
         private ImageFile currentImageFile;
         private Image currentImage
         {
@@ -33,18 +33,19 @@ namespace ImageViewer
             get
             {
                 if (currentImageFile == null)
-                    return imageList.repoPath;
+                    return imageRepository.repoPath;
                 else
-                    return imageList.repoPath;
+                    return imageRepository.repoPath;
             }
         }
 
         private PaintBoard paintBoard = new PaintBoard();
 
-
         private Rectangle currentRectangle;
         private float currentZoomRatio;
         private Point currentDrawLocation;
+
+        private bool IsBreadcrumbsEnabled = true;
 
         private bool isFixedZoomRatio;
         private bool isFixedDrawLocation;
@@ -81,7 +82,7 @@ namespace ImageViewer
 
         private void showImageTree()
         {
-            treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageList));
+            treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageRepository));
             treeForm.itemSelected += ((selectedFile) => changeImage(selectedFile));
             treeForm.itemArranged += (() => reloadDirectory());
             treeForm.FormClosed += ((a, b) => treeForm = null);
@@ -95,18 +96,13 @@ namespace ImageViewer
 
         private void initializeInstanceVariables()
         {
-            imageList = new ImageRepository();
+            imageRepository = new ImageRepository();
             currentImageListIndex = 0;
             currentZoomRatio = 1.0f;
             isFixedZoomRatio = false;
             currentImageFile = null;
             turnOffOverwrapWait();
             currentDrawLocation.X = currentDrawLocation.Y = 0;
-        }
-
-        private bool isZip()
-        {
-            return imageList is ZipImageList;
         }
 
         private void updateImageList(string path)
@@ -128,9 +124,7 @@ namespace ImageViewer
             {
                 if (System.IO.Path.GetExtension(path).ToLower().EndsWith(".zip"))
                 {
-                    ZipImageList zipImageList = new ZipImageList(path);
-
-                    imageList = zipImageList;
+                    imageRepository = ImageRepositoryFactory.openRepository(path);
                     currentImageListIndex = 0;
                     return;
                 }
@@ -155,9 +149,9 @@ namespace ImageViewer
                 return;
             }
 
-            imageList = new ImageRepository(directory);
-            currentImageFile = imageList.FindImage(filepath);
-            currentImageListIndex = Math.Max(imageList.findIndex(filepath), 0);
+            imageRepository = ImageRepositoryFactory.openRepository(directory);
+            currentImageFile = imageRepository.FindImage(filepath);
+            currentImageListIndex = Math.Max(imageRepository.findIndex(filepath), 0);
 
             changeImage();
             updateDirectoryWatcher();
@@ -165,13 +159,13 @@ namespace ImageViewer
 
         private void renameImageFilename()
         {
-            if (isZip())
+            if (imageRepository.IsReadonly())
                 return;
 
-            if (imageList.Count == 0)
+            if (imageRepository.Count == 0)
                 return;
 
-            RenameForm form = new RenameForm(currentImageFile.AbsPath, new ImageTree(imageList));
+            RenameForm form = new RenameForm(currentImageFile.AbsPath, new ImageTree(imageRepository));
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -187,7 +181,7 @@ namespace ImageViewer
 
         private void reloadDirectory()
         {
-            if (isZip())
+            if (imageRepository.IsReadonly())
                 return;
             updateImageList(currentDirectoryPath);
         }
@@ -200,7 +194,7 @@ namespace ImageViewer
 
         private void deleteImage()
         {
-            if (currentImage == null)
+            if (currentImageFile == null)
                 return;
 
             DialogResult result = MessageBox.Show("Delete " + currentImageFile.AbsPath + " ?", "Delete File", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -220,7 +214,7 @@ namespace ImageViewer
 
                 int save = currentImageListIndex;
                 reloadDirectory();
-                if (save >= imageList.Count)
+                if (save >= imageRepository.Count)
                     save -= 1;
                 currentImageListIndex = Math.Max(save, 0);
                 changeImage();
@@ -258,7 +252,7 @@ namespace ImageViewer
 
         private void changeImage(ImageFile imageFile = null)
         {
-            if (imageList.Count == 0)
+            if (imageRepository.Count == 0)
             {
                 currentImageFile = null;
                 refreshWindow();
@@ -267,12 +261,12 @@ namespace ImageViewer
 
             if (imageFile != null)
             {
-                int newIndex = imageList.findIndex(imageFile.AbsPath);
+                int newIndex = imageRepository.findIndex(imageFile.AbsPath);
                 if (newIndex >= 0)
                     currentImageListIndex = newIndex;
             }
 
-            currentImageFile = imageList[currentImageListIndex];
+            currentImageFile = imageRepository[currentImageListIndex];
 
             if (autoFitWindowMode)
             {
@@ -325,7 +319,7 @@ namespace ImageViewer
             {
                 e.Graphics.Clear(Color.WhiteSmoke);
             }
-            else if (currentImageFile.IsImage())
+            else if (currentImageFile.IsImage() && currentImage != null)
             {
                 e.Graphics.DrawImage(currentImage, currentRectangle);
                 paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
@@ -346,7 +340,29 @@ namespace ImageViewer
                     TextFormatFlags flags = TextFormatFlags.HorizontalCenter |
                         TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
 
-                    TextRenderer.DrawText(e.Graphics, currentImageFile.Comment, font2, rect2, Color.Blue, flags);
+                    TextRenderer.DrawText(e.Graphics, currentImageFile.Comment, font2, rect2, Color.Gray, flags);
+                    e.Graphics.DrawRectangle(Pens.Transparent, rect2);
+                }
+            }
+
+            if (currentImageFile != null && IsBreadcrumbsEnabled)
+            {
+                using (Font font2 = new Font("Meiryo UI", 8, FontStyle.Bold, GraphicsUnit.Point))
+                {
+                    string breadcrumbs = makeBreadcrumbs();
+                    int height = font2.Height + 10;
+                    int width = (int)e.Graphics.MeasureString(breadcrumbs, font2).Width + 10;
+
+                    SolidBrush b = new SolidBrush(Color.FromArgb(190, 255, 255, 255));
+                    e.Graphics.FillRectangle(b, 0, 0, width, height);
+                    b.Dispose();
+
+
+                    Rectangle rect2 = new Rectangle(5, 0, width, height);
+
+                    TextFormatFlags flags = TextFormatFlags.VerticalCenter;
+
+                    TextRenderer.DrawText(e.Graphics, breadcrumbs, font2, rect2, Color.Crimson, flags);
                     e.Graphics.DrawRectangle(Pens.Transparent, rect2);
                 }
             }
@@ -370,6 +386,13 @@ namespace ImageViewer
             }
         }
 
+        private string makeBreadcrumbs()
+        {
+            var blist = imageRepository.tree.findTreeByAbsPath(currentImageFile.AbsPath).breadcrumbs("/");
+            string breadcrumbs = string.Join(" > ", blist);
+            return breadcrumbs;
+        }
+
         private void updateWindowTitle()
         {
             string newTitle = "";
@@ -378,15 +401,15 @@ namespace ImageViewer
             if (isRangeOperating)
                 newTitle += "【選択】";
 
-            if (imageList.Count > 0)
+            if (imageRepository.Count > 0)
             {
                 newTitle += string.Format(
-                    " [{0," + imageList.Count.ToString("#").Length + "}/{1}]",
+                    " [{0," + imageRepository.Count.ToString("#").Length + "}/{1}]",
                     currentImageListIndex + 1,
-                    imageList.Count
+                    imageRepository.Count
                 );
 
-                if (currentImageFile == null)
+                if (currentImageFile != null && currentImageFile.IsImage() && currentImage == null)
                     newTitle += " !!LOAD ERROR!!";
 
                 if (isFixedZoomRatio)
@@ -395,7 +418,7 @@ namespace ImageViewer
                 if (isFixedDrawLocation)
                     flags += "F";
 
-                if (isZip())
+                if (imageRepository.IsReadonly())
                     newTitle += "[ZIP]";
 
                 if (flags.Length > 0)
@@ -491,7 +514,7 @@ namespace ImageViewer
         {
             prepareToChangeImage();
 
-            if (currentImageListIndex + 1 >= imageList.Count)
+            if (currentImageListIndex + 1 >= imageRepository.Count)
             {
                 if (!overwrapWait)
                 {
@@ -528,7 +551,7 @@ namespace ImageViewer
                 else
                 {
                     if (turnOffOverwrapWait())
-                        changeImageListIndex(imageList.Count - 1);
+                        changeImageListIndex(imageRepository.Count - 1);
                 }
             }
             else
@@ -547,7 +570,7 @@ namespace ImageViewer
         {
             prepareToChangeImage();
 
-            currentImageListIndex = imageList.Count - 1;
+            currentImageListIndex = imageRepository.Count - 1;
             changeImage();
         }
 
@@ -596,13 +619,15 @@ namespace ImageViewer
 
         private void rotateRight90()
         {
-            currentImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            if (currentImage != null)
+                currentImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
             refreshWindow();
         }
 
         private void rotateLeft90()
         {
-            currentImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            if (currentImage != null)
+                currentImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
             refreshWindow();
         }
 
@@ -1414,6 +1439,8 @@ namespace ImageViewer
             toolStripMenuItem_MoveAll.Enabled = enabled;
 
             toolStripMenuItem_ToggleTopMost.Checked = this.TopMost;
+
+            toolStripMenuItem_showBreadcrumbs.Checked = IsBreadcrumbsEnabled;
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -1525,7 +1552,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_RangeOpe_FromHere_Click(object sender, EventArgs e)
         {
-            if (imageList.Count == 0)
+            if (imageRepository.Count == 0)
                 return;
             isRangeOperating = true;
             isRangeOperate_StartPosition = currentImageListIndex;
@@ -1533,7 +1560,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_RangeOpe_MoveTo_Click(object sender, EventArgs e)
         {
-            if (imageList.Count == 0)
+            if (imageRepository.Count == 0)
                 return;
             isRangeOperating = false;
             moveItems(isRangeOperate_StartPosition, currentImageListIndex);
@@ -1541,25 +1568,31 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_MoveAll_Click(object sender, EventArgs e)
         {
-            moveItems(0, imageList.Count - 1);
+            moveItems(0, imageRepository.Count - 1);
         }
 
         private void ToolStripMenuItem_MoveAllFromHere_Click(object sender, EventArgs e)
         {
-            moveItems(currentImageListIndex, imageList.Count - 1);
+            moveItems(currentImageListIndex, imageRepository.Count - 1);
+        }
+
+        private void toolStripMenuItem_showBreadcrumbs_Click(object sender, EventArgs e)
+        {
+            IsBreadcrumbsEnabled = !IsBreadcrumbsEnabled;
+            refreshWindow();
         }
 
         private void moveItems(int index1, int index2)
         {
-            if (isZip())
+            if (imageRepository.IsReadonly())
                 return;
-            if (imageList.Count == 0)
+            if (imageRepository.Count == 0)
                 return;
 
             int fromIndex = Math.Min(index1, currentImageListIndex);
             int count = Math.Abs(index2 - index1) + 1;
 
-            ImageRepository range = imageList.GetRange(fromIndex, count);
+            ImageRepository range = imageRepository.GetRange(fromIndex, count);
             MoveForm mf = new MoveForm(range);
 
             mf.ShowDialog();
@@ -1697,7 +1730,7 @@ namespace ImageViewer
         private void watcher_Changed(System.Object source, System.IO.FileSystemEventArgs e)
         {
             reloadDirectory();
-            currentImageListIndex = imageList.lastUpdatedFileIndex;
+            currentImageListIndex = imageRepository.lastUpdatedFileIndex;
             changeImage();
         }
 
