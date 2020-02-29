@@ -47,6 +47,8 @@ namespace ImageViewer
 
         private bool IsBreadcrumbsEnabled = true;
 
+        private bool IsIncludeSubDirectory = false;
+
         private bool isFixedZoomRatio;
         private bool isFixedDrawLocation;
 
@@ -124,7 +126,7 @@ namespace ImageViewer
             {
                 if (System.IO.Path.GetExtension(path).ToLower().EndsWith(".zip"))
                 {
-                    imageRepository = ImageRepositoryFactory.openRepository(path);
+                    imageRepository = ImageRepositoryFactory.openRepository(path, IsIncludeSubDirectory);
                     currentImageListIndex = 0;
                     return;
                 }
@@ -149,7 +151,7 @@ namespace ImageViewer
                 return;
             }
 
-            imageRepository = ImageRepositoryFactory.openRepository(directory);
+            imageRepository = ImageRepositoryFactory.openRepository(directory, IsIncludeSubDirectory);
             currentImageFile = imageRepository.FindImage(filepath);
             currentImageListIndex = Math.Max(imageRepository.findIndex(filepath), 0);
 
@@ -1441,6 +1443,7 @@ namespace ImageViewer
             toolStripMenuItem_ToggleTopMost.Checked = this.TopMost;
 
             toolStripMenuItem_showBreadcrumbs.Checked = IsBreadcrumbsEnabled;
+            toolStripMenuItem_includeSubDirectories.Checked = IsIncludeSubDirectory;
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -1628,6 +1631,12 @@ namespace ImageViewer
         private void toolStripMenuItem_openTreeView_Click(object sender, EventArgs e)
         {
             showImageTree();
+        }
+
+        private void toolStripMenuItem_includeSubDirectories_Click(object sender, EventArgs e)
+        {
+            IsIncludeSubDirectory = !IsIncludeSubDirectory;
+            reloadDirectory();
         }
 
         #endregion

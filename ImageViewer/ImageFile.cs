@@ -106,7 +106,12 @@ namespace ImageViewer
 
         public int CompareTo(ImageFile other)
         {
-            return AbsPath.CompareTo(other.AbsPath);
+            var c = Filename.CompareTo(other.Filename);
+
+            if (c == 0)
+                return AbsPath.Length - other.AbsPath.Length;
+            else
+                return c;
         }
 
         public bool Equals(ImageFile other)

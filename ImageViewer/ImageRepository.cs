@@ -9,12 +9,12 @@ namespace ImageViewer
 {
     public static class ImageRepositoryFactory
     {
-        public static ImageRepository openRepository(string path)
+        public static ImageRepository openRepository(string path, bool recursive)
         {
             if (Path.GetExtension(path).ToLower().EndsWith(".zip"))
-                return new ZippedImageRepository(path);
+                return new ZippedImageRepository(path, recursive);
             else
-                return new ImageRepository(path);
+                return new ImageRepository(path, recursive);
         }
     }
 
@@ -27,14 +27,17 @@ namespace ImageViewer
         public string repoPath = null;
         public ImageTree tree = null;
 
+        private bool Recursive = false;
+
         public ImageRepository()
         {
             clear();
         }
 
-        public ImageRepository(string folderPath)
+        public ImageRepository(string folderPath, bool recursive)
         {
             this.repoPath = folderPath;
+            this.Recursive = recursive;
             reload();
         }
 
@@ -83,8 +86,21 @@ namespace ImageViewer
                 {
                     imageList.Add(new MetaFile(System.IO.Path.GetFullPath(path)));
                 }
-                imageList.Sort();
             }
+
+            if (Recursive)
+            {
+                try
+                {
+                    foreach (var subdir in Directory.GetDirectories(folderPath))
+                        findImages(subdir);
+                }
+                catch (Exception)
+                {
+                    // nothing to do
+                }
+            }
+            imageList.Sort();
         }
 
         public int findIndex(string absPath)
@@ -189,7 +205,7 @@ namespace ImageViewer
     {
         ZipArchive archive;
 
-        public ZippedImageRepository(string zipPath)
+        public ZippedImageRepository(string zipPath, bool recursive)
         {
             archive = ZipFile.OpenRead(zipPath);
             var zipImageLoader = new ZipImageLoader(archive);
