@@ -27,7 +27,14 @@ namespace ImageViewer
         public string repoPath = null;
         public ImageTree tree = null;
 
-        private bool Recursive = false;
+        public bool Recursive = false;
+
+        private bool isVirtualRepository = true;
+        public bool IsVirtualRepository
+        {
+            get { return isVirtualRepository; }
+            set { isVirtualRepository = value; reload(); }
+        }
 
         public ImageRepository()
         {
@@ -38,16 +45,17 @@ namespace ImageViewer
         {
             this.repoPath = folderPath;
             this.Recursive = recursive;
+            tree = new ImageTree(this);
             reload();
         }
 
-        public void reload()
+        public virtual void reload()
         {
             if (repoPath != null)
             {
                 clear();
-                this.findImages(repoPath);
-                tree = new ImageTree(this);
+                findImages(repoPath);
+                tree.reload();
             }
         }
 
@@ -60,6 +68,8 @@ namespace ImageViewer
         {
             lastUpdatedFileIndex = -1;
             imageList.Clear();
+            if (tree != null)
+                tree.clear();
         }
 
         private void findImages(string folderPath)
@@ -220,6 +230,13 @@ namespace ImageViewer
                     Console.WriteLine(e.FullName);
                 }
             }
+
+            tree = new ImageTree(this);
+        }
+
+        public override void reload()
+        {
+            tree.reload();
         }
 
         public override bool IsReadonly()

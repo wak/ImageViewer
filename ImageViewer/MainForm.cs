@@ -84,7 +84,7 @@ namespace ImageViewer
 
         private void showImageTree()
         {
-            treeForm = new TreeForm(currentDirectoryPath, new ImageTree(imageRepository));
+            treeForm = new TreeForm(currentDirectoryPath, imageRepository);
             treeForm.itemSelected += ((selectedFile) => changeImage(selectedFile));
             treeForm.itemArranged += (() => reloadDirectory());
             treeForm.FormClosed += ((a, b) => treeForm = null);
@@ -115,8 +115,17 @@ namespace ImageViewer
             {
                 currentImageFile = null;
                 currentImageListIndex = 0;
+                if (treeForm != null)
+                    treeForm.Close();
                 return;
             }
+
+            //if (imageRepository != null && imageRepository.repoPath == path)
+            //{
+            //    imageRepository.Recursive = IsIncludeSubDirectory;
+            //    imageRepository.reload();
+            //    return;
+            //}
 
             string filepath;
             string directory;
@@ -128,6 +137,9 @@ namespace ImageViewer
                 {
                     imageRepository = ImageRepositoryFactory.openRepository(path, IsIncludeSubDirectory);
                     currentImageListIndex = 0;
+
+                    if (treeForm != null)
+                        treeForm.changeRepository(imageRepository);
                     return;
                 }
                 filepath = path;
@@ -155,6 +167,9 @@ namespace ImageViewer
             currentImageFile = imageRepository.FindImage(filepath);
             currentImageListIndex = Math.Max(imageRepository.findIndex(filepath), 0);
 
+            if (treeForm != null)
+                treeForm.changeRepository(imageRepository);
+
             changeImage();
             updateDirectoryWatcher();
         }
@@ -167,7 +182,7 @@ namespace ImageViewer
             if (imageRepository.Count == 0)
                 return;
 
-            RenameForm form = new RenameForm(currentImageFile.AbsPath, new ImageTree(imageRepository));
+            RenameForm form = new RenameForm(currentImageFile.AbsPath, imageRepository.tree);
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -175,10 +190,15 @@ namespace ImageViewer
                 form.Dispose();
 
                 updateImageList(newFilepath);
-                if (treeForm != null)
-                    treeForm.reload();
+                updateTreeForm();
                 refreshWindow();
             }
+        }
+
+        private void updateTreeForm()
+        {
+            if (treeForm != null)
+                treeForm.reload();
         }
 
         private void reloadDirectory()
@@ -430,7 +450,8 @@ namespace ImageViewer
                     newTitle += string.Format("[{0}ms]", CHANGE_IMAGE_WAIT_MSEC);
 
                 newTitle += string.Format(" {0:0.00}x: {1})",
-                    currentZoomRatio, currentImageFile.Filename);
+                    currentZoomRatio, 
+                    (currentImageFile == null) ? "" : currentImageFile.Filename);
             }
             this.Text = newTitle;
         }
@@ -1444,6 +1465,7 @@ namespace ImageViewer
 
             toolStripMenuItem_showBreadcrumbs.Checked = IsBreadcrumbsEnabled;
             toolStripMenuItem_includeSubDirectories.Checked = IsIncludeSubDirectory;
+            toolStripMenuItem_toggleVirtualTreeView.Checked = (imageRepository == null || imageRepository.IsVirtualRepository);
         }
 
         private void ToolStripMenuItem_OpenInExplorer_Click(object sender, EventArgs e)
@@ -1637,6 +1659,14 @@ namespace ImageViewer
         {
             IsIncludeSubDirectory = !IsIncludeSubDirectory;
             reloadDirectory();
+        }
+
+        private void toolStripMenuItem_toggleVirtualTreeView_Click(object sender, EventArgs e)
+        {
+            if (imageRepository != null)
+                imageRepository.IsVirtualRepository = !imageRepository.IsVirtualRepository;
+
+            refreshWindow();
         }
 
         #endregion

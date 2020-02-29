@@ -116,6 +116,8 @@ namespace ImageViewer
 
         public bool Equals(ImageFile other)
         {
+            if (other == null)
+                return false;
             return AbsPath == other.AbsPath;
         }
     }

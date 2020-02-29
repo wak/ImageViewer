@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ImageViewer
 {
@@ -35,41 +37,21 @@ namespace ImageViewer
             }
         }
 
-        public ImageTree(ImageRepository imageList) : this(null, null)
+        public ImageTree(ImageRepository imageRepojitory) : this(null, null)
         {
-            this.imageRepository = imageList;
-            setupTree(imageList);
+            this.imageRepository = imageRepojitory;
+            setupTree();
         }
 
-        private void setupTree(ImageRepository imageList)
+        protected void setupTree()
         {
-            int currentLevel = 0;
-            ImageTree currentNode = this;
-
-            foreach (var f in imageList)
-            {
-                if (f.HasComment())
-                {
-                    while (currentNode.commentLevel >= f.CommentLevel)
-                        currentNode = currentNode.parent;
-
-                    if (f.CommentLevel == currentLevel)
-                    {
-                        currentNode = currentNode.newSiblingNode(f);
-                    }
-                    else
-                    {
-                        currentNode = currentNode.newChildNode(f);
-                    }
-                }
-                else
-                {
-                    currentNode.addEntry(f);
-                }
-            }
+            if (imageRepository.IsVirtualRepository)
+                new VirtualTreeBuilder().BuildTree(imageRepository, this);
+            else
+                new DirectoryBuildTree().BuildTree(imageRepository, this);
         }
 
-        internal bool contains(ImageFile file)
+        public bool contains(ImageFile file)
         {
             if (file == null)
                 return false;
@@ -108,40 +90,9 @@ namespace ImageViewer
             if (!isRoot())
                 throw new NotImplementedException("reload should root node.");
 
-            imageRepository.reload();
+            //imageRepository.reload();
             clear();
-            setupTree(imageRepository);
-        }
-
-        private void clear()
-        {
-            nodes.Clear();
-            files.Clear();
-            name = "";
-            commentLevel = 0;
-        }
-
-        public bool isRoot()
-        {
-            return parent == null;
-        }
-
-        public ImageTree newChildNode(ImageFile f)
-        {
-            ImageTree node = new ImageTree(f, this);
-
-            nodes.Add(node);
-            return node;
-        }
-
-        public ImageTree newSiblingNode(ImageFile f)
-        {
-            return this.parent.newChildNode(f);
-        }
-
-        public void addEntry(ImageFile e)
-        {
-            files.Add(e);
+            setupTree();
         }
 
         public ImageTree findTreeByAbsPath(string absPath)
@@ -162,6 +113,11 @@ namespace ImageViewer
             return null;
         }
 
+        public bool isRoot()
+        {
+            return parent == null;
+        }
+
         public List<string> breadcrumbs(string rootName = "")
         {
             List<string> results = new List<string>();
@@ -178,6 +134,42 @@ namespace ImageViewer
             }
 
             return results;
+        }
+
+        public void fixLevel(bool recursive = true)
+        {
+            if (files.Count > 0)
+                files[0].ChangeLevel(treeLevel);
+
+            if (recursive)
+                foreach (var t in nodes)
+                    t.fixLevel(true);
+        }
+
+        public void clear()
+        {
+            nodes.Clear();
+            files.Clear();
+            name = "";
+            commentLevel = 0;
+        }
+
+        public ImageTree newChildNode(ImageFile f)
+        {
+            ImageTree node = new ImageTree(f, this);
+
+            nodes.Add(node);
+            return node;
+        }
+
+        public ImageTree newSiblingNode(ImageFile f)
+        {
+            return this.parent.newChildNode(f);
+        }
+
+        public void addFile(ImageFile e)
+        {
+            files.Add(e);
         }
 
         public void dump()
@@ -202,14 +194,116 @@ namespace ImageViewer
             }
         }
 
-        internal void fixLevel(bool recursive = true)
+        internal bool Empty()
         {
-            if (files.Count > 0)
-                files[0].ChangeLevel(treeLevel);
+            return files.Count == 0;
+        }
+    }
 
-            if (recursive)
-                foreach (var t in nodes)
-                    t.fixLevel(true);
+    interface ITreeBuilder
+    {
+        void BuildTree(ImageRepository repository, ImageTree root);
+    }
+
+    class VirtualTreeBuilder : ITreeBuilder
+    {
+        public VirtualTreeBuilder()
+        { }
+
+        public void BuildTree(ImageRepository repository, ImageTree root)
+        {
+            int currentLevel = 0;
+            ImageTree currentNode = root;
+
+            foreach (var f in repository)
+            {
+                if (f.HasComment())
+                {
+                    while (currentNode.commentLevel >= f.CommentLevel)
+                        currentNode = currentNode.parent;
+
+                    if (f.CommentLevel == currentLevel)
+                    {
+                        currentNode = currentNode.newSiblingNode(f);
+                    }
+                    else
+                    {
+                        currentNode = currentNode.newChildNode(f);
+                    }
+                }
+                else
+                {
+                    currentNode.addFile(f);
+                }
+            }
+        }
+    }
+
+    class DirectoryBuildTree : ITreeBuilder
+    {
+        private class HEntry
+        {
+            public Hashtable hash = new Hashtable();
+            public List<ImageFile> files = new List<ImageFile>();
+        }
+
+        public void BuildTree(ImageRepository repository, ImageTree root)
+        {
+            var hashRoot = makeHash(repository);
+            makeTree(root, hashRoot);
+        }
+
+        private HEntry makeHash(ImageRepository repository)
+        {
+            var rootEntry = new HEntry();
+
+            foreach (var f in repository)
+            {
+                var c = rootEntry;
+
+                foreach (var part in Path.GetDirectoryName(f.AbsPath).Split(Path.DirectorySeparatorChar))
+                {
+                    if (!c.hash.Contains(part))
+                        c.hash[part] = new HEntry();
+                    c = (HEntry)c.hash[part];
+                }
+                c.files.Add(f);
+            }
+
+            var relRoot = rootEntry;
+            while (relRoot.files.Count == 0 && relRoot.hash.Count == 1)
+            {
+                foreach (var t in relRoot.hash.Keys)
+                {
+                    relRoot = (HEntry)relRoot.hash[t];
+                    break;
+                }
+            }
+
+            return relRoot;
+        }
+
+        private void makeTree(ImageTree tree, HEntry entry, int level = 0)
+        {
+            entry.files.Sort();
+            foreach (var f in entry.files)
+                tree.addFile(f);
+
+            string[] keyList = new string[entry.hash.Count];
+            entry.hash.Keys.CopyTo(keyList, 0);
+            var t = new List<string>(keyList);
+            t.Sort();
+
+            foreach (var k in t)
+            {
+                var newEntry = (HEntry)entry.hash[k];
+                var newTree = tree.newChildNode(null);
+
+                newTree.name = (string)k;
+                newTree.treeLevel = level + 1;
+
+                makeTree(newTree, newEntry, level + 1);
+            }
         }
     }
 }

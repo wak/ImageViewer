@@ -32,6 +32,8 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_openFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_includeSubDirectories = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_showBreadcrumbs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_openTreeView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -74,8 +76,7 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_includeSubDirectories = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_toggleVirtualTreeView = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -101,16 +102,17 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_openFile,
             this.toolStripSeparator7,
+            this.toolStripMenuItem_watchDirectory,
             this.toolStripMenuItem_includeSubDirectories,
             this.toolStripMenuItem_showBreadcrumbs,
-            this.toolStripMenuItem_openTreeView,
+            this.toolStripMenuItem_toggleVirtualTreeView,
+            this.toolStripMenuItem_ToggleTopMost,
             this.toolStripSeparator2,
-            this.toolStripMenuItem_watchDirectory,
             this.toolStripMenuItem_Color,
             this.toolStripSeparator8,
+            this.toolStripMenuItem_openTreeView,
             this.toolStripMenuItem_MoveWindow,
             this.toolStripMenuItem_ChangeWindowSize,
-            this.toolStripMenuItem_ToggleTopMost,
             this.toolStripSeparator5,
             this.toolStripMenuItem3,
             this.toolStripMenuItem_OpenInExplorer,
@@ -129,7 +131,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 536);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 558);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_openFile
@@ -138,6 +140,18 @@
             this.toolStripMenuItem_openFile.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem_openFile.Text = "開く";
             this.toolStripMenuItem_openFile.Click += new System.EventHandler(this.ToolStripMenuItem_openFile_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(223, 6);
+            // 
+            // toolStripMenuItem_includeSubDirectories
+            // 
+            this.toolStripMenuItem_includeSubDirectories.Name = "toolStripMenuItem_includeSubDirectories";
+            this.toolStripMenuItem_includeSubDirectories.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_includeSubDirectories.Text = "サブフォルダを含む";
+            this.toolStripMenuItem_includeSubDirectories.Click += new System.EventHandler(this.toolStripMenuItem_includeSubDirectories_Click);
             // 
             // toolStripMenuItem_showBreadcrumbs
             // 
@@ -150,7 +164,7 @@
             // 
             this.toolStripMenuItem_openTreeView.Name = "toolStripMenuItem_openTreeView";
             this.toolStripMenuItem_openTreeView.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_openTreeView.Text = "ツリー表示";
+            this.toolStripMenuItem_openTreeView.Text = "ツリー管理画面起動";
             this.toolStripMenuItem_openTreeView.Click += new System.EventHandler(this.toolStripMenuItem_openTreeView_Click);
             // 
             // toolStripSeparator2
@@ -440,17 +454,12 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_includeSubDirectories
+            // toolStripMenuItem_toggleVirtualTreeView
             // 
-            this.toolStripMenuItem_includeSubDirectories.Name = "toolStripMenuItem_includeSubDirectories";
-            this.toolStripMenuItem_includeSubDirectories.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem_includeSubDirectories.Text = "サブフォルダを含む";
-            this.toolStripMenuItem_includeSubDirectories.Click += new System.EventHandler(this.toolStripMenuItem_includeSubDirectories_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(223, 6);
+            this.toolStripMenuItem_toggleVirtualTreeView.Name = "toolStripMenuItem_toggleVirtualTreeView";
+            this.toolStripMenuItem_toggleVirtualTreeView.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItem_toggleVirtualTreeView.Text = "仮想ツリー管理";
+            this.toolStripMenuItem_toggleVirtualTreeView.Click += new System.EventHandler(this.toolStripMenuItem_toggleVirtualTreeView_Click);
             // 
             // MainForm
             // 
@@ -531,6 +540,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_showBreadcrumbs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_includeSubDirectories;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_toggleVirtualTreeView;
     }
 }
 
