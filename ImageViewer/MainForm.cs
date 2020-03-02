@@ -76,7 +76,7 @@ namespace ImageViewer
             this.MouseWheel += MainForm_MouseWheel;
 
             restoreWindowSize();
-            updateImageList(path);
+            changePathFromUI(path);
 
             initialized = true;
             changeImage();
@@ -172,6 +172,39 @@ namespace ImageViewer
 
             changeImage();
             updateDirectoryWatcher();
+        }
+
+        private void changePathFromUI(string newPath)
+        {
+            if (IsIncludeSubDirectory)
+            {
+                DialogResult r = MessageBox.Show(
+                    "サブディレクトリの検索が有効になっています。\r\n" +
+                    "サブフォルダも検索対象にしますか？",
+                    "確認",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                IsIncludeSubDirectory = (r == DialogResult.Yes);
+            }
+
+            updateImageList(newPath);
+
+            if (imageRepository.Count > 0)
+                return;
+            if (IsIncludeSubDirectory)
+                return;
+
+            DialogResult result = MessageBox.Show(
+                "画像が見つかりませんでした。\r\n" +
+                "サブフォルダも検索対象にしますか？",
+                "確認",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.No)
+                return;
+
+            IsIncludeSubDirectory = true;
+            reloadDirectory();
         }
 
         private void renameImageFilename()
@@ -1423,7 +1456,7 @@ namespace ImageViewer
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
             string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            updateImageList(fileName[0]);
+            changePathFromUI(fileName[0]);
             changeImage();
         }
 
