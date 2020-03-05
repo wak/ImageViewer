@@ -44,7 +44,7 @@ namespace ImageViewer
             if (imageLRUCache.Count > MAX_CACHE_IMAGES)
                 imageLRUCache.RemoveAt(imageLRUCache.Count - 1);
 
-            Console.WriteLine("read file");
+            //Console.WriteLine("read file");
             return c.image;
         }
 
@@ -70,7 +70,7 @@ namespace ImageViewer
                         imageLRUCache.RemoveAt(i);
                         imageLRUCache.Insert(0, c);
                     }
-                    Console.WriteLine("use cache");
+                    //Console.WriteLine("use cache");
                     return c.image;
                 }
             }

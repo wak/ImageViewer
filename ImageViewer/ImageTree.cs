@@ -87,10 +87,11 @@ namespace ImageViewer
 
         public void reload()
         {
+            // ImageRepository経由以外から呼び出してはいけない。
+
             if (!isRoot())
                 throw new NotImplementedException("reload should root node.");
 
-            //imageRepository.reload();
             clear();
             setupTree();
         }

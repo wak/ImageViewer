@@ -77,13 +77,14 @@ namespace ImageViewer
             DateTime lastUpdated = new DateTime(0);
             string[] allPathes = System.IO.Directory.GetFiles(folderPath);
 
+            Array.Sort<string>(allPathes);
             foreach (string path in allPathes)
             {
                 string extension = System.IO.Path.GetExtension(path);
 
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
-                    Console.WriteLine(path);
+                    // Console.WriteLine(path);
                     imageList.Add(new ImageFile(System.IO.Path.GetFullPath(path)));
 
                     if (lastUpdated < System.IO.File.GetLastWriteTime(path))

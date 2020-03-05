@@ -251,6 +251,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "仮想ツリー管理";
             this.Load += new System.EventHandler(this.TreeForm_Load);
+            this.Shown += new System.EventHandler(this.TreeForm_Shown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TreeForm_KeyPress);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

@@ -76,7 +76,8 @@ namespace ImageViewer
             this.MouseWheel += MainForm_MouseWheel;
 
             restoreWindowSize();
-            changePathFromUI(path);
+            if (path != null)
+                changePathFromUI(path);
 
             initialized = true;
             changeImage();
@@ -84,8 +85,17 @@ namespace ImageViewer
 
         private void showImageTree()
         {
-            treeForm = new TreeForm(currentDirectoryPath, imageRepository);
-            treeForm.itemSelected += ((selectedFile) => changeImage(selectedFile));
+            if (treeForm != null)
+            {
+                treeForm.Focus();
+                return;
+            }
+            treeForm = new TreeForm(currentDirectoryPath, imageRepository, currentImageFile);
+            treeForm.itemSelected += ((selectedFile) =>
+            {
+                overwrapWait = false;
+                changeImage(selectedFile);
+            });
             treeForm.itemArranged += (() => reloadDirectory());
             treeForm.FormClosed += ((a, b) => treeForm = null);
             treeForm.Show(this);
@@ -322,6 +332,9 @@ namespace ImageViewer
             }
 
             currentImageFile = imageRepository[currentImageListIndex];
+
+            if (treeForm != null)
+                treeForm.changeSelected(currentImageFile);
 
             if (autoFitWindowMode)
             {
