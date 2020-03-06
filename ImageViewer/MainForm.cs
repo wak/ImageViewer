@@ -334,7 +334,7 @@ namespace ImageViewer
             currentImageFile = imageRepository[currentImageListIndex];
 
             if (treeForm != null)
-                treeForm.changeSelected(currentImageFile);
+                treeForm.changeSelectedItem(currentImageFile);
 
             if (autoFitWindowMode)
             {

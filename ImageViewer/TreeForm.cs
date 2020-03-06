@@ -42,48 +42,9 @@ namespace ImageViewer
         {
             runNonPreemptive(() =>
             {
-                setupTreeNodes();
+                setupTreeView();
                 updateWidgetStatus();
             });
-        }
-
-        private void setupTreeNodes()
-        {
-            // imageTree.dump();
-            treeView.Nodes.Clear();
-
-            setupTreeNodes_(treeView.Nodes, imageTree);
-            treeView.ExpandAll();
-            treeView.Select();
-            treeView.Focus();
-        }
-
-        private void setupTreeNodes_(TreeNodeCollection myNodes, ImageTree imageNode)
-        {
-            string nodeName = (imageNode.isRoot() ? "(root)" : imageNode.name);
-            if (!imageNode.isRoot() && imageNode.files.Count > 0 && !imageNode.files[0].IsImage())
-                nodeName += " (*)";
-
-            TreeNode myNode = new TreeNode(nodeName);
-            myNode.Tag = imageNode;
-            myNodes.Add(myNode);
-
-            if (imageNode.contains(selectedFile))
-                treeView.SelectedNode = myNode;
-
-            foreach (var inode in imageNode.nodes)
-            {
-                setupTreeNodes_(myNode.Nodes, inode);
-            }
-        }
-
-        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            ImageTree node = (ImageTree)e.Node.Tag;
-
-            debug("treeView AfterSelect: " + node.name);
-
-            updateItemViewFiles(node);
         }
 
         public delegate void RunNonPreemptiveDelegate();
@@ -99,17 +60,67 @@ namespace ImageViewer
             hooking = before;
         }
 
-        private void updateItemViewFiles(ImageTree node)
+        public void reload()
+        {
+            clearListView();
+
+            imageRepository.reload();
+            setupTreeView();
+        }
+
+        #region ツリー
+        private void setupTreeView()
+        {
+            // imageTree.dump();
+            treeView.Nodes.Clear();
+
+            setupTreeViewNodes(treeView.Nodes, imageTree);
+            treeView.ExpandAll();
+            treeView.Select();
+            treeView.Focus();
+        }
+
+        private void setupTreeViewNodes(TreeNodeCollection myNodes, ImageTree imageNode)
+        {
+            string nodeName = (imageNode.isRoot() ? "(root)" : imageNode.name);
+            if (!imageNode.isRoot() && imageNode.files.Count > 0 && !imageNode.files[0].IsImage())
+                nodeName += " (*)";
+
+            TreeNode myNode = new TreeNode(nodeName);
+            myNode.Tag = imageNode;
+            myNodes.Add(myNode);
+
+            if (imageNode.contains(selectedFile))
+                treeView.SelectedNode = myNode;
+
+            foreach (var inode in imageNode.nodes)
+            {
+                setupTreeViewNodes(myNode.Nodes, inode);
+            }
+        }
+        #endregion
+
+        #region リスト
+        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            ImageTree node = (ImageTree)e.Node.Tag;
+
+            debug("treeView AfterSelect: " + node.name);
+
+            setupListView(node);
+        }
+
+        private void setupListView(ImageTree node)
         {
             runNonPreemptive(() =>
             {
                 debug("updateItemViewFiles");
-                _updateItemViewFiles(node);
-                updateItemViewSelected();
+                setupListViewItems(node);
+                setupListViewSelected();
             });
         }
 
-        private void _updateItemViewFiles(ImageTree node)
+        private void setupListViewItems(ImageTree node)
         {
             if (!shouldUpdateListView(node))
                 return;
@@ -135,7 +146,7 @@ namespace ImageViewer
             listView.Columns[0].Width -= 5;
         }
 
-        private void updateItemViewSelected()
+        private void setupListViewSelected()
         {
             debug("updateItemViewSelected");
 
@@ -166,23 +177,23 @@ namespace ImageViewer
             // return !viewingFiles.SequenceEqual(node.files);
         }
 
-        public void changeSelected(ImageFile newSelected)
+        public void changeSelectedItem(ImageFile newSelected)
         {
             // 本体Formからのみ呼び出される。
 
             if (notifyingOtherForm)
                 return;
 
-            debug("changeSelected");
+            debug("changeSelectedItem");
 
             processingOtherFormNotification = true;
-            _changeSelected(newSelected, treeView.Nodes);
+            changeSelectedItemSafe(newSelected, treeView.Nodes);
             processingOtherFormNotification = false;
         }
 
-        public bool _changeSelected(ImageFile newSelected, TreeNodeCollection searchNodes)
+        private bool changeSelectedItemSafe(ImageFile newSelected, TreeNodeCollection searchNodes)
         {
-            debug("_changeSelected");
+            debug("changeSelectedItemSafe");
 
             foreach (TreeNode t in searchNodes)
             {
@@ -192,24 +203,16 @@ namespace ImageViewer
                 {
                     runNonPreemptive(() => treeView.SelectedNode = t);
                     selectedFile = newSelected;
-                    updateItemViewFiles(tree);
+                    setupListView(tree);
 
                     return true;
                 }
 
-                if (_changeSelected(newSelected, t.Nodes))
+                if (changeSelectedItemSafe(newSelected, t.Nodes))
                     return true;
             }
 
             return false;
-        }
-
-        public void reload()
-        {
-            clearListView();
-
-            imageRepository.reload();
-            setupTreeNodes();
         }
 
         private void clearListView()
@@ -217,6 +220,7 @@ namespace ImageViewer
             viewingTree = null;
             listView.Clear();
         }
+        #endregion
 
         private void change()
         {
@@ -291,16 +295,6 @@ namespace ImageViewer
             }
         }
 
-        private void buttonClose_Click(object sender, System.EventArgs e)
-        {
-            Close();
-        }
-
-        private void buttonReload_Click(object sender, EventArgs e)
-        {
-            reload();
-        }
-
         #region フォルダ分け
         private void buttonArrange_Click(object sender, System.EventArgs e)
         {
@@ -359,7 +353,7 @@ namespace ImageViewer
         public void changeRepository(ImageRepository imageRepository)
         {
             this.imageRepository = imageRepository;
-            setupTreeNodes();
+            setupTreeView();
         }
 
         private bool arrangeImages(ImageTree myNode, bool dryRun, int myIndex = 1, string myDir = null)
@@ -415,17 +409,6 @@ namespace ImageViewer
         }
         #endregion
 
-        private void ToolStripMenuItem_rename_Click(object sender, EventArgs e)
-        {
-            if (!hasSelectedTree())
-                return;
-
-            var tree = (ImageTree)treeView.SelectedNode.Tag;
-            var renameForm = new RenameForm(tree.files[0].AbsPath, tree);
-            if (renameForm.ShowDialog() == DialogResult.OK)
-                change();
-        }
-
         private bool hasSelectedTree()
         {
             if (treeView.SelectedNode == null)
@@ -437,39 +420,6 @@ namespace ImageViewer
                 return false;
 
             return true;
-        }
-
-        private void ToolStripMenuItem_upLevel_Click(object sender, EventArgs e)
-        {
-            if (!hasSelectedTree())
-                return;
-
-            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-            var tree = (ImageTree)treeView.SelectedNode.Tag;
-
-            switch ((string)menu.Tag)
-            {
-                case "up":
-                    tree.upLevel();
-                    break;
-
-                case "down":
-                    tree.downLevel();
-                    break;
-
-                case "treeUp":
-                    tree.upLevel(true);
-                    break;
-
-                case "treeDown":
-                    tree.downLevel(true);
-                    break;
-
-                default:
-                    throw new Exception("bug");
-            }
-
-            change();
         }
 
         private void treeView_MouseDown(object sender, MouseEventArgs e)
@@ -537,9 +487,75 @@ namespace ImageViewer
             ToolStripMenuItem_removeIV.Enabled = (!selected.Empty() && !selected.files[0].IsImage());
         }
 
+        #region ボタン
+
+        private void buttonClose_Click(object sender, System.EventArgs e)
+        {
+            Close();
+        }
+
+        private void buttonReload_Click(object sender, EventArgs e)
+        {
+            reload();
+        }
+
         private void buttonReLevel_Click(object sender, EventArgs e)
         {
             imageTree.fixLevel();
+            change();
+        }
+
+        private void buttonToggleTreeViewMode_Click(object sender, EventArgs e)
+        {
+            imageRepository.IsVirtualRepository = !imageRepository.IsVirtualRepository;
+            change();
+        }
+
+        #endregion
+
+        #region ツリーの右クリックメニュー
+
+        private void ToolStripMenuItem_rename_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+            var renameForm = new RenameForm(tree.files[0].AbsPath, tree);
+            if (renameForm.ShowDialog() == DialogResult.OK)
+                change();
+        }
+
+        private void ToolStripMenuItem_upLevel_Click(object sender, EventArgs e)
+        {
+            if (!hasSelectedTree())
+                return;
+
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            var tree = (ImageTree)treeView.SelectedNode.Tag;
+
+            switch ((string)menu.Tag)
+            {
+                case "up":
+                    tree.upLevel();
+                    break;
+
+                case "down":
+                    tree.downLevel();
+                    break;
+
+                case "treeUp":
+                    tree.upLevel(true);
+                    break;
+
+                case "treeDown":
+                    tree.downLevel(true);
+                    break;
+
+                default:
+                    throw new Exception("bug");
+            }
+
             change();
         }
 
@@ -617,10 +633,20 @@ namespace ImageViewer
             return newName;
         }
 
-        private void buttonToggleTreeViewMode_Click(object sender, EventArgs e)
+        #endregion
+
+        #region リストの右クリックメニュー
+
+        private void ItemuMenu_ChangeName_Click(object sender, EventArgs e)
         {
-            imageRepository.IsVirtualRepository = !imageRepository.IsVirtualRepository;
-            change();
+            if (listView.SelectedItems.Count != 1)
+                return;
+
+            var renameForm = new RenameForm(((ImageFile)listView.SelectedItems[0].Tag).AbsPath, imageTree);
+            if (renameForm.ShowDialog() == DialogResult.OK)
+                change();
         }
+
+        #endregion
     }
 }

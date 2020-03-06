@@ -48,11 +48,14 @@
             this.ToolStripMenuItem_downTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonReLevel = new System.Windows.Forms.Button();
             this.buttonToggleTreeViewMode = new System.Windows.Forms.Button();
+            this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ItemuMenu_ChangeName = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.treeMenu.SuspendLayout();
+            this.listMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView
@@ -67,6 +70,7 @@
             // 
             // listView
             // 
+            this.listView.ContextMenuStrip = this.listMenu;
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 0);
@@ -235,6 +239,20 @@
             this.buttonToggleTreeViewMode.UseVisualStyleBackColor = true;
             this.buttonToggleTreeViewMode.Click += new System.EventHandler(this.buttonToggleTreeViewMode_Click);
             // 
+            // listMenu
+            // 
+            this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ItemuMenu_ChangeName});
+            this.listMenu.Name = "listMenu";
+            this.listMenu.Size = new System.Drawing.Size(132, 26);
+            // 
+            // ItemuMenu_ChangeName
+            // 
+            this.ItemuMenu_ChangeName.Name = "ItemuMenu_ChangeName";
+            this.ItemuMenu_ChangeName.Size = new System.Drawing.Size(180, 22);
+            this.ItemuMenu_ChangeName.Text = "名前を変更";
+            this.ItemuMenu_ChangeName.Click += new System.EventHandler(this.ItemuMenu_ChangeName_Click);
+            // 
             // TreeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -258,6 +276,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.treeMenu.ResumeLayout(false);
+            this.listMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -283,5 +302,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_removeIV;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button buttonToggleTreeViewMode;
+        private System.Windows.Forms.ContextMenuStrip listMenu;
+        private System.Windows.Forms.ToolStripMenuItem ItemuMenu_ChangeName;
     }
 }
