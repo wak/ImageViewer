@@ -29,10 +29,13 @@ namespace ImageViewer
         private ImageTree viewingTree = null;
         private List<ImageFile> viewingFiles = new List<ImageFile>();
 
-        public TreeForm(string _baseDirectory, ImageRepository repository, ImageFile defaultSelected)
+        private MainForm mainForm;
+
+        public TreeForm(MainForm form, string _baseDirectory, ImageRepository repository, ImageFile defaultSelected)
         {
             InitializeComponent();
 
+            mainForm = form;
             baseDirectory = _baseDirectory;
             imageRepository = repository;
             selectedFile = defaultSelected;
@@ -46,9 +49,8 @@ namespace ImageViewer
                 updateWidgetStatus();
             });
         }
-
-        public delegate void RunNonPreemptiveDelegate();
-        private void runNonPreemptive(RunNonPreemptiveDelegate func)
+        
+        private void runNonPreemptive(MethodInvoker func)
         {
             /*
              * 無限イベントハンドラ呼び出し防止。
@@ -58,6 +60,15 @@ namespace ImageViewer
             hooking = true;
             func.Invoke();
             hooking = before;
+        }
+
+        private void callMainForm(MethodInvoker func)
+        {
+            var before = notifyingOtherForm;
+
+            notifyingOtherForm = true;
+            func.Invoke();
+            notifyingOtherForm = before;
         }
 
         public void reload()
@@ -73,11 +84,10 @@ namespace ImageViewer
         {
             // imageTree.dump();
             treeView.Nodes.Clear();
-
             setupTreeViewNodes(treeView.Nodes, imageTree);
             treeView.ExpandAll();
             treeView.Select();
-            treeView.Focus();
+            // treeView.Focus();
         }
 
         private void setupTreeViewNodes(TreeNodeCollection myNodes, ImageTree imageNode)
@@ -114,7 +124,7 @@ namespace ImageViewer
         {
             runNonPreemptive(() =>
             {
-                debug("updateItemViewFiles");
+                debug("setupListView");
                 setupListViewItems(node);
                 setupListViewSelected();
             });
@@ -282,8 +292,16 @@ namespace ImageViewer
                     e.Handled = true;
                     break;
 
+                case 'j':
+                    mainForm.showNextImage();
+                    break;
+
+                case 'k':
+                    mainForm.showPreviousImage();
+                    break;
+
                 case 'r':
-                    reload();
+                    mainForm.renameImageFilename();
                     break;
 
                 case 'w':
@@ -293,6 +311,53 @@ namespace ImageViewer
                     Close();
                     break;
             }
+        }
+
+        private void TreeForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Down:
+                case Keys.Control | Keys.J:
+                    selectNextTree();
+                    break;
+
+                case Keys.Up:
+                case Keys.Control | Keys.K:
+                    selectPreviousTree();
+                    break;
+
+                case Keys.Left:
+                case Keys.Control | Keys.H:
+                    changeSelectedTreeLevel("up");
+                    break;
+
+                case Keys.Right:
+                case Keys.Control | Keys.L:
+                    changeSelectedTreeLevel("down");
+                    break;
+
+                default:
+                    return;
+            }
+
+            e.Handled = true;
+        }
+
+        private void selectPreviousTree()
+        {
+            if (treeView.SelectedNode == null || treeView.SelectedNode.PrevVisibleNode == null)
+                return;
+
+            treeView.SelectedNode = treeView.SelectedNode.PrevVisibleNode;
+        }
+
+        private void selectNextTree()
+        {
+            if (treeView.SelectedNode == null || treeView.SelectedNode.NextVisibleNode == null)
+                return;
+
+            treeView.SelectedNode = treeView.SelectedNode.NextVisibleNode;
         }
 
         #region フォルダ分け
@@ -409,6 +474,28 @@ namespace ImageViewer
         }
         #endregion
 
+        #region ツリーのレベル制御
+
+        private bool canUpLevel(ImageTree selected)
+        {
+            if (!imageRepository.IsVirtualRepository || imageRepository.IsReadonly())
+                return false;
+
+            return (selected.treeLevel > 1);
+        }
+
+        private bool canDownLevel(ImageTree selected)
+        {
+            if (selected.isRoot())
+                return false;
+
+            if (!selected.isRoot() && selected.parent.files.Count > 0 && selected.parent.nodes[0] == selected)
+                return false;
+
+            return true;
+        }
+        #endregion
+
         private bool hasSelectedTree()
         {
             if (treeView.SelectedNode == null)
@@ -471,16 +558,11 @@ namespace ImageViewer
 
             ToolStripMenuItem_rename.Enabled = (selected.files.Count > 0);
 
-            bool upEnabled = (selected.treeLevel > 1);
+            bool upEnabled = canUpLevel(selected);
             ToolStripMenuItem_upLevel.Enabled = upEnabled;
             ToolStripMenuItem_upTreeLevel.Enabled = upEnabled;
 
-            bool downEnabled = true;
-            if (selected.isRoot())
-                downEnabled = false;
-            if (!selected.isRoot() && selected.parent.files.Count > 0 && selected.parent.nodes[0] == selected)
-                downEnabled = false;
-
+            bool downEnabled = canDownLevel(selected);
             ToolStripMenuItem_downLevel.Enabled = downEnabled;
             ToolStripMenuItem_downTreeLevel.Enabled = downEnabled;
 
@@ -528,15 +610,22 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_upLevel_Click(object sender, EventArgs e)
         {
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            changeSelectedTreeLevel((string)menu.Tag);
+        }
+
+        private void changeSelectedTreeLevel(string command)
+        {
             if (!hasSelectedTree())
                 return;
 
-            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             var tree = (ImageTree)treeView.SelectedNode.Tag;
 
-            switch ((string)menu.Tag)
+            switch (command)
             {
                 case "up":
+                    if (!canUpLevel(tree))
+                        return;
                     tree.upLevel();
                     break;
 
@@ -545,10 +634,14 @@ namespace ImageViewer
                     break;
 
                 case "treeUp":
+                    if (!canUpLevel(tree))
+                        return;
                     tree.upLevel(true);
                     break;
 
                 case "treeDown":
+                    if (!canDownLevel(tree))
+                        return;
                     tree.downLevel(true);
                     break;
 

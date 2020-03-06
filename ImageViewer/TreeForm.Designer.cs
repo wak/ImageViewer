@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.treeView = new System.Windows.Forms.TreeView();
             this.listView = new System.Windows.Forms.ListView();
+            this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ItemuMenu_ChangeName = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonArrange = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -48,14 +50,12 @@
             this.ToolStripMenuItem_downTreeLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonReLevel = new System.Windows.Forms.Button();
             this.buttonToggleTreeViewMode = new System.Windows.Forms.Button();
-            this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ItemuMenu_ChangeName = new System.Windows.Forms.ToolStripMenuItem();
+            this.listMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.treeMenu.SuspendLayout();
-            this.listMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView
@@ -80,6 +80,20 @@
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
             this.listView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_ItemSelectionChanged);
+            // 
+            // listMenu
+            // 
+            this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ItemuMenu_ChangeName});
+            this.listMenu.Name = "listMenu";
+            this.listMenu.Size = new System.Drawing.Size(132, 26);
+            // 
+            // ItemuMenu_ChangeName
+            // 
+            this.ItemuMenu_ChangeName.Name = "ItemuMenu_ChangeName";
+            this.ItemuMenu_ChangeName.Size = new System.Drawing.Size(131, 22);
+            this.ItemuMenu_ChangeName.Text = "名前を変更";
+            this.ItemuMenu_ChangeName.Click += new System.EventHandler(this.ItemuMenu_ChangeName_Click);
             // 
             // buttonClose
             // 
@@ -222,9 +236,9 @@
             this.buttonReLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReLevel.Location = new System.Drawing.Point(404, 365);
             this.buttonReLevel.Name = "buttonReLevel";
-            this.buttonReLevel.Size = new System.Drawing.Size(148, 30);
+            this.buttonReLevel.Size = new System.Drawing.Size(118, 30);
             this.buttonReLevel.TabIndex = 8;
-            this.buttonReLevel.Text = "仮想ツリーレベルを再設定";
+            this.buttonReLevel.Text = "ファイル名を正規化";
             this.buttonReLevel.UseVisualStyleBackColor = true;
             this.buttonReLevel.Click += new System.EventHandler(this.buttonReLevel_Click);
             // 
@@ -238,20 +252,6 @@
             this.buttonToggleTreeViewMode.Text = "ツリー表示切替";
             this.buttonToggleTreeViewMode.UseVisualStyleBackColor = true;
             this.buttonToggleTreeViewMode.Click += new System.EventHandler(this.buttonToggleTreeViewMode_Click);
-            // 
-            // listMenu
-            // 
-            this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ItemuMenu_ChangeName});
-            this.listMenu.Name = "listMenu";
-            this.listMenu.Size = new System.Drawing.Size(132, 26);
-            // 
-            // ItemuMenu_ChangeName
-            // 
-            this.ItemuMenu_ChangeName.Name = "ItemuMenu_ChangeName";
-            this.ItemuMenu_ChangeName.Size = new System.Drawing.Size(180, 22);
-            this.ItemuMenu_ChangeName.Text = "名前を変更";
-            this.ItemuMenu_ChangeName.Click += new System.EventHandler(this.ItemuMenu_ChangeName_Click);
             // 
             // TreeForm
             // 
@@ -270,13 +270,14 @@
             this.Text = "仮想ツリー管理";
             this.Load += new System.EventHandler(this.TreeForm_Load);
             this.Shown += new System.EventHandler(this.TreeForm_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TreeForm_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TreeForm_KeyPress);
+            this.listMenu.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.treeMenu.ResumeLayout(false);
-            this.listMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

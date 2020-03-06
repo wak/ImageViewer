@@ -90,7 +90,7 @@ namespace ImageViewer
                 treeForm.Focus();
                 return;
             }
-            treeForm = new TreeForm(currentDirectoryPath, imageRepository, currentImageFile);
+            treeForm = new TreeForm(this, currentDirectoryPath, imageRepository, currentImageFile);
             treeForm.itemSelected += ((selectedFile) =>
             {
                 overwrapWait = false;
@@ -217,7 +217,7 @@ namespace ImageViewer
             reloadDirectory();
         }
 
-        private void renameImageFilename()
+        public void renameImageFilename()
         {
             if (imageRepository.IsReadonly())
                 return;
@@ -579,7 +579,7 @@ namespace ImageViewer
                 return false;
         }
 
-        private void showNextImage()
+        public void showNextImage()
         {
             prepareToChangeImage();
 
@@ -607,7 +607,7 @@ namespace ImageViewer
             changeImage();
         }
 
-        private void showPreviousImage()
+        public void showPreviousImage()
         {
             prepareToChangeImage();
 
