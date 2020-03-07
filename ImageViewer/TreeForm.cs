@@ -669,7 +669,6 @@ namespace ImageViewer
             FSUtility.Touch(newPath);
             imageRepository.reload();
             var renameForm = new RenameForm(newPath, imageTree);
-            renameForm.setCommentLevel(tree.treeLevel);
             if (renameForm.ShowDialog() != DialogResult.OK)
                 File.Delete(newPath);
 

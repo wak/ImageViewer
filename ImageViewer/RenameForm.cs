@@ -26,6 +26,9 @@ namespace ImageViewer
             this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
             this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
 
+            if (targetTree != null)
+                setCommentLevel(targetTree.treeLevel);
+
             updateCommentFromFilename();
         }
 
@@ -68,7 +71,7 @@ namespace ImageViewer
             }
         }
 
-        public void setCommentLevel(int newLevel)
+        private void setCommentLevel(int newLevel)
         {
             if (targetTree.treeLevel == 0)
                 commentLevel = 1;
