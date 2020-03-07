@@ -21,7 +21,7 @@ namespace ImageViewer
     public class ImageRepository : IEnumerable<ImageFile>
     {
         protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
-        protected List<ImageFile> imageList = new List<ImageFile>();
+        public List<ImageFile> imageList = new List<ImageFile>();
         public int lastUpdatedFileIndex;
 
         public string repoPath = null;
@@ -62,6 +62,11 @@ namespace ImageViewer
         public virtual bool IsReadonly()
         {
             return false;
+        }
+
+        public string repoName()
+        {
+            return Path.GetFileName(repoPath);
         }
 
         private void clear()
@@ -218,6 +223,7 @@ namespace ImageViewer
 
         public ZippedImageRepository(string zipPath, bool recursive)
         {
+            repoPath = zipPath;
             archive = ZipFile.OpenRead(zipPath);
             var zipImageLoader = new ZipImageLoader(archive);
 

@@ -93,8 +93,14 @@ namespace ImageViewer
         private void setupTreeViewNodes(TreeNodeCollection myNodes, ImageTree imageNode)
         {
             string nodeName = (imageNode.isRoot() ? "(root)" : imageNode.name);
+
+            if (imageNode.isRoot())
+                nodeName = imageRepository.repoName();
+
             if (!imageNode.isRoot() && imageNode.files.Count > 0 && !imageNode.files[0].IsImage())
                 nodeName += " (*)";
+            else
+                nodeName += string.Format(" ({0})", imageNode.files.Count);
 
             TreeNode myNode = new TreeNode(nodeName);
             myNode.Tag = imageNode;
@@ -486,6 +492,9 @@ namespace ImageViewer
 
         private bool canDownLevel(ImageTree selected)
         {
+            if (!imageRepository.IsVirtualRepository || imageRepository.IsReadonly())
+                return false;
+
             if (selected.isRoot())
                 return false;
 
@@ -496,17 +505,23 @@ namespace ImageViewer
         }
         #endregion
 
-        private bool hasSelectedTree()
+        private ImageTree selectedTree;
+
+        private void loadSelected()
         {
             if (treeView.SelectedNode == null)
-                return false;
+                selectedTree = null;
+            else
+                selectedTree = (ImageTree)treeView.SelectedNode.Tag;
 
-            var tree = (ImageTree)treeView.SelectedNode.Tag;
+            if (listView.SelectedItems.Count > 0)
+                selectedFile = ((ImageFile)listView.SelectedItems[0].Tag);
+        }
 
-            if (tree.files.Count == 0)
-                return false;
-
-            return true;
+        private bool hasSelectedTreeAndContainsFiles()
+        {
+            loadSelected();
+            return selectedTree != null && selectedTree.files.Count > 0;
         }
 
         private void treeView_MouseDown(object sender, MouseEventArgs e)
@@ -556,6 +571,9 @@ namespace ImageViewer
                 return;
             }
 
+            loadSelected();
+            ToolStripMenuItem_addIV.Enabled = !selectedTree.isRoot();
+
             ToolStripMenuItem_rename.Enabled = (selected.files.Count > 0);
 
             bool upEnabled = canUpLevel(selected);
@@ -599,7 +617,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_rename_Click(object sender, EventArgs e)
         {
-            if (!hasSelectedTree())
+            if (!hasSelectedTreeAndContainsFiles())
                 return;
 
             var tree = (ImageTree)treeView.SelectedNode.Tag;
@@ -616,7 +634,7 @@ namespace ImageViewer
 
         private void changeSelectedTreeLevel(string command)
         {
-            if (!hasSelectedTree())
+            if (!hasSelectedTreeAndContainsFiles())
                 return;
 
             var tree = (ImageTree)treeView.SelectedNode.Tag;
@@ -630,6 +648,8 @@ namespace ImageViewer
                     break;
 
                 case "down":
+                    if (!canDownLevel(tree))
+                        return;
                     tree.downLevel();
                     break;
 
@@ -654,17 +674,24 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_addIV_Click(object sender, EventArgs e)
         {
-            // @todo 選択されているツリーに一つもファイルがないと作成できない。
+            loadSelected();
 
-            if (!hasSelectedTree())
+            if (selectedTree == null)
                 return;
 
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-            var tree = (ImageTree)treeView.SelectedNode.Tag;
 
-            var newPath = Path.Combine(
-                tree.files[0].DirPath,
-                makePreviousFilename(tree.files[0]));
+            var tree = selectedTree;
+            while (!tree.isRoot() && tree.files.Count == 0)
+                tree = tree.parent;
+
+            ImageFile baseFile;
+            if (tree.files.Count == 0)
+                baseFile = tree.nodes[0].files[0];
+            else
+                baseFile = tree.files[0];
+
+            var newPath = Path.Combine(baseFile.DirPath, makePreviousFilename(baseFile));
 
             FSUtility.Touch(newPath);
             imageRepository.reload();
@@ -677,7 +704,7 @@ namespace ImageViewer
 
         private void ToolStripMenuItem_removeIV_Click(object sender, EventArgs e)
         {
-            if (!hasSelectedTree())
+            if (!hasSelectedTreeAndContainsFiles())
                 return;
 
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
@@ -694,14 +721,17 @@ namespace ImageViewer
             string prefix = "";
             ImageFile previous = null;
 
-            foreach (var i in imageTree.imageRepository)
+            foreach (var image in imageTree.imageRepository)
             {
-                if (!i.IsImage())
-                    continue;
-                if (i.Equals(target))
+                //if (!image.IsImage())
+                //    continue;
+                if (image.Equals(target))
                     break;
-                previous = i;
+                previous = image;
             }
+
+            if (previous == null)
+                previous = imageTree.imageRepository.imageList[0];
 
             if (previous != null)
                 prefix = Path.GetFileNameWithoutExtension(previous.FilenameWithoutComment);

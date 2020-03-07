@@ -161,7 +161,7 @@
             this.ToolStripMenuItem_upTreeLevel,
             this.ToolStripMenuItem_downTreeLevel});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(193, 176);
+            this.treeMenu.Size = new System.Drawing.Size(193, 198);
             // 
             // ToolStripMenuItem_rename
             // 
@@ -179,7 +179,7 @@
             // 
             this.ToolStripMenuItem_addIV.Name = "ToolStripMenuItem_addIV";
             this.ToolStripMenuItem_addIV.Size = new System.Drawing.Size(192, 22);
-            this.ToolStripMenuItem_addIV.Text = "階層を追加";
+            this.ToolStripMenuItem_addIV.Text = "階層を挿入";
             this.ToolStripMenuItem_addIV.Click += new System.EventHandler(this.ToolStripMenuItem_addIV_Click);
             // 
             // ToolStripMenuItem_removeIV
