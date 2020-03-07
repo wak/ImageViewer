@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,29 +7,51 @@ namespace ImageViewer
 {
     class Line
     {
-        public List<PointF> points = new List<PointF>();
+        public PointF[] pointsCache = new PointF[0];
+        public float pointsCacheZoom;
+        public Point pointsCacheBaseLocation;
+
+        public PointF[] points = new PointF[0];
 
         public void addPoint(PointF p)
         {
-            points.Add(p);
+            Array.Resize(ref points, points.Length + 1);
+            points[points.Length - 1] = p;
+
+            Array.Resize(ref pointsCache, pointsCache.Length + 1);
+            pointsCache[pointsCache.Length - 1] = new PointF(p.X * pointsCacheZoom + pointsCacheBaseLocation.X, p.Y * pointsCacheZoom + pointsCacheBaseLocation.Y);
         }
 
-        public void draw(Graphics g, Point baseLocation, float zoom)
+        private void updateCache(Point newBaseLocation, float newZoom)
         {
-            if (points.Count <= 1)
+            if (newBaseLocation == pointsCacheBaseLocation && newZoom == pointsCacheZoom)
                 return;
 
-            var drawPoints = points.Select(p => new PointF(p.X * zoom + baseLocation.X, p.Y * zoom + baseLocation.Y));
+            pointsCacheZoom = newZoom;
+            pointsCacheBaseLocation = newBaseLocation;
+
+            for (var i = 0; i < points.Length; i++)
+            {
+                var p = points[i];
+                pointsCache[i] = new PointF(p.X * pointsCacheZoom + pointsCacheBaseLocation.X, p.Y * pointsCacheZoom + pointsCacheBaseLocation.Y);
+            }
+        }
+        public void draw(Graphics g, Point baseLocation, float zoom)
+        {
+            if (points.Length <= 1)
+                return;
+
+            updateCache(baseLocation, zoom);
 
             using (Pen pen = new Pen(Color.FromArgb(255, 255, 0, 0), 5))
             {
-                g.DrawLines(pen, drawPoints.ToArray());
+                g.DrawLines(pen, pointsCache);
             }
         }
 
         public bool IsEmpty()
         {
-            return points.Count == 0;
+            return points.Length == 0;
         }
     }
 
