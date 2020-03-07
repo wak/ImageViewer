@@ -109,9 +109,9 @@
             // buttonArrange
             // 
             this.buttonArrange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonArrange.Location = new System.Drawing.Point(316, 365);
+            this.buttonArrange.Location = new System.Drawing.Point(216, 365);
             this.buttonArrange.Name = "buttonArrange";
-            this.buttonArrange.Size = new System.Drawing.Size(82, 30);
+            this.buttonArrange.Size = new System.Drawing.Size(50, 30);
             this.buttonArrange.TabIndex = 4;
             this.buttonArrange.Text = "整理";
             this.buttonArrange.UseVisualStyleBackColor = true;
@@ -141,7 +141,7 @@
             this.buttonReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReload.Location = new System.Drawing.Point(12, 365);
             this.buttonReload.Name = "buttonReload";
-            this.buttonReload.Size = new System.Drawing.Size(82, 30);
+            this.buttonReload.Size = new System.Drawing.Size(65, 30);
             this.buttonReload.TabIndex = 6;
             this.buttonReload.Text = "リロード";
             this.buttonReload.UseVisualStyleBackColor = true;
@@ -161,7 +161,7 @@
             this.ToolStripMenuItem_upTreeLevel,
             this.ToolStripMenuItem_downTreeLevel});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(193, 198);
+            this.treeMenu.Size = new System.Drawing.Size(193, 176);
             // 
             // ToolStripMenuItem_rename
             // 
@@ -234,7 +234,7 @@
             // buttonReLevel
             // 
             this.buttonReLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReLevel.Location = new System.Drawing.Point(404, 365);
+            this.buttonReLevel.Location = new System.Drawing.Point(285, 365);
             this.buttonReLevel.Name = "buttonReLevel";
             this.buttonReLevel.Size = new System.Drawing.Size(118, 30);
             this.buttonReLevel.TabIndex = 8;
@@ -245,9 +245,9 @@
             // buttonToggleTreeViewMode
             // 
             this.buttonToggleTreeViewMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonToggleTreeViewMode.Location = new System.Drawing.Point(109, 365);
+            this.buttonToggleTreeViewMode.Location = new System.Drawing.Point(96, 365);
             this.buttonToggleTreeViewMode.Name = "buttonToggleTreeViewMode";
-            this.buttonToggleTreeViewMode.Size = new System.Drawing.Size(160, 30);
+            this.buttonToggleTreeViewMode.Size = new System.Drawing.Size(101, 30);
             this.buttonToggleTreeViewMode.TabIndex = 9;
             this.buttonToggleTreeViewMode.Text = "ツリー表示切替";
             this.buttonToggleTreeViewMode.UseVisualStyleBackColor = true;
@@ -258,12 +258,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 401);
+            this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonToggleTreeViewMode);
             this.Controls.Add(this.buttonReLevel);
             this.Controls.Add(this.buttonReload);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonArrange);
-            this.Controls.Add(this.buttonClose);
             this.KeyPreview = true;
             this.Name = "TreeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

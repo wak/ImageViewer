@@ -298,6 +298,10 @@ namespace ImageViewer
                     e.Handled = true;
                     break;
 
+                case 'd':
+                    mainForm.deleteImage();
+                    break;
+
                 case 'j':
                     mainForm.showNextImage();
                     break;
@@ -547,12 +551,10 @@ namespace ImageViewer
 
             if (imageRepository.IsVirtualRepository)
             {
-                buttonToggleTreeViewMode.Text = "実フォルダツリー管理に切替";
                 Text = "仮想ツリー管理";
             }
             else
             {
-                buttonToggleTreeViewMode.Text = "仮想ツリー管理に切替";
                 Text = "実フォルダツリー管理";
             }
         }

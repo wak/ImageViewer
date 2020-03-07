@@ -26,10 +26,10 @@ namespace ImageViewer
             this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
             this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
 
+            updateCommentFromFilename();
+
             if (targetTree != null)
                 setCommentLevel(targetTree.treeLevel);
-
-            updateCommentFromFilename();
         }
 
         private void RenameForm_Shown(object sender, EventArgs e)
@@ -58,17 +58,40 @@ namespace ImageViewer
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    e.Handled = true;
                     setCommentLevel(commentLevel - 1);
                     updateFilenameFromComment();
                     break;
 
                 case Keys.Down:
-                    e.Handled = true;
                     setCommentLevel(commentLevel + 1);
                     updateFilenameFromComment();
                     break;
+
+                case Keys.J:
+                    if (isControlKeyPressing())
+                    {
+                        setCommentLevel(commentLevel + 1);
+                        updateFilenameFromComment();
+                    }
+                    break;
+
+                case Keys.K:
+                    if (isControlKeyPressing())
+                    {
+                        setCommentLevel(commentLevel - 1);
+                        updateFilenameFromComment();
+                    }
+                    break;
+
+                default:
+                    return;
             }
+            e.Handled = true;
+        }
+
+        private static bool isControlKeyPressing()
+        {
+            return (Control.ModifierKeys & Keys.Control) == Keys.Control;
         }
 
         private void setCommentLevel(int newLevel)

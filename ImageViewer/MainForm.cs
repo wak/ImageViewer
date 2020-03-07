@@ -257,7 +257,7 @@ namespace ImageViewer
                 Clipboard.SetImage(currentImage);
         }
 
-        private void deleteImage()
+        public void deleteImage()
         {
             if (currentImageFile == null)
                 return;
