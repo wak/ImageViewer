@@ -1524,9 +1524,18 @@ namespace ImageViewer
             if (currentImageFile == null)
                 return;
 
-            System.Diagnostics.Process process = System.Diagnostics.Process.Start(
-                "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImageFile.AbsPath)
-            );
+            if (imageRepository.IsVirtualRepository)
+            {
+                System.Diagnostics.Process process = System.Diagnostics.Process.Start(
+                    "EXPLORER.EXE", String.Format(@"/select,""{0}""", imageRepository.repoPath)
+                );
+            }
+            else
+            {
+                System.Diagnostics.Process process = System.Diagnostics.Process.Start(
+                    "EXPLORER.EXE", String.Format(@"/select,""{0}""", currentImageFile.AbsPath)
+                );
+            }
         }
 
         private void ToolStripMenuItem_CopyFilePathToClipboard_Click(object sender, EventArgs e)
