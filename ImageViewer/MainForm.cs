@@ -370,9 +370,10 @@ namespace ImageViewer
                 calcDefaultDrawLocation();
             }
 
-            currentRectangle = new Rectangle(0, 0,
-                (int)Math.Round(currentImage.Width * currentZoomRatio),
-                (int)Math.Round(currentImage.Height * currentZoomRatio));
+            int newWidth = (int)Math.Round(currentImage.Width * currentZoomRatio);
+            int newHeight = (int)Math.Round(currentImage.Height * currentZoomRatio);
+            currentRectangle = new Rectangle(0, 0, newWidth, newHeight);
+            Console.WriteLine(string.Format("{0}, {1}", newWidth, newHeight));
 
             currentRectangle.X = currentDrawLocation.X;
             currentRectangle.Y = currentDrawLocation.Y;
@@ -389,7 +390,9 @@ namespace ImageViewer
             }
             else if (currentImageFile.IsImage() && currentImage != null)
             {
-                e.Graphics.DrawImage(currentImage, currentRectangle);
+                updateImageCache();
+
+                e.Graphics.DrawImage(cachedPreparedImage, currentRectangle);
                 paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
 
                 if (rcmRangeCopyModeSelecting)
@@ -450,6 +453,47 @@ namespace ImageViewer
 
                     TextRenderer.DrawText(e.Graphics, "(overwrapped)", font2, rect2, Color.Blue, flags);
                     e.Graphics.DrawRectangle(Pens.Transparent, rect2);
+                }
+            }
+        }
+
+        Image cachedOriginalImage = null;
+        Image cachedPreparedImage = null;
+        Rectangle cachedOriginalRectangle;
+        double cachedOriginalZoom = 0.0;
+
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+        private void updateImageCache()
+        {
+            // 拡大率が100%でない状態で描画すると、処理に時間がかかる様子。お絵かき中に顕著。
+            // そのため、キャッシュする。
+
+            if (cachedPreparedImage == null || currentImage != cachedOriginalImage ||
+                currentZoomRatio != cachedOriginalZoom ||
+                cachedOriginalRectangle.Width != currentRectangle.Width ||
+                cachedOriginalRectangle.Height != currentRectangle.Height)
+            {
+                if (cachedPreparedImage != null)
+                    cachedPreparedImage.Dispose();
+                cachedOriginalZoom = currentZoomRatio;
+                cachedOriginalImage = currentImage;
+                cachedOriginalRectangle = currentRectangle;
+
+                using (Bitmap bitmap = new Bitmap(currentRectangle.Width, currentRectangle.Height))
+                {
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        var rectangle = currentRectangle;
+
+                        rectangle.X = 0;
+                        rectangle.Y = 0;
+                        g.DrawImage(currentImage, rectangle);
+
+                        IntPtr hBitmap = bitmap.GetHbitmap();
+                        cachedPreparedImage = Image.FromHbitmap(hBitmap);
+                        DeleteObject(hBitmap);
+                    }
                 }
             }
         }
@@ -518,8 +562,18 @@ namespace ImageViewer
         {
             float ratio;
 
-            ratio = Math.Min((float)(outerWidth - PICTURE_BORDER_SIZE * 2) / imageWidth,
-                             (float)(outerHeight - PICTURE_BORDER_SIZE * 2) / imageHeight);
+            float width_ratio = (float)(outerWidth - PICTURE_BORDER_SIZE * 2) / imageWidth;
+            float height_ratio = (float)(outerHeight - PICTURE_BORDER_SIZE * 2) / imageHeight;
+
+            ratio = Math.Min(width_ratio, height_ratio);
+
+            if (ratio > 1.0f)
+                return 1.0f;
+
+            if (width_ratio < height_ratio)
+            {
+                // 横幅のほうが縮小率が高いため、横幅に合わせる。
+            }
 
             return Math.Min(ratio, 1.0f);
         }
@@ -1524,8 +1578,9 @@ namespace ImageViewer
             if (currentImageFile == null)
                 return;
 
-            if (imageRepository.IsVirtualRepository)
+            if (imageRepository.IsReadonly())
             {
+                // ZIP
                 System.Diagnostics.Process process = System.Diagnostics.Process.Start(
                     "EXPLORER.EXE", String.Format(@"/select,""{0}""", imageRepository.repoPath)
                 );

@@ -7,19 +7,30 @@ namespace ImageViewer
 {
     class Line
     {
-        public PointF[] pointsCache = new PointF[0];
-        public float pointsCacheZoom;
-        public Point pointsCacheBaseLocation;
+        const int POINTS_INC = 100;
+        private int pointsSize = 0;
+        private PointF[] pointsCache = new PointF[POINTS_INC];
+        private float pointsCacheZoom;
+        private Point pointsCacheBaseLocation;
 
-        public PointF[] points = new PointF[0];
+        private PointF[] points = new PointF[POINTS_INC];
 
         public void addPoint(PointF p)
         {
-            Array.Resize(ref points, points.Length + 1);
-            points[points.Length - 1] = p;
+            if (pointsSize >= points.Length)
+            {
+                Array.Resize(ref points, points.Length + POINTS_INC);
+                Array.Resize(ref pointsCache, pointsCache.Length + POINTS_INC);
+            }
+            points[pointsSize] = p;
+            pointsCache[pointsSize] = new PointF(p.X * pointsCacheZoom + pointsCacheBaseLocation.X, p.Y * pointsCacheZoom + pointsCacheBaseLocation.Y);
+            pointsSize += 1;
 
-            Array.Resize(ref pointsCache, pointsCache.Length + 1);
-            pointsCache[pointsCache.Length - 1] = new PointF(p.X * pointsCacheZoom + pointsCacheBaseLocation.X, p.Y * pointsCacheZoom + pointsCacheBaseLocation.Y);
+            for (var i = pointsSize; i < points.Length; i++)
+            {
+                points[i] = points[pointsSize - 1];
+                pointsCache[i] = pointsCache[pointsSize - 1];
+            }
         }
 
         private void updateCache(Point newBaseLocation, float newZoom)
@@ -38,7 +49,7 @@ namespace ImageViewer
         }
         public void draw(Graphics g, Point baseLocation, float zoom)
         {
-            if (points.Length <= 1)
+            if (pointsSize <= 1)
                 return;
 
             updateCache(baseLocation, zoom);
@@ -51,7 +62,7 @@ namespace ImageViewer
 
         public bool IsEmpty()
         {
-            return points.Length == 0;
+            return pointsSize == 0;
         }
     }
 
