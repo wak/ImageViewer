@@ -373,7 +373,6 @@ namespace ImageViewer
             int newWidth = (int)Math.Round(currentImage.Width * currentZoomRatio);
             int newHeight = (int)Math.Round(currentImage.Height * currentZoomRatio);
             currentRectangle = new Rectangle(0, 0, newWidth, newHeight);
-            Console.WriteLine(string.Format("{0}, {1}", newWidth, newHeight));
 
             currentRectangle.X = currentDrawLocation.X;
             currentRectangle.Y = currentDrawLocation.Y;
@@ -390,10 +389,17 @@ namespace ImageViewer
             }
             else if (currentImageFile.IsImage() && currentImage != null)
             {
-                updateImageCache();
-
-                e.Graphics.DrawImage(cachedPreparedImage, currentRectangle);
-                paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
+                if (paintBoard.IsEmpty())
+                {
+                    e.Graphics.DrawImage(currentImage, currentRectangle);
+                }
+                else
+                {
+                    // キャッシュは遅いため、必要なときだけする。
+                    updateImageCache();
+                    e.Graphics.DrawImage(cachedPreparedImage, currentRectangle);
+                    paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
+                }
 
                 if (rcmRangeCopyModeSelecting)
                 {

@@ -105,5 +105,10 @@ namespace ImageViewer
 
             lines.Add(currentLine);
         }
+
+        public bool IsEmpty()
+        {
+            return lines.Count == 0 || (lines.Count == 1 && lines[0].IsEmpty());
+        }
     }
 }
