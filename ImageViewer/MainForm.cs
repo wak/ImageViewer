@@ -130,13 +130,6 @@ namespace ImageViewer
                 return;
             }
 
-            //if (imageRepository != null && imageRepository.repoPath == path)
-            //{
-            //    imageRepository.Recursive = IsIncludeSubDirectory;
-            //    imageRepository.reload();
-            //    return;
-            //}
-
             string filepath;
             string directory;
             path = System.IO.Path.GetFullPath(path);
@@ -400,13 +393,7 @@ namespace ImageViewer
                     e.Graphics.DrawImage(cachedPreparedImage, currentRectangle);
                     paintBoard.draw(e.Graphics, currentDrawLocation, (float)currentZoomRatio);
                 }
-
-                if (rcmRangeCopyModeSelecting)
-                {
-                    Pen p = new Pen(Color.Black, 1);
-                    e.Graphics.DrawRectangle(p, rcmX(), rcmY(), rcmWidth(), rcmHeight());
-                    p.Dispose();
-                }
+                drawCopyRectangle(e.Graphics);
             }
             else if (currentImageFile.HasComment())
             {
@@ -422,44 +409,78 @@ namespace ImageViewer
                 }
             }
 
-            if (currentImageFile != null && IsBreadcrumbsEnabled)
+            drawBreadcrumbs(e.Graphics);
+            drawOverwrapWaitMessage(e.Graphics);
+            drawPositionBar(e.Graphics);
+        }
+
+        private void drawPositionBar(Graphics graphics)
+        {
+            if (imageRepository.Count == 0)
+                return;
+
+            using (SolidBrush b = new SolidBrush(Color.FromArgb(190, 255, 0, 0)))
             {
-                using (Font font2 = new Font("Meiryo UI", 8, FontStyle.Bold, GraphicsUnit.Point))
-                {
-                    string breadcrumbs = makeBreadcrumbs();
-                    int height = font2.Height + 10;
-                    int width = (int)e.Graphics.MeasureString(breadcrumbs, font2).Width + 10;
-
-                    SolidBrush b = new SolidBrush(Color.FromArgb(190, 255, 255, 255));
-                    e.Graphics.FillRectangle(b, 0, 0, width, height);
-                    b.Dispose();
-
-
-                    Rectangle rect2 = new Rectangle(5, 0, width, height);
-
-                    TextFormatFlags flags = TextFormatFlags.VerticalCenter;
-
-                    TextRenderer.DrawText(e.Graphics, breadcrumbs, font2, rect2, Color.Crimson, flags);
-                    e.Graphics.DrawRectangle(Pens.Transparent, rect2);
-                }
+                int height = 3;
+                graphics.FillRectangle(b, 0, pictureBox.Height - height,
+                    (int)(pictureBox.Width * (float)(currentImageListIndex + 1) / imageRepository.Count), pictureBox.Height);
             }
+        }
 
-            if (overwrapWait)
+        private void drawOverwrapWaitMessage(Graphics graphics)
+        {
+            if (!overwrapWait)
+                return;
+
+            SolidBrush b = new SolidBrush(Color.FromArgb(190, 210, 210, 210));
+            graphics.FillRectangle(b, 0, 0, pictureBox.Width, pictureBox.Height);
+            b.Dispose();
+
+            using (Font font2 = new Font("Meiryo UI", 20, FontStyle.Bold, GraphicsUnit.Point))
             {
-                SolidBrush b = new SolidBrush(Color.FromArgb(190, 210, 210, 210));
-                e.Graphics.FillRectangle(b, 0, 0, pictureBox.Width, pictureBox.Height);
-                b.Dispose();
+                Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
 
-                using (Font font2 = new Font("Meiryo UI", 20, FontStyle.Bold, GraphicsUnit.Point))
+                TextFormatFlags flags = TextFormatFlags.HorizontalCenter |
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+
+                TextRenderer.DrawText(graphics, "(overwrapped)", font2, rect2, Color.Blue, flags);
+                graphics.DrawRectangle(Pens.Transparent, rect2);
+            }
+        }
+
+        private void drawBreadcrumbs(Graphics graphics)
+        {
+            if (currentImageFile == null)
+                return;
+
+            if (!IsBreadcrumbsEnabled)
+                return;
+
+            using (Font font2 = new Font("Meiryo UI", 8, FontStyle.Bold, GraphicsUnit.Point))
+            {
+                string breadcrumbs = makeBreadcrumbs();
+                int height = font2.Height + 10;
+                int width = (int)graphics.MeasureString(breadcrumbs, font2).Width + 10;
+
+                using (SolidBrush b = new SolidBrush(Color.FromArgb(190, 255, 255, 255)))
                 {
-                    Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
-
-                    TextFormatFlags flags = TextFormatFlags.HorizontalCenter |
-                        TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
-
-                    TextRenderer.DrawText(e.Graphics, "(overwrapped)", font2, rect2, Color.Blue, flags);
-                    e.Graphics.DrawRectangle(Pens.Transparent, rect2);
+                    graphics.FillRectangle(b, 0, 0, width, height);
                 }
+
+                Rectangle rect2 = new Rectangle(5, 0, width, height);
+                TextFormatFlags flags = TextFormatFlags.VerticalCenter;
+                TextRenderer.DrawText(graphics, breadcrumbs, font2, rect2, Color.Crimson, flags);
+                graphics.DrawRectangle(Pens.Transparent, rect2);
+            }
+        }
+
+        private void drawCopyRectangle(Graphics graphics)
+        {
+            if (rcmRangeCopyModeSelecting)
+            {
+                Pen p = new Pen(Color.Black, 1);
+                graphics.DrawRectangle(p, rcmX(), rcmY(), rcmWidth(), rcmHeight());
+                p.Dispose();
             }
         }
 

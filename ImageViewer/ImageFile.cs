@@ -45,6 +45,8 @@ namespace ImageViewer
 
         public virtual Image LoadImage()
         {
+            if (AbsPath.EndsWith(".iv"))
+                return null;
             return imageLoader.loadImage(AbsPath);
         }
 
