@@ -755,7 +755,7 @@ namespace ImageViewer
 
         private void zoomOut()
         {
-            currentZoomRatio = Math.Max(0.0f, currentZoomRatio - 0.1f);
+            currentZoomRatio = Math.Max(0.1f, currentZoomRatio - 0.1f);
             isFixedZoomRatio = true;
             refreshWindow();
         }
