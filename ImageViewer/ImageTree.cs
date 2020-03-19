@@ -216,7 +216,10 @@ namespace ImageViewer
             int currentLevel = 0;
             ImageTree currentNode = root;
 
-            foreach (var f in repository)
+            var list = new List<ImageFile>(repository.imageList);
+            list.Sort();
+
+            foreach (var f in list)
             {
                 if (f.HasComment())
                 {

@@ -20,7 +20,7 @@ namespace ImageViewer
 
     public class ImageRepository : IEnumerable<ImageFile>
     {
-        protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png" });
+        protected readonly List<string> IMAGE_EXTENTIONS = new List<string>(new string[] { ".bmp", ".jpg", ".jpeg", ".png", ".emf" });
         public List<ImageFile> imageList = new List<ImageFile>();
         public int lastUpdatedFileIndex;
 
@@ -83,6 +83,8 @@ namespace ImageViewer
             string[] allPathes = System.IO.Directory.GetFiles(folderPath);
 
             Array.Sort<string>(allPathes);
+
+            var list = new List<ImageFile>();
             foreach (string path in allPathes)
             {
                 string extension = System.IO.Path.GetExtension(path);
@@ -90,25 +92,29 @@ namespace ImageViewer
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
                     // Console.WriteLine(path);
-                    imageList.Add(new ImageFile(System.IO.Path.GetFullPath(path)));
+                    list.Add(new ImageFile(System.IO.Path.GetFullPath(path)));
 
                     if (lastUpdated < System.IO.File.GetLastWriteTime(path))
                     {
                         lastUpdated = System.IO.File.GetLastWriteTime(path);
-                        lastUpdatedFileIndex = imageList.Count - 1;
+                        lastUpdatedFileIndex = list.Count - 1;
                     }
                 }
                 else if (extension.EndsWith(".iv"))
                 {
-                    imageList.Add(new MetaFile(System.IO.Path.GetFullPath(path)));
+                    list.Add(new MetaFile(System.IO.Path.GetFullPath(path)));
                 }
             }
+            list.Sort();
+            imageList.AddRange(list);
 
             if (Recursive)
             {
                 try
                 {
-                    foreach (var subdir in Directory.GetDirectories(folderPath))
+                    var dirs = new List<string>(Directory.GetDirectories(folderPath));
+                    dirs.Sort();
+                    foreach (var subdir in dirs)
                         findImages(subdir);
                 }
                 catch (Exception)
@@ -116,7 +122,6 @@ namespace ImageViewer
                     // nothing to do
                 }
             }
-            imageList.Sort();
         }
 
         public int findIndex(string absPath)
