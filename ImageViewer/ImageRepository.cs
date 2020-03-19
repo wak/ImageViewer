@@ -29,6 +29,8 @@ namespace ImageViewer
 
         public bool Recursive = false;
 
+        protected string filter = null;
+
         private bool isVirtualRepository = true;
         public bool IsVirtualRepository
         {
@@ -49,8 +51,12 @@ namespace ImageViewer
             reload();
         }
 
-        public virtual void reload()
+        public virtual void reload(string filter = null)
         {
+            if (filter != null)
+                filter = filter.ToLower();
+            this.filter = filter;
+
             if (repoPath != null)
             {
                 clear();
@@ -88,6 +94,9 @@ namespace ImageViewer
             foreach (string path in allPathes)
             {
                 string extension = System.IO.Path.GetExtension(path);
+
+                if (filter != null && System.IO.Path.GetFileName(path).ToLower().IndexOf(filter) < 0)
+                    continue;
 
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
@@ -228,27 +237,36 @@ namespace ImageViewer
 
         public ZippedImageRepository(string zipPath, bool recursive)
         {
-            repoPath = zipPath;
-            archive = ZipFile.OpenRead(zipPath);
+            this.repoPath = zipPath;
+            this.Recursive = recursive;
+            reload();
+            tree = new ImageTree(this);
+        }
+
+        public override void reload(string filter = null)
+        {
+            imageList.Clear();
+
+            if (filter != null)
+                filter = filter.ToLower();
+            this.filter = filter;
+
+            archive = ZipFile.OpenRead(repoPath);
             var zipImageLoader = new ZipImageLoader(archive);
 
             foreach (ZipArchiveEntry e in archive.Entries)
             {
                 string extension = System.IO.Path.GetExtension(e.FullName);
 
+                if (filter != null && e.Name.ToLower().IndexOf(filter) < 0)
+                    continue;
+
                 if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
                 {
                     imageList.Add(new ZippedImageFile(e.FullName, zipImageLoader));
-                    Console.WriteLine(e.FullName);
                 }
             }
-
             tree = new ImageTree(this);
-        }
-
-        public override void reload()
-        {
-            tree.reload();
         }
 
         public override bool IsReadonly()

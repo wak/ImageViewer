@@ -75,7 +75,7 @@ namespace ImageViewer
         {
             clearListView();
 
-            imageRepository.reload();
+            imageRepository.reload(filterBox.Text);
             setupTreeView();
         }
 
@@ -292,6 +292,9 @@ namespace ImageViewer
 
         private void TreeForm_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (this.ActiveControl == filterBox)
+                return;
+
             switch (e.KeyChar)
             {
                 case (char)Keys.Enter:
@@ -772,5 +775,21 @@ namespace ImageViewer
         }
 
         #endregion
+
+        private void filterBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    e.Handled = true;
+                    reload();
+                    break;
+
+                case Keys.Escape:
+                    e.Handled = true;
+                    this.Close();
+                    break;
+            }
+        }
     }
 }

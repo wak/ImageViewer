@@ -97,7 +97,7 @@ namespace ImageViewer
                 changeImage(selectedFile);
             });
             treeForm.itemArranged += (() => reloadDirectory());
-            treeForm.FormClosed += ((a, b) => treeForm = null);
+            treeForm.FormClosed += ((a, b) => { treeForm = null; this.Focus(); });
             treeForm.Show(this);
         }
 
