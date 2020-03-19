@@ -1690,6 +1690,16 @@ namespace ImageViewer
             rcmEnterRangeCopyMode();
         }
 
+        private void toolStripMenuItem_ExplorerCopy_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null || imageRepository.IsReadonly())
+                return;
+
+            System.Collections.Specialized.StringCollection files = new System.Collections.Specialized.StringCollection();
+            files.Add(currentImageFile.AbsPath);
+            Clipboard.SetFileDropList(files);
+        }
+
         private void ToolStripMenuItem_rotateRight_Click(object sender, EventArgs e)
         {
             rotateRight90();
