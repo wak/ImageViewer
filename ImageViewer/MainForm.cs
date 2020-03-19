@@ -244,7 +244,7 @@ namespace ImageViewer
             updateImageList(currentDirectoryPath);
         }
 
-        private void copyToClipboard()
+        public void copyToClipboard()
         {
             if (currentImage != null)
                 Clipboard.SetImage(currentImage);

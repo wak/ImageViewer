@@ -330,6 +330,10 @@ namespace ImageViewer
         {
             switch (e.KeyData)
             {
+                case Keys.Control | Keys.C:
+                    mainForm.copyToClipboard();
+                    break;
+
                 case Keys.Down:
                 case Keys.Control | Keys.J:
                     selectNextTree();
