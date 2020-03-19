@@ -53,6 +53,7 @@
             this.toolStripMenuItem_ChangeWindowSize = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_ExplorerCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CopyRectangleToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
@@ -77,7 +78,6 @@
             this.toolStripMenuItem_RunSnippingTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_ExplorerCopy = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -88,7 +88,7 @@
             this.pictureBox.Location = new System.Drawing.Point(0, 0);
             this.pictureBox.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(600, 360);
+            this.pictureBox.Size = new System.Drawing.Size(700, 450);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
@@ -132,7 +132,7 @@
             this.toolStripSeparator3,
             this.toolStripMenuItem_ExitApplication});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 558);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 536);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_openFile
@@ -301,6 +301,13 @@
             this.toolStripMenuItem3.Size = new System.Drawing.Size(226, 22);
             this.toolStripMenuItem3.Text = "クリップボードにコピー";
             // 
+            // toolStripMenuItem_ExplorerCopy
+            // 
+            this.toolStripMenuItem_ExplorerCopy.Name = "toolStripMenuItem_ExplorerCopy";
+            this.toolStripMenuItem_ExplorerCopy.Size = new System.Drawing.Size(186, 22);
+            this.toolStripMenuItem_ExplorerCopy.Text = "Explorerのファイルコピー";
+            this.toolStripMenuItem_ExplorerCopy.Click += new System.EventHandler(this.toolStripMenuItem_ExplorerCopy_Click);
+            // 
             // toolStripMenuItem_CopyToClipboard
             // 
             this.toolStripMenuItem_CopyToClipboard.Name = "toolStripMenuItem_CopyToClipboard";
@@ -463,25 +470,19 @@
             this.toolStripMenuItem_ExitApplication.Text = "終了";
             this.toolStripMenuItem_ExitApplication.Click += new System.EventHandler(this.ToolStripMenuItem_ExitApplication_Click);
             // 
-            // toolStripMenuItem_ExplorerCopy
-            // 
-            this.toolStripMenuItem_ExplorerCopy.Name = "toolStripMenuItem_ExplorerCopy";
-            this.toolStripMenuItem_ExplorerCopy.Size = new System.Drawing.Size(186, 22);
-            this.toolStripMenuItem_ExplorerCopy.Text = "Explorerのファイルコピー";
-            this.toolStripMenuItem_ExplorerCopy.Click += new System.EventHandler(this.toolStripMenuItem_ExplorerCopy_Click);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(600, 360);
+            this.ClientSize = new System.Drawing.Size(700, 450);
             this.Controls.Add(this.pictureBox);
+            this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(79, 88);
+            this.MinimumSize = new System.Drawing.Size(89, 100);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ImageViewer";

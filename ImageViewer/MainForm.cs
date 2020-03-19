@@ -210,7 +210,7 @@ namespace ImageViewer
             reloadDirectory();
         }
 
-        public void renameImageFilename()
+        private void renameImageFilename()
         {
             if (imageRepository.IsReadonly())
                 return;
@@ -244,13 +244,23 @@ namespace ImageViewer
             updateImageList(currentDirectoryPath);
         }
 
-        public void copyToClipboard()
+        private void copyToClipboard()
         {
             if (currentImage != null)
                 Clipboard.SetImage(currentImage);
         }
 
-        public void deleteImage()
+        public void copyExplorerFileToClipboard()
+        {
+            if (currentImage == null || imageRepository.IsReadonly())
+                return;
+
+            System.Collections.Specialized.StringCollection files = new System.Collections.Specialized.StringCollection();
+            files.Add(currentImageFile.AbsPath);
+            Clipboard.SetFileDropList(files);
+        }
+
+        private void deleteImage()
         {
             if (currentImageFile == null)
                 return;
@@ -397,7 +407,7 @@ namespace ImageViewer
             }
             else if (currentImageFile.HasComment())
             {
-                using (Font font2 = new Font("Meiryo UI", 30, FontStyle.Bold, GraphicsUnit.Point))
+                using (Font font2 = new Font("Yu Gothic UI", 30, FontStyle.Bold, GraphicsUnit.Point))
                 {
                     Rectangle rect2 = new Rectangle(0, 0, pictureBox.Width, pictureBox.Height);
 
@@ -660,7 +670,7 @@ namespace ImageViewer
                 return false;
         }
 
-        public void showNextImage()
+        private void showNextImage()
         {
             prepareToChangeImage();
 
@@ -688,7 +698,7 @@ namespace ImageViewer
             changeImage();
         }
 
-        public void showPreviousImage()
+        private void showPreviousImage()
         {
             prepareToChangeImage();
 
@@ -990,7 +1000,7 @@ namespace ImageViewer
             }
         }
 
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        public void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
             {
@@ -1001,10 +1011,14 @@ namespace ImageViewer
                 case Keys.Control | Keys.Shift | Keys.C:
                     rcmEnterRangeCopyMode();
                     break;
+
+                case Keys.Alt | Keys.C:
+                    copyExplorerFileToClipboard();
+                    break;
             }
         }
 
-        private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
+        public void MainForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
             {
@@ -1692,12 +1706,7 @@ namespace ImageViewer
 
         private void toolStripMenuItem_ExplorerCopy_Click(object sender, EventArgs e)
         {
-            if (currentImage == null || imageRepository.IsReadonly())
-                return;
-
-            System.Collections.Specialized.StringCollection files = new System.Collections.Specialized.StringCollection();
-            files.Add(currentImageFile.AbsPath);
-            Clipboard.SetFileDropList(files);
+            copyExplorerFileToClipboard();
         }
 
         private void ToolStripMenuItem_rotateRight_Click(object sender, EventArgs e)

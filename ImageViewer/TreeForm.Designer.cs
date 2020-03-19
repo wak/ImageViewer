@@ -62,10 +62,10 @@
             // treeView
             // 
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.treeView.Location = new System.Drawing.Point(0, 0);
+            this.treeView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(420, 359);
+            this.treeView.Size = new System.Drawing.Size(489, 449);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             this.treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDown);
@@ -74,11 +74,11 @@
             // 
             this.listView.ContextMenuStrip = this.listMenu;
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 0);
+            this.listView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(262, 359);
+            this.listView.Size = new System.Drawing.Size(306, 449);
             this.listView.TabIndex = 1;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -101,9 +101,10 @@
             // buttonClose
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClose.Location = new System.Drawing.Point(592, 365);
+            this.buttonClose.Location = new System.Drawing.Point(691, 461);
+            this.buttonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(82, 30);
+            this.buttonClose.Size = new System.Drawing.Size(96, 32);
             this.buttonClose.TabIndex = 3;
             this.buttonClose.Text = "閉じる";
             this.buttonClose.UseVisualStyleBackColor = true;
@@ -112,9 +113,10 @@
             // buttonArrange
             // 
             this.buttonArrange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonArrange.Location = new System.Drawing.Point(179, 365);
+            this.buttonArrange.Location = new System.Drawing.Point(209, 461);
+            this.buttonArrange.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonArrange.Name = "buttonArrange";
-            this.buttonArrange.Size = new System.Drawing.Size(50, 30);
+            this.buttonArrange.Size = new System.Drawing.Size(58, 32);
             this.buttonArrange.TabIndex = 4;
             this.buttonArrange.Text = "整理";
             this.buttonArrange.UseVisualStyleBackColor = true;
@@ -126,6 +128,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -135,16 +138,18 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listView);
-            this.splitContainer1.Size = new System.Drawing.Size(686, 359);
-            this.splitContainer1.SplitterDistance = 420;
+            this.splitContainer1.Size = new System.Drawing.Size(800, 449);
+            this.splitContainer1.SplitterDistance = 489;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 5;
             // 
             // buttonReload
             // 
             this.buttonReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReload.Location = new System.Drawing.Point(12, 365);
+            this.buttonReload.Location = new System.Drawing.Point(14, 461);
+            this.buttonReload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonReload.Name = "buttonReload";
-            this.buttonReload.Size = new System.Drawing.Size(65, 30);
+            this.buttonReload.Size = new System.Drawing.Size(76, 32);
             this.buttonReload.TabIndex = 6;
             this.buttonReload.Text = "リロード";
             this.buttonReload.UseVisualStyleBackColor = true;
@@ -237,9 +242,10 @@
             // buttonReLevel
             // 
             this.buttonReLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReLevel.Location = new System.Drawing.Point(242, 365);
+            this.buttonReLevel.Location = new System.Drawing.Point(282, 461);
+            this.buttonReLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonReLevel.Name = "buttonReLevel";
-            this.buttonReLevel.Size = new System.Drawing.Size(118, 30);
+            this.buttonReLevel.Size = new System.Drawing.Size(138, 32);
             this.buttonReLevel.TabIndex = 8;
             this.buttonReLevel.Text = "ファイル名を正規化";
             this.buttonReLevel.UseVisualStyleBackColor = true;
@@ -248,9 +254,10 @@
             // buttonToggleTreeViewMode
             // 
             this.buttonToggleTreeViewMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonToggleTreeViewMode.Location = new System.Drawing.Point(90, 365);
+            this.buttonToggleTreeViewMode.Location = new System.Drawing.Point(105, 461);
+            this.buttonToggleTreeViewMode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonToggleTreeViewMode.Name = "buttonToggleTreeViewMode";
-            this.buttonToggleTreeViewMode.Size = new System.Drawing.Size(76, 30);
+            this.buttonToggleTreeViewMode.Size = new System.Drawing.Size(89, 32);
             this.buttonToggleTreeViewMode.TabIndex = 9;
             this.buttonToggleTreeViewMode.Text = "表示切替";
             this.buttonToggleTreeViewMode.UseVisualStyleBackColor = true;
@@ -258,18 +265,18 @@
             // 
             // filterBox
             // 
-            this.filterBox.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.filterBox.Location = new System.Drawing.Point(376, 369);
+            this.filterBox.Location = new System.Drawing.Point(435, 465);
+            this.filterBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.filterBox.Name = "filterBox";
-            this.filterBox.Size = new System.Drawing.Size(210, 23);
+            this.filterBox.Size = new System.Drawing.Size(244, 23);
             this.filterBox.TabIndex = 10;
             this.filterBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.filterBox_KeyDown);
             // 
             // TreeForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 401);
+            this.ClientSize = new System.Drawing.Size(800, 501);
             this.Controls.Add(this.filterBox);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonToggleTreeViewMode);
@@ -277,7 +284,9 @@
             this.Controls.Add(this.buttonReload);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonArrange);
+            this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "TreeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "仮想ツリー管理";

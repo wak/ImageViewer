@@ -301,27 +301,15 @@ namespace ImageViewer
                     e.Handled = true;
                     break;
 
-                case 'd':
-                    mainForm.deleteImage();
-                    break;
-
-                case 'j':
-                    mainForm.showNextImage();
-                    break;
-
-                case 'k':
-                    mainForm.showPreviousImage();
-                    break;
-
-                case 'r':
-                    mainForm.renameImageFilename();
-                    break;
-
                 case 'w':
                 case 'q':
                 case (char)Keys.Escape:
                     e.Handled = true;
                     Close();
+                    break;
+
+                default:
+                    mainForm.MainForm_KeyPress(sender, e);
                     break;
             }
         }
@@ -330,10 +318,6 @@ namespace ImageViewer
         {
             switch (e.KeyData)
             {
-                case Keys.Control | Keys.C:
-                    mainForm.copyToClipboard();
-                    break;
-
                 case Keys.Down:
                 case Keys.Control | Keys.J:
                     selectNextTree();
@@ -355,6 +339,7 @@ namespace ImageViewer
                     break;
 
                 default:
+                    mainForm.MainForm_KeyDown(sender, e);
                     return;
             }
 

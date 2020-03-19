@@ -39,10 +39,10 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(315, 200);
+            this.buttonOK.Location = new System.Drawing.Point(356, 244);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(2);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(56, 26);
+            this.buttonOK.Size = new System.Drawing.Size(65, 32);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "変更";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -50,10 +50,10 @@
             // 
             // textBox_filename
             // 
-            this.textBox_filename.Location = new System.Drawing.Point(36, 44);
+            this.textBox_filename.Location = new System.Drawing.Point(31, 49);
             this.textBox_filename.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_filename.Name = "textBox_filename";
-            this.textBox_filename.Size = new System.Drawing.Size(335, 19);
+            this.textBox_filename.Size = new System.Drawing.Size(390, 23);
             this.textBox_filename.TabIndex = 2;
             this.textBox_filename.TextChanged += new System.EventHandler(this.textBox_filename_TextChanged);
             this.textBox_filename.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_filename_KeyPress);
@@ -61,9 +61,10 @@
             // textBox_comment
             // 
             this.textBox_comment.AcceptsTab = true;
-            this.textBox_comment.Location = new System.Drawing.Point(36, 119);
+            this.textBox_comment.Location = new System.Drawing.Point(31, 143);
+            this.textBox_comment.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_comment.Name = "textBox_comment";
-            this.textBox_comment.Size = new System.Drawing.Size(335, 19);
+            this.textBox_comment.Size = new System.Drawing.Size(390, 23);
             this.textBox_comment.TabIndex = 3;
             this.textBox_comment.TextChanged += new System.EventHandler(this.TextBox_comment_TextChanged);
             this.textBox_comment.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_comment_KeyDown);
@@ -72,44 +73,44 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 18);
+            this.label1.Location = new System.Drawing.Point(16, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 12);
+            this.label1.Size = new System.Drawing.Size(53, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "ファイル名";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 93);
+            this.label2.Location = new System.Drawing.Point(16, 110);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 12);
+            this.label2.Size = new System.Drawing.Size(40, 15);
             this.label2.TabIndex = 5;
             this.label2.Text = "コメント";
             // 
             // labelNewBreadcrumbs
             // 
             this.labelNewBreadcrumbs.AutoSize = true;
-            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(88, 172);
+            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(83, 209);
             this.labelNewBreadcrumbs.Name = "labelNewBreadcrumbs";
-            this.labelNewBreadcrumbs.Size = new System.Drawing.Size(70, 12);
+            this.labelNewBreadcrumbs.Size = new System.Drawing.Size(76, 15);
             this.labelNewBreadcrumbs.TabIndex = 6;
             this.labelNewBreadcrumbs.Text = "breadcrumbs";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 172);
+            this.label3.Location = new System.Drawing.Point(16, 209);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.Size = new System.Drawing.Size(67, 15);
             this.label3.TabIndex = 7;
             this.label3.Text = "変更階層：";
             // 
             // RenameForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(413, 238);
+            this.ClientSize = new System.Drawing.Size(445, 290);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.labelNewBreadcrumbs);
             this.Controls.Add(this.label2);
@@ -117,6 +118,7 @@
             this.Controls.Add(this.textBox_comment);
             this.Controls.Add(this.textBox_filename);
             this.Controls.Add(this.buttonOK);
+            this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
