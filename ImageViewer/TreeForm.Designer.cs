@@ -265,6 +265,7 @@
             // 
             // filterBox
             // 
+            this.filterBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.filterBox.Location = new System.Drawing.Point(435, 465);
             this.filterBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.filterBox.Name = "filterBox";
@@ -285,6 +286,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonArrange);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "TreeForm";

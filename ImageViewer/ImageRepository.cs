@@ -41,6 +41,7 @@ namespace ImageViewer
         public ImageRepository()
         {
             clear();
+            tree = new ImageTree(this);
         }
 
         public ImageRepository(string folderPath, bool recursive)

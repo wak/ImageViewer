@@ -537,7 +537,11 @@ namespace ImageViewer
 
         private string makeBreadcrumbs()
         {
-            var blist = imageRepository.tree.findTreeByAbsPath(currentImageFile.AbsPath).breadcrumbs("/");
+            var tree = imageRepository.tree.findTreeByAbsPath(currentImageFile.AbsPath);
+
+            if (tree == null)
+                return "";
+            var blist = tree.breadcrumbs("/");
             string breadcrumbs = string.Join(" > ", blist);
             return breadcrumbs;
         }
