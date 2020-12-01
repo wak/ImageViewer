@@ -850,22 +850,44 @@ namespace ImageViewer
 
         private int rcmX()
         {
-            return Math.Min(rcmStartPoint.X, rcmCurrentPoint.X);
+            return Math.Max(currentRectangle.X, Math.Min(rcmStartPoint.X, rcmCurrentPoint.X));
+        }
+
+        private int rcmOutOfWidth()
+        {
+            var rect = currentRectangle.X;
+            var select = Math.Min(rcmStartPoint.X, rcmCurrentPoint.X);
+
+            if (rect > select)
+                return Math.Abs(rect - select);
+            else
+                return 0;
+        }
+
+        private int rcmOutOfHeight()
+        {
+            var rect = currentRectangle.Y;
+            var select = Math.Min(rcmStartPoint.Y, rcmCurrentPoint.Y);
+
+            if (rect > select)
+                return Math.Abs(rect - select);
+            else
+                return 0;
         }
 
         private int rcmY()
         {
-            return Math.Min(rcmStartPoint.Y, rcmCurrentPoint.Y);
+            return Math.Max(currentRectangle.Y, Math.Min(rcmStartPoint.Y, rcmCurrentPoint.Y));
         }
 
         private int rcmWidth()
         {
-            return Math.Abs(rcmStartPoint.X - rcmCurrentPoint.X);
+            return Math.Abs(rcmStartPoint.X - rcmCurrentPoint.X) - rcmOutOfWidth();
         }
 
         private int rcmHeight()
         {
-            return Math.Abs(rcmStartPoint.Y - rcmCurrentPoint.Y);
+            return Math.Abs(rcmStartPoint.Y - rcmCurrentPoint.Y) - rcmOutOfHeight();
         }
 
         #endregion
