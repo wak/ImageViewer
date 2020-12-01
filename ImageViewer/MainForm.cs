@@ -580,7 +580,7 @@ namespace ImageViewer
                 if (CHANGE_IMAGE_WAIT_MSEC > 0)
                     newTitle += string.Format("[{0}ms]", CHANGE_IMAGE_WAIT_MSEC);
 
-                newTitle += string.Format(" {0:0.00}x: {1})",
+                newTitle += string.Format(" {0:0.00}x: {1}",
                     currentZoomRatio, 
                     (currentImageFile == null) ? "" : currentImageFile.Filename);
             }

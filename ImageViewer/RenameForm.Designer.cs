@@ -35,11 +35,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.labelNewBreadcrumbs = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.labelFileName = new System.Windows.Forms.Label();
+            this.numericUpDownLevel = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(356, 244);
+            this.buttonOK.Location = new System.Drawing.Point(341, 174);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(2);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(65, 32);
@@ -50,10 +53,10 @@
             // 
             // textBox_filename
             // 
-            this.textBox_filename.Location = new System.Drawing.Point(31, 49);
+            this.textBox_filename.Location = new System.Drawing.Point(86, 11);
             this.textBox_filename.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_filename.Name = "textBox_filename";
-            this.textBox_filename.Size = new System.Drawing.Size(390, 23);
+            this.textBox_filename.Size = new System.Drawing.Size(320, 23);
             this.textBox_filename.TabIndex = 2;
             this.textBox_filename.TextChanged += new System.EventHandler(this.textBox_filename_TextChanged);
             this.textBox_filename.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_filename_KeyPress);
@@ -61,10 +64,10 @@
             // textBox_comment
             // 
             this.textBox_comment.AcceptsTab = true;
-            this.textBox_comment.Location = new System.Drawing.Point(31, 143);
+            this.textBox_comment.Location = new System.Drawing.Point(86, 50);
             this.textBox_comment.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_comment.Name = "textBox_comment";
-            this.textBox_comment.Size = new System.Drawing.Size(390, 23);
+            this.textBox_comment.Size = new System.Drawing.Size(320, 23);
             this.textBox_comment.TabIndex = 3;
             this.textBox_comment.TextChanged += new System.EventHandler(this.TextBox_comment_TextChanged);
             this.textBox_comment.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_comment_KeyDown);
@@ -73,7 +76,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 16);
+            this.label1.Location = new System.Drawing.Point(17, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 15);
             this.label1.TabIndex = 4;
@@ -82,7 +85,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 110);
+            this.label2.Location = new System.Drawing.Point(17, 53);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 15);
             this.label2.TabIndex = 5;
@@ -91,7 +94,7 @@
             // labelNewBreadcrumbs
             // 
             this.labelNewBreadcrumbs.AutoSize = true;
-            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(83, 209);
+            this.labelNewBreadcrumbs.Location = new System.Drawing.Point(144, 90);
             this.labelNewBreadcrumbs.Name = "labelNewBreadcrumbs";
             this.labelNewBreadcrumbs.Size = new System.Drawing.Size(76, 15);
             this.labelNewBreadcrumbs.TabIndex = 6;
@@ -100,17 +103,37 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 209);
+            this.label3.Location = new System.Drawing.Point(17, 90);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 15);
+            this.label3.Size = new System.Drawing.Size(31, 15);
             this.label3.TabIndex = 7;
-            this.label3.Text = "変更階層：";
+            this.label3.Text = "階層";
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(17, 139);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 15);
+            this.labelFileName.TabIndex = 9;
+            this.labelFileName.Text = "filename";
+            // 
+            // numericUpDownLevel
+            // 
+            this.numericUpDownLevel.Location = new System.Drawing.Point(86, 88);
+            this.numericUpDownLevel.Name = "numericUpDownLevel";
+            this.numericUpDownLevel.Size = new System.Drawing.Size(52, 23);
+            this.numericUpDownLevel.TabIndex = 10;
+            this.numericUpDownLevel.ValueChanged += new System.EventHandler(this.numericUpDownLevel_ValueChanged);
+            this.numericUpDownLevel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_filename_KeyPress);
             // 
             // RenameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 290);
+            this.ClientSize = new System.Drawing.Size(430, 215);
+            this.Controls.Add(this.numericUpDownLevel);
+            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.labelNewBreadcrumbs);
             this.Controls.Add(this.label2);
@@ -127,6 +150,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ファイル名の変更";
             this.Shown += new System.EventHandler(this.RenameForm_Shown);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLevel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,5 +164,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelNewBreadcrumbs;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.NumericUpDown numericUpDownLevel;
     }
 }

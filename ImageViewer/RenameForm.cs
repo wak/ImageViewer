@@ -11,6 +11,7 @@ namespace ImageViewer
         public string result;
         private ImageTree imageTree, targetTree;
         private string originalAbsPath;
+        private string fileExtension;
         private readonly List<char> INVALID_CHARACTERS = new List<char>(new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' });
 
         private int commentLevel = 0;
@@ -19,14 +20,14 @@ namespace ImageViewer
         {
             InitializeComponent();
 
+            var image = new ImageFile(oldFilePath);
+            this.fileExtension = System.IO.Path.GetExtension(oldFilePath);
             this.result = null;
             this.imageTree = imageTree;
             this.originalAbsPath = oldFilePath;
             this.targetTree = imageTree.findTreeByAbsPath(originalAbsPath);
-            this.textBox_filename.Text = System.IO.Path.GetFileName(oldFilePath);
-            this.textBox_filename.SelectionStart = System.IO.Path.GetFileName(oldFilePath).Length - System.IO.Path.GetExtension(oldFilePath).Length;
-
-            updateCommentFromFilename();
+            this.textBox_filename.Text = System.IO.Path.GetFileNameWithoutExtension(image.FilenameWithoutComment);
+            this.textBox_comment.Text = image.Comment;
 
             if (targetTree != null)
                 setCommentLevel(targetTree.treeLevel);
@@ -59,19 +60,16 @@ namespace ImageViewer
             {
                 case Keys.Up:
                     setCommentLevel(commentLevel - 1);
-                    updateFilenameFromComment();
                     break;
 
                 case Keys.Down:
                     setCommentLevel(commentLevel + 1);
-                    updateFilenameFromComment();
                     break;
 
                 case Keys.J:
                     if (isControlKeyPressing())
                     {
                         setCommentLevel(commentLevel + 1);
-                        updateFilenameFromComment();
                     }
                     break;
 
@@ -79,7 +77,6 @@ namespace ImageViewer
                     if (isControlKeyPressing())
                     {
                         setCommentLevel(commentLevel - 1);
-                        updateFilenameFromComment();
                     }
                     break;
 
@@ -103,7 +100,9 @@ namespace ImageViewer
             else
                 commentLevel = Math.Min(Math.Max(1, newLevel), targetTree.treeLevel + 1);
 
-            updateFilenameFromComment();
+            numericUpDownLevel.Value = commentLevel;
+            updateFilenameLabel();
+            updateBreadcrumbs(commentLevel);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -113,16 +112,10 @@ namespace ImageViewer
 
         private void desideFilename()
         {
-            ImageFile f = new ImageFile(this.textBox_filename.Text);
             string dirname = System.IO.Path.GetDirectoryName(originalAbsPath);
-            string newFilepath = System.IO.Path.Combine(dirname, this.textBox_filename.Text);
+            string newFilepath = System.IO.Path.Combine(dirname, this.labelFileName.Text);
 
-            if (this.textBox_comment.Text == "")
-            {
-                newFilepath = System.IO.Path.Combine(dirname, f.FilenameWithoutComment);
-            }
-
-            if (FSUtility.Rename(originalAbsPath, newFilepath))
+           if (FSUtility.Rename(originalAbsPath, newFilepath))
             {
                 this.result = newFilepath;
                 this.DialogResult = DialogResult.OK;
@@ -131,13 +124,13 @@ namespace ImageViewer
             this.Close();
         }
 
-        private void fixFilename()
+        private void removeIgnoredCharacters(TextBox textbox)
         {
             string newFilename = "";
             int nrIgnored = 0;
-            int beforeSelectionStart = this.textBox_filename.SelectionStart;
+            int beforeSelectionStart = textbox.SelectionStart;
 
-            foreach (char c in this.textBox_filename.Text)
+            foreach (char c in textbox.Text)
             {
                 if (INVALID_CHARACTERS.Contains(c))
                 {
@@ -149,48 +142,11 @@ namespace ImageViewer
 
             if (nrIgnored > 0)
             {
-                this.textBox_filename.Text = newFilename;
+                textbox.Text = newFilename;
 
                 if (beforeSelectionStart - nrIgnored >= 0)
-                    this.textBox_filename.SelectionStart = beforeSelectionStart - nrIgnored;
+                    textbox.SelectionStart = beforeSelectionStart - nrIgnored;
             }
-        }
-
-        private void updateCommentFromFilename()
-        {
-            ImageFile f = new ImageFile(this.textBox_filename.Text);
-
-            this.textBox_comment.Text = f.Comment;
-            setCommentLevel(f.CommentLevel);
-            updateBreadcrumbs(commentLevel);
-        }
-
-        private void updateFilenameFromComment()
-        {
-            ImageFile f = new ImageFile(this.textBox_filename.Text);
-
-            string filenameBase;
-            filenameBase = System.IO.Path.GetFileNameWithoutExtension(f.FilenameWithoutComment);
-
-
-            string filenameSep = "";
-            if (commentLevel > 0)
-                filenameSep = " " + new string('-', commentLevel) + " ";
-
-            string newfilename = null;
-
-            newfilename =
-                string.Format("{0}{1}{2}{3}",
-                    filenameBase,
-                    filenameSep,
-                    this.textBox_comment.Text,
-                    System.IO.Path.GetExtension(this.textBox_filename.Text)
-                );
-
-            this.textBox_filename.Text = newfilename;
-            fixFilename();
-
-            updateBreadcrumbs(commentLevel);
         }
 
         private void updateBreadcrumbs(int level)
@@ -208,19 +164,29 @@ namespace ImageViewer
 
         private void textBox_filename_TextChanged(object sender, EventArgs e)
         {
-            if (this.ActiveControl == textBox_filename)
-            {
-                fixFilename();
-                updateCommentFromFilename();
-            }
+            removeIgnoredCharacters(this.textBox_filename);
+            updateFilenameLabel();
         }
 
         private void TextBox_comment_TextChanged(object sender, EventArgs e)
         {
-            if (this.ActiveControl == textBox_comment)
-            {
-                updateFilenameFromComment();
-            }
+            removeIgnoredCharacters(this.textBox_comment);
+            updateFilenameLabel();
+            updateBreadcrumbs(commentLevel);
+        }
+
+        private void numericUpDownLevel_ValueChanged(object sender, EventArgs e)
+        {
+            setCommentLevel((int)numericUpDownLevel.Value);
+        }
+
+        private void updateFilenameLabel()
+        {
+            string filenameSep = "";
+            if (commentLevel > 0 && textBox_comment.Text.Length > 0)
+                filenameSep = " " + new string('-', commentLevel) + " ";
+
+            labelFileName.Text = textBox_filename.Text + filenameSep + textBox_comment.Text + this.fileExtension;
         }
     }
 }
