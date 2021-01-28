@@ -818,8 +818,10 @@ namespace ImageViewer
                     g.DrawImage(currentImage, currentRectangle);
 
                     Rectangle rect = new Rectangle(rcmX(), rcmY(), rcmWidth(), rcmHeight());
-                    Bitmap dest = bmp.Clone(rect, bmp.PixelFormat);
+                    if (rect.Height <= 0 || rect.Width <= 0)
+                        return;
 
+                    Bitmap dest = bmp.Clone(rect, bmp.PixelFormat);
                     Clipboard.SetImage(dest);
                 }
             }
@@ -857,11 +859,14 @@ namespace ImageViewer
         {
             var rect = currentRectangle.X;
             var select = Math.Min(rcmStartPoint.X, rcmCurrentPoint.X);
+            int outOfWidth = 0;
 
             if (rect > select)
-                return Math.Abs(rect - select);
-            else
-                return 0;
+                outOfWidth = Math.Abs(rect - select);
+            if (currentRectangle.Right - outOfWidth < rcmCurrentPoint.X)
+                outOfWidth += rcmCurrentPoint.X - currentRectangle.Right;
+
+            return outOfWidth;
         }
 
         private int rcmOutOfHeight()
@@ -869,10 +874,14 @@ namespace ImageViewer
             var rect = currentRectangle.Y;
             var select = Math.Min(rcmStartPoint.Y, rcmCurrentPoint.Y);
 
+            int outOfHeight = 0;
+
             if (rect > select)
-                return Math.Abs(rect - select);
-            else
-                return 0;
+                outOfHeight = Math.Abs(rect - select);
+            if (currentRectangle.Bottom - outOfHeight < rcmCurrentPoint.Y)
+                outOfHeight += rcmCurrentPoint.Y - currentRectangle.Bottom;
+
+            return outOfHeight;
         }
 
         private int rcmY()
