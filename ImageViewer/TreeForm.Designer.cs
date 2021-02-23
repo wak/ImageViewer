@@ -265,6 +265,7 @@
             // 
             // filterBox
             // 
+            this.filterBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.filterBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.filterBox.Location = new System.Drawing.Point(435, 465);
             this.filterBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
