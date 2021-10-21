@@ -262,7 +262,7 @@ namespace ImageViewer
                 if (filter != null && e.Name.ToLower().IndexOf(filter) < 0)
                     continue;
 
-                if (IMAGE_EXTENTIONS.Contains(extension.ToLower()))
+                if (IMAGE_EXTENTIONS.Contains(extension.ToLower()) || extension.EndsWith(".iv"))
                 {
                     imageList.Add(new ZippedImageFile(e.FullName, zipImageLoader));
                 }
